@@ -44,13 +44,13 @@
 
   </div>
 
-  
 
 
-<script src="./cordova.js"></script>
+
+  <script src="./cordova.js"></script>
   <script src="./js/config.js"></script>
-<script src="./js/app.js"></script>
-<script src="./js/ota.js"></script>
+  <script src="./js/app.js"></script>
+  <script src="./js/ota.js"></script>
 
   <script>
     // Inject Logo
@@ -61,7 +61,7 @@
     document.addEventListener('deviceready', async () => {
       // 1. Check for OTA Update
       if (splashTagline) splashTagline.textContent = "Checking for updates...";
-      
+
       try {
         const updateApplied = await window.otaService.checkAndApplyUpdate();
         if (updateApplied) {
@@ -74,21 +74,14 @@
       }
 
       // 2. Redirect to App
-      const bootPath = window.otaService.getBootstrapPath();
-      
-      // DEBUG ALERT: Let's see what the app thinks
-      const loggedIn = window.sessionManager.isLoggedIn();
-      const seenOnboard = localStorage.getItem('choicedraft_onboarding_seen');
-      alert(`Debug Info:\nLoggedIn: ${loggedIn}\nSeenOnboard: ${seenOnboard}\nTarget: ${bootPath}`);
-
       if (splashTagline) splashTagline.textContent = "Loading ChoiceDraft...";
       setTimeout(() => {
-        window.location.href = bootPath;
+        window.location.href = window.otaService.getBootstrapPath();
       }, 1500);
     }, false);
 
     // Fallback for browser testing
-    if(!window.cordova) {
+    if (!window.cordova) {
       setTimeout(() => {
         window.ChoiceDraftApp.splashRedirect();
       }, 2000);

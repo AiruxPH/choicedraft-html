@@ -20,21 +20,20 @@ const otaService = {
             // 1. Fetch remote version info
             const response = await fetch(OTA_CONFIG.RAW_VERSION_URL + "?t=" + Date.now());
             const remote = await response.json();
-            
+
             const localVersion = localStorage.getItem(OTA_CONFIG.LOCAL_STORAGE_KEY) || "1.0.0";
-            
+
             console.log(`OTA: Local version ${localVersion}, Remote version ${remote.version}`);
-            
+
             if (remote.version !== localVersion) {
-                alert(`Update Found! New version: ${remote.version}. Downloading...`);
+                console.log(`OTA: Update found! New version: ${remote.version}. Downloading...`);
                 await this.downloadAndInstall(remote.download_url, remote.version);
                 return true; // Reload required
             }
-            
+
             console.log("OTA: App is up to date.");
             return false;
         } catch (error) {
-            alert("OTA Check Error: " + error);
             console.error("OTA Error:", error);
             return false;
         }
@@ -50,7 +49,6 @@ const otaService = {
                 uri,
                 targetPath,
                 (entry) => {
-                    alert("Download complete! Unzipping...");
                     console.log("OTA: Download complete: " + entry.toURL());
 
                     // Unzip
@@ -58,18 +56,18 @@ const otaService = {
 
                     zip.unzip(entry.toURL(), destPath, (status) => {
                         if (status === 0) {
-                            alert("Update Successful! App will now restart.");
+                            console.log("OTA: Unzip successful!");
                             localStorage.setItem(OTA_CONFIG.LOCAL_STORAGE_KEY, newVersion);
                             localStorage.setItem("cd_use_ota_path", "true");
                             resolve();
                         } else {
-                            alert("Unzip Failed. Status: " + status);
+                            console.error("OTA: Unzip failed, status: " + status);
                             reject("OTA: Unzip failed");
                         }
                     });
                 },
                 (error) => {
-                    alert("Download Failed. Error Source: " + error.source);
+                    console.error("OTA: Download failed", error.source);
                     reject("OTA: Download failed " + error.source);
                 },
                 false
@@ -81,7 +79,7 @@ const otaService = {
         const useOTA = localStorage.getItem("cd_use_ota_path") === "true";
         const isLoggedIn = window.sessionManager && window.sessionManager.isLoggedIn();
         const hasSeenOnboarding = localStorage.getItem('choicedraft_onboarding_seen') === 'true';
-        
+
         let targetPage = "signin.html";
         if (isLoggedIn) {
             targetPage = "home.html";
@@ -94,7 +92,7 @@ const otaService = {
             // For this repo, it is "choicedraft-html-main"
             return cordova.file.dataDirectory + OTA_CONFIG.UPDATE_DIR + "/choicedraft-html-main/" + targetPage;
         }
-        
+
         return targetPage;
     }
 };
