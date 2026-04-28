@@ -520,15 +520,16 @@
 
             list.innerHTML = data.tests.map(t => {
                 const pct = Math.round(t.avg_pct);
-                const color = pct >= 75 ? '#00c2cb' : (pct >= 50 ? '#f59e0b' : '#ef4444');
+                const color = pct >= 75 ? 'linear-gradient(to right, #00c2cb, #00e0eb)' : (pct >= 50 ? 'linear-gradient(to right, #f59e0b, #fbbf24)' : 'linear-gradient(to right, #ef4444, #f87171)');
+                const rawColor = pct >= 75 ? '#00c2cb' : (pct >= 50 ? '#f59e0b' : '#ef4444');
                 return `
                     <div class="bg-white border border-e0e0e0 rounded-xl p-3">
                         <div class="flex justify-between items-center mb-1.5">
                             <p class="font-zain font-700 text-15 text-primary-dark">${t.title}</p>
-                            <span class="font-zain font-800 text-14" style="color:${color}">${pct}%</span>
+                            <span class="font-zain font-800 text-14" style="color:${rawColor}">${pct}%</span>
                         </div>
                         <div class="w-full h-2 bg-f0f0f0 rounded-full overflow-hidden">
-                            <div class="h-full" style="width:${pct}%; background:${color}"></div>
+                            <div class="h-full" style="width:${pct}%; background:${color}; transition: width 0.8s ease"></div>
                         </div>
                         <div class="flex justify-between mt-1">
                             <p class="font-zain text-12 text-a9a9a9">${t.attempt_count} takers</p>

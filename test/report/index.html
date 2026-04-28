@@ -63,9 +63,19 @@
 
     .chart-label {
       font-family: 'Zain';
-      font-size: 12px;
+      font-size: 11px;
       color: #a9a9a9;
-      margin-top: 6px;
+      margin-top: 8px;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .chart-bar {
+      width: 32px;
+      border-radius: 6px 6px 0 0;
+      transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      position: relative;
     }
 
     /* Missing Utilities from static build */
@@ -294,9 +304,12 @@
       document.getElementById('highScore').textContent = `${Math.max(...attempts.map(a => Number(a.percentage)))}%`;
       document.getElementById('lowScore').textContent = `${Math.min(...attempts.map(a => Number(a.percentage)))}%`;
 
-      // Hide distribution chart - not useful for a single student
+      // Hide distribution chart card for students (they only see their own)
       const chartEl = document.getElementById('distributionChart');
-      if (chartEl) chartEl.closest('section')?.style && (chartEl.closest('.q-list2') ? chartEl.closest('.q-list2').style.display = 'none' : null);
+      if (chartEl) {
+          const card = chartEl.closest('.bg-white');
+          if (card) card.style.display = 'none';
+      }
 
       // Question breakdown for their answers
       const questions = currentTest.questions || [];
@@ -305,19 +318,20 @@
         : questions.map((q, idx) => {
           const answered = latest.answers && latest.answers[q.id];
           const correct = answered === q.correct_choice_id;
-          const color = correct ? '#00c2cb' : '#ef4444';
+          const color = correct ? 'linear-gradient(to right, #00c2cb, #00e0eb)' : 'linear-gradient(to right, #ef4444, #f87171)';
+          const rawColor = correct ? '#00c2cb' : '#ef4444';
           return `<div><div class="flex items-center justify-between mb-1">
             <p class="font-zain text-14 text-primary-dark"><span class="font-700">Q${idx + 1}</span>: ${q.text.slice(0, 60)}${q.text.length > 60 ? '…' : ''}</p>
-            <span class="font-700 font-zain text-14" style="color:${color}">${correct ? '✓' : '✗'}</span>
+            <span class="font-700 font-zain text-14" style="color:${rawColor}">${correct ? '✓' : '✗'}</span>
           </div>
-          <div class="w-full h-2 bg-e0e0e0 rounded-full overflow-hidden"><div class="h-full" style="width:${correct ? 100 : 0}%;background:${color}"></div></div>
+          <div class="w-full h-2 bg-e0e0e0 rounded-full overflow-hidden"><div class="h-full" style="width:${correct ? 100 : 0}%;background:${color};transition:width 0.8s ease"></div></div>
           </div>`;
         }).join('');
 
       // My attempts list
       document.getElementById('attemptsList').innerHTML = attempts.map(a => {
         const p = Number(a.percentage);
-        const color = p >= passingScore ? '#00c2cb' : '#ef4444';
+        const color = p >= passingScore ? 'linear-gradient(135deg, #00c2cb, #00e0eb)' : 'linear-gradient(135deg, #ef4444, #f87171)';
         return `<div class="bg-white shadow-sm border border-e0e0e0 rounded-xl px-5 py-4 flex items-start gap-3" style="padding:1rem">
           <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 shadow-sm" style="background:${color}">
             <span class="font-800 text-16 text-white font-zain">${Math.round(p)}%</span>
@@ -365,13 +379,17 @@
       ];
       const maxCount = Math.max(...ranges.map(r => r.count), 1);
 
-      document.getElementById('distributionChart').innerHTML = ranges.map((r, idx) => `
-        <div class="chart-bar-wrapper">
-          <div class="chart-tooltip">${r.count} taker${r.count !== 1 ? 's' : ''}</div>
-          <div class="chart-bar" style="height: ${(r.count / maxCount) * 100}%; background: ${idx >= 2 ? '#00c2cb' : '#002e31'};"></div>
-          <span class="chart-label">${r.label}</span>
-        </div>
-      `).join('');
+      document.getElementById('distributionChart').innerHTML = ranges.map((r, idx) => {
+        const height = (r.count / maxCount) * 100;
+        const color = idx >= 2 ? 'linear-gradient(to top, #00c2cb, #00e0eb)' : 'linear-gradient(to top, #002e31, #004d52)';
+        return `
+            <div class="chart-bar-wrapper">
+              <div class="chart-tooltip">${r.count} taker${r.count !== 1 ? 's' : ''}</div>
+              <div class="chart-bar" style="height: ${height}%; background: ${color};"></div>
+              <span class="chart-label">${r.label.replace(' ', '<br>')}</span>
+            </div>
+        `;
+      }).join('');
 
       const questions = currentTest.questions || [];
       document.getElementById('questionAnalysisList').innerHTML = questions.length === 0 ? '<p class="text-14 text-a9a9a9">No questions.</p>' : questions.map((q, idx) => {
