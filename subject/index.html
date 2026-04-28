@@ -153,6 +153,11 @@
   <script src="../js/config.js"></script>
   <script src="../js/app.js"></script>
   <script>
+    // Auth Guard
+    if (!window.sessionManager.isLoggedIn()) {
+      window.location.href = '../signin.html';
+    }
+
     const sidebar = document.getElementById('sidebar');
     sidebar.innerHTML = `
       <div class="sidebar-header flex items-center gap-3"><div class="sidebar-logo-icon"></div><span class="auth-header-title sidebar-logo-text">Choice<span class="text-secondary">Draft</span></span><button class="close-menu sidebar-close-btn" id="closeMenuBtn"><i class="fa-solid fa-times"></i></button></div>

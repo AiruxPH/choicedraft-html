@@ -75,12 +75,22 @@ const otaService = {
 
     getBootstrapPath() {
         const useOTA = localStorage.getItem("cd_use_ota_path") === "true";
-        if (useOTA && window.cordova) {
-            // Note: archive extraction from GitHub usually creates a nested folder like "repo-main"
-            // We'll need to handle the pathing correctly.
-            return cordova.file.dataDirectory + OTA_CONFIG.UPDATE_DIR + "/choicedraft-html-main/www/home.html";
+        const isLoggedIn = window.sessionManager && window.sessionManager.isLoggedIn();
+        const hasSeenOnboarding = localStorage.getItem('choicedraft_onboarding_seen') === 'true';
+        
+        let targetPage = "signin.html";
+        if (isLoggedIn) {
+            targetPage = "home.html";
+        } else if (!hasSeenOnboarding) {
+            targetPage = "onboarding.html";
         }
-        return "home.html";
+
+        if (useOTA && window.cordova) {
+            // Note: GitHub ZIP extraction usually creates a nested folder
+            return cordova.file.dataDirectory + OTA_CONFIG.UPDATE_DIR + "/choicedraft-html-main/www/" + targetPage;
+        }
+        
+        return targetPage;
     }
 };
 

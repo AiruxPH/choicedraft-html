@@ -273,6 +273,11 @@
   <script src="./js/app.js"></script>
 
   <script>
+    // Auth Guard
+    if (!window.sessionManager.isLoggedIn()) {
+      window.location.href = 'signin.html';
+    }
+
     document.getElementById('menuToggleBtn').addEventListener('click', () => toggleSidebar(true));
     document.getElementById('closeMenuBtn').addEventListener('click', () => toggleSidebar(false));
     document.getElementById('sidebarOverlay').addEventListener('click', () => toggleSidebar(false));

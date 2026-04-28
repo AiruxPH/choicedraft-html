@@ -162,6 +162,11 @@
   <script src="../js/app.js"></script>
 
   <script>
+    // Auth Guard
+    if (!window.sessionManager.isLoggedIn()) {
+      window.location.href = '../signin.html';
+    }
+
     // Navigation & Sidebar
     const sidebar = document.getElementById('sidebar');
     const sidebarOverlay = document.getElementById('sidebarOverlay');
