@@ -20,17 +20,17 @@ const otaService = {
             // 1. Fetch remote version info
             const response = await fetch(OTA_CONFIG.RAW_VERSION_URL + "?t=" + Date.now());
             const remote = await response.json();
-
+            
             const localVersion = localStorage.getItem(OTA_CONFIG.LOCAL_STORAGE_KEY) || "1.0.0";
-
+            
             console.log(`OTA: Local version ${localVersion}, Remote version ${remote.version}`);
-
+            
             if (remote.version !== localVersion) {
                 console.log(`OTA: Update found! New version: ${remote.version}. Downloading...`);
                 await this.downloadAndInstall(remote.download_url, remote.version);
                 return true; // Reload required
             }
-
+            
             console.log("OTA: App is up to date.");
             return false;
         } catch (error) {
@@ -79,7 +79,7 @@ const otaService = {
         const useOTA = localStorage.getItem("cd_use_ota_path") === "true";
         const isLoggedIn = window.sessionManager && window.sessionManager.isLoggedIn();
         const hasSeenOnboarding = localStorage.getItem('choicedraft_onboarding_seen') === 'true';
-
+        
         let targetPage = "signin.html";
         if (isLoggedIn) {
             targetPage = "home.html";
@@ -92,7 +92,7 @@ const otaService = {
             // For this repo, it is "choicedraft-html-main"
             return cordova.file.dataDirectory + OTA_CONFIG.UPDATE_DIR + "/choicedraft-html-main/" + targetPage;
         }
-
+        
         return targetPage;
     }
 };
