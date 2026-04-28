@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Performance Report - ChoiceDraft</title>
+  <link rel="stylesheet" href="../../css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zain:wght@200;300;400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .chart-container {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      height: 140px;
+      padding-top: 20px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .chart-bar-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 20%;
+      position: relative;
+    }
+
+    .chart-bar {
+      width: 100%;
+      border-radius: 8px 8px 0 0;
+      transition: height 0.5s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .chart-bar:hover {
+      opacity: 0.8;
+    }
+
+    .chart-tooltip {
+      position: absolute;
+      top: -25px;
+      background: #002e31;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-family: 'Zain';
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .chart-bar-wrapper:hover .chart-tooltip {
+      opacity: 1;
+    }
+
+    .chart-label {
+      font-family: 'Zain';
+      font-size: 12px;
+      color: #a9a9a9;
+      margin-top: 6px;
+    }
+
+    /* Missing Utilities from static build */
+    .rounded-2xl {
+      border-radius: 16px;
+    }
+
+    .rounded-xl {
+      border-radius: 12px;
+    }
+
+    .bg-white shadow-sm border border-e0e0e0 {
+      background-color: #f2f6f9;
+    }
+
+    .bg-e0e0e0 {
+      background-color: #e0e0e0;
+    }
+
+    .bg-red-50 {
+      background-color: #fef2f2;
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/ef9baa832e.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-app">
+  <div class="home-layout">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <main class="home-main">
+      <header class="topbar">
+        <div class="flex items-center gap-2"><button id="menuToggleBtn" class="topbar-icon-btn"><i
+              class="fa-solid fa-bars topbar-menu-icon"></i></button><span class="topbar-title">Report</span></div>
+        <div class="flex items-center gap-1"><a href="../../home.html"
+            class="topbar-icon-btn flex items-center justify-center"><i
+              class="fa-solid fa-house topbar-home-icon"></i></a></div>
+      </header>
+
+      <div class="main-scroll-area fade-in">
+        <a href="#" id="backLink" class="back-link"><i
+            class="fa-solid fa-chevron-left back-link-icon"></i><span>Back</span></a>
+
+        <div class="q-list q-list2 mx-4 rounded-2xl p-4 mb-4 text-white" style="background-color: #002e31;">
+          <h2 class="font-zain font-800 text-20 mb-1" id="reportTestTitle">Test Title</h2>
+          <p class="font-zain text-14 text-white/60" id="reportSubmissionsCount">Performance Report</p>
+        </div>
+
+        <div id="reportContent" class="q-list2 px-4 pb-6 flex flex-col gap-4">
+          <div class="q-list gap-2.5" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+            <div class="bg-white shadow-sm border border-e0e0e0 rounded-2xl p-5 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-cyan/20 flex items-center justify-center"><i
+                  class="fa-solid fa-arrow-trend-up text-cyan"></i></div>
+              <div>
+                <p class="font-zain font-800 text-22 text-cyan" id="avgScore">0%</p>
+                <p class="font-zain text-12 text-a9a9a9">Avg Score</p>
+              </div>
+            </div>
+            <div class="bg-white shadow-sm border border-e0e0e0 rounded-2xl p-5 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-[#002e31]/10 flex items-center justify-center"><i
+                  class="fa-solid fa-award text-primary-dark"></i></div>
+              <div>
+                <p class="font-zain font-800 text-22 text-primary-dark" id="passRate">0%</p>
+                <p class="font-zain text-12 text-a9a9a9">Pass Rate</p>
+              </div>
+            </div>
+            <div class="bg-white shadow-sm border border-e0e0e0 rounded-2xl p-5 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-cyan/20 flex items-center justify-center"><i
+                  class="fa-solid fa-circle-check text-cyan"></i></div>
+              <div>
+                <p class="font-zain font-800 text-22 text-cyan" id="passedCount">0</p>
+                <p class="font-zain text-12 text-a9a9a9">Passed</p>
+              </div>
+            </div>
+            <div class="bg-white shadow-sm border border-e0e0e0 rounded-2xl p-5 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center"><i
+                  class="fa-solid fa-circle-xmark text-red-500"></i></div>
+              <div>
+                <p class="font-zain font-800 text-22 text-red-500" id="failedCount">0</p>
+                <p class="font-zain text-12 text-a9a9a9">Failed</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-2.5">
+            <div class="flex-1 rounded-xl p-3 text-center"
+              style="background-color: #f0fffe; border: 1px solid rgba(0, 194, 203, 0.3);">
+              <p class="font-zain font-800 text-24 text-cyan" id="highScore">0%</p>
+              <p class="font-zain text-13 text-a9a9a9">Highest Score</p>
+            </div>
+            <div class="flex-1 rounded-xl p-3 text-center"
+              style="background-color: #fff5f5; border: 1px solid #fca5a5;">
+              <p class="font-zain font-800 text-24 text-red-500" id="lowScore">0%</p>
+              <p class="font-zain text-13 text-a9a9a9">Lowest Score</p>
+            </div>
+          </div>
+
+          <div class="bg-white shadow-sm border border-e0e0e0 rounded-2xl p-4">
+            <p class="font-zain font-700 text-18 text-primary-dark mb-3">Score Distribution</p>
+            <div class="chart-container" id="distributionChart"></div>
+          </div>
+
+          <div class="bg-white shadow-sm border border-e0e0e0 rounded-2xl p-4">
+            <p class="font-zain font-700 text-18 text-primary-dark mb-3">Question Analysis</p>
+            <div class="q-list flex flex-col gap-3" id="questionAnalysisList"></div>
+          </div>
+
+          <div>
+            <p class="font-zain font-700 text-18 text-primary-dark mb-2">Individual Results</p>
+            <div class="q-list flex flex-col gap-2" id="attemptsList"></div>
+          </div>
+        </div>
+
+        <div id="emptyState" class="hidden flex flex-col items-center justify-center py-12 px-4">
+          <div
+            class="w-16 h-16 rounded-full bg-white shadow-sm border border-e0e0e0 flex items-center justify-center mb-4">
+            <i class="fa-solid fa-users text-3xl text-a9a9a9"></i>
+          </div>
+          <p class="font-zain text-17 text-a9a9a9 text-center">No submissions yet.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  
+
+
+<script src="../../cordova.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/app.js"></script>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    sidebar.innerHTML = `
+      <div class="sidebar-header flex items-center gap-3"><div class="sidebar-logo-icon"></div><span class="auth-header-title sidebar-logo-text">Choice<span class="text-secondary">Draft</span></span><button class="close-menu sidebar-close-btn" id="closeMenuBtn"><i class="fa-solid fa-times"></i></button></div>
+      <div id="sidebarUserBlock" class="sidebar-user-block hidden"><div class="user-avatar" id="userAvatar">?</div><div class="user-details"><p class="user-name" id="userName">User</p><p class="user-email" id="userEmail">@</p></div></div>
+      <nav class="sidebar-nav">
+        <a href="../../home.html" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-chalkboard"></i></div><span class="nav-label">Dashboard</span></a>
+        <a href="../../profile.html" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-user"></i></div><span class="nav-label">Profile</span></a>
+        <a href="../../settings.html" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-gear"></i></div><span class="nav-label">Settings</span></a>
+        <a href="../../about.html" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-circle-info"></i></div><span class="nav-label">About Us</span></a>
+        <div class="flex-1"></div><button id="logoutBtn" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></div><span class="nav-label">Log Out</span></button>
+      </nav>
+    `;
+
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const sidebarUserBlock = document.getElementById('sidebarUserBlock');
+
+    const backLink = document.getElementById('backLink');
+    const reportTestTitle = document.getElementById('reportTestTitle');
+    const reportSubmissionsCount = document.getElementById('reportSubmissionsCount');
+    const reportContent = document.getElementById('reportContent');
+    const emptyState = document.getElementById('emptyState');
+
+    const params = new URLSearchParams(window.location.search);
+    const testId = params.get('id');
+
+    let currentTest = null;
+
+    function toggleSidebar(open) { sidebar.classList.toggle('open', open); sidebarOverlay.classList.toggle('open', open); }
+
+    menuToggleBtn.addEventListener('click', () => toggleSidebar(true));
+    closeMenuBtn.addEventListener('click', () => toggleSidebar(false));
+    sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+    logoutBtn.addEventListener('click', async () => { await window.ChoiceDraftApp.dataService.logout(); window.ChoiceDraftApp.navigateTo('../../signin.html'); });
+
+    async function init() {
+      if (!testId) { window.ChoiceDraftApp.navigateTo('../../home.html'); return; }
+
+      await window.ChoiceDraftApp.dataService.init();
+      const user = await window.ChoiceDraftApp.dataService.getCurrentUser();
+      currentTest = await window.ChoiceDraftApp.dataService.getTestById(testId);
+
+      if (user) { sidebarUserBlock.classList.remove('hidden'); document.getElementById('userName').textContent = user.name; document.getElementById('userEmail').textContent = user.email; document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase(); }
+
+      if (currentTest) {
+        renderReport();
+      }
+    }
+
+    function renderReport() {
+      const attempts = currentTest.attempts || [];
+      const passingScore = currentTest.passing_score ?? 70;
+
+      reportSubmissionsCount.textContent = `Performance Report — ${attempts.length} submission${attempts.length !== 1 ? 's' : ''}`;
+
+      if (attempts.length === 0) { emptyState.classList.remove('hidden'); reportContent.classList.add('hidden'); return; }
+
+      emptyState.classList.add('hidden'); reportContent.classList.remove('hidden');
+
+      const avg = attempts.reduce((sum, a) => sum + a.percentage, 0) / attempts.length;
+      document.getElementById('avgScore').textContent = `${Math.round(avg)}%`;
+
+      const passes = attempts.filter(a => a.percentage >= passingScore).length;
+      document.getElementById('passRate').textContent = `${Math.round((passes / attempts.length) * 100)}%`;
+      document.getElementById('passedCount').textContent = passes;
+      document.getElementById('failedCount').textContent = attempts.length - passes;
+
+      const scores = attempts.map(a => a.percentage);
+      document.getElementById('highScore').textContent = `${Math.max(...scores)}%`;
+      document.getElementById('lowScore').textContent = `${Math.min(...scores)}%`;
+
+      const ranges = [{ label: "0-49", count: attempts.filter(a => a.percentage < 50).length }, { label: "50-69", count: attempts.filter(a => a.percentage >= 50 && a.percentage < 70).length }, { label: "70-89", count: attempts.filter(a => a.percentage >= 70 && a.percentage < 90).length }, { label: "90-100", count: attempts.filter(a => a.percentage >= 90).length }];
+      const maxCount = Math.max(...ranges.map(r => r.count), 1);
+
+      document.getElementById('distributionChart').innerHTML = ranges.map((r, idx) => `
+        <div class="chart-bar-wrapper">
+          <div class="chart-tooltip">${r.count} taker${r.count !== 1 ? 's' : ''}</div>
+          <div class="chart-bar" style="height: ${(r.count / maxCount) * 100}%; background: ${idx >= 2 ? '#00c2cb' : '#002e31'};"></div>
+          <span class="chart-label">${r.label}</span>
+        </div>
+      `).join('');
+
+      const questions = currentTest.questions || [];
+      document.getElementById('questionAnalysisList').innerHTML = questions.length === 0 ? '<p class="text-14 text-a9a9a9">No questions.</p>' : questions.map((q, idx) => {
+        const correctCount = attempts.filter(a => a.answers && a.answers[q.id] === q.correct_choice_id).length;
+        const rate = Math.round((correctCount / attempts.length) * 100);
+        const color = rate >= 70 ? '#00c2cb' : '#ef4444';
+        return `
+          <div><div class="flex items-center justify-between mb-1"><p class="font-zain text-14 text-primary-dark"><span class="font-700">Q${idx + 1}</span>: ${q.text.slice(0, 40)}${q.text.length > 40 ? '…' : ''}</p><span class="font-700 font-zain text-14" style="color: ${color}">${rate}%</span></div><div class="w-full h-2 bg-e0e0e0 rounded-full overflow-hidden"><div class="h-full" style="width: ${rate}%; background: ${color}"></div></div></div>
+        `;
+      }).join('');
+
+      document.getElementById('attemptsList').innerHTML = attempts.map(a => `
+        <div class="bg-white shadow-sm border border-e0e0e0 rounded-xl px-5 py-4 flex items-center gap-3" style="padding:1rem">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${a.percentage >= passingScore ? 'bg-cyan' : 'bg-red-500'}"><span class="font-800 text-14 text-white font-zain">${a.percentage}%</span></div>
+          <div class="flex-1">
+            <p class="font-700 text-16 text-primary-dark font-zain">${a.user_name || a.userName || 'Student'}</p>
+            <p class="text-13 text-a9a9a9 font-zain">${a.score}/${a.totalPoints} pts · ${new Date(a.completedAt || a.timestamp).toLocaleDateString()}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    init();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - ChoiceDraft</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zain:wght@200;300;400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://kit.fontawesome.com/ef9baa832e.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-app">
+  <div class="home-layout">
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header flex items-center gap-3">
+        <div class="sidebar-logo-icon">
+          <svg class="w-full h-full" fill="none" viewBox="0 0 150 150">
+            <path clip-rule="evenodd"
+              d="M137.5 29.1667C134.185 29.1667 131.005 30.4836 128.661 32.8278C126.317 35.172 125 38.3515 125 41.6667V50H150V41.6667C150 38.3515 148.683 35.172 146.339 32.8278C143.995 30.4836 140.815 29.1667 137.5 29.1667ZM150 58.3333H125V127.083L137.5 145.833L150 127.083V58.3333ZM0 12.5V137.5C0 140.815 1.31696 143.995 3.66117 146.339C6.00537 148.683 9.18479 150 12.5 150H104.167C107.482 150 110.661 148.683 113.005 146.339C115.35 143.995 116.667 140.815 116.667 137.5V12.5C116.667 9.18479 115.35 6.00537 113.005 3.66117C110.661 1.31696 107.482 0 104.167 0H12.5C9.18479 0 6.00537 1.31696 3.66117 3.66117C1.31696 6.00537 0 9.18479 0 12.5ZM58.3333 37.5C58.3333 36.3949 58.7723 35.3351 59.5537 34.5537C60.3351 33.7723 61.3949 33.3333 62.5 33.3333H95.8333C96.9384 33.3333 97.9982 33.7723 98.7796 34.5537C99.561 35.3351 100 36.3949 100 37.5C100 38.6051 99.561 39.6649 98.7796 40.4463C97.9982 41.2277 96.9384 41.6667 95.8333 41.6667H62.5C61.3949 41.6667 60.3351 41.2277 59.5537 40.4463C58.7723 39.6649 58.3333 38.6051 58.3333 37.5ZM62.5 50C61.3949 50 60.3351 50.439 59.5537 51.2204C58.7723 52.0018 58.3333 53.0616 58.3333 54.1667C58.3333 55.2717 58.7723 56.3315 59.5537 57.1129C60.3351 57.8943 61.3949 58.3333 62.5 58.3333H95.8333C96.9384 58.3333 97.9982 57.8943 98.7796 57.1129C99.561 56.3315 100 55.2717 100 54.1667C100 53.0616 99.561 52.0018 98.7796 51.2204C97.9982 50.439 96.9384 50 95.8333 50H62.5ZM58.3333 91.6667C58.3333 90.5616 58.7723 89.5018 59.5537 88.7204C60.3351 87.939 61.3949 87.5 62.5 87.5H95.8333C96.9384 87.5 97.9982 87.939 98.7796 88.7204C99.561 89.5018 100 90.5616 100 91.6667C100 92.7717 99.561 93.8315 98.7796 94.6129C97.9982 95.3943 96.9384 95.8333 95.8333 95.8333H62.5C61.3949 95.8333 60.3351 95.3943 59.5537 94.6129C58.7723 93.8315 58.3333 92.7717 58.3333 91.6667ZM62.5 104.167C61.3949 104.167 60.3351 104.606 59.5537 105.387C58.7723 106.168 58.3333 107.228 58.3333 108.333C58.3333 109.438 58.7723 110.498 59.5537 111.28C60.3351 112.061 61.3949 112.5 62.5 112.5H95.8333C96.9384 112.5 97.9982 112.061 98.7796 111.28C99.561 110.498 100 109.438 100 108.333C100 107.228 99.561 110.498 98.7796 105.387C97.9982 104.606 96.9384 104.167 95.8333 104.167H62.5ZM25 91.6667V104.167H37.5V91.6667H25ZM20.8333 83.3333H41.6667C42.7717 83.3333 43.8315 83.7723 44.6129 84.5537C45.3943 85.3351 45.8333 86.3949 45.8333 87.5V108.333C45.8333 109.438 45.3943 110.498 44.6129 111.28C43.8315 112.061 42.7717 112.5 41.6667 112.5H20.8333C19.7283 112.5 18.6685 112.061 17.8871 111.28C17.1057 110.498 16.6667 109.438 16.6667 108.333V87.5C16.6667 86.3949 17.1057 85.3351 17.8871 84.5537C18.6685 83.7723 19.7283 83.3333 20.8333 83.3333ZM48.7792 40.4458C49.5382 39.66 49.9581 38.6075 49.9486 37.515C49.9391 36.4225 49.5009 35.3775 48.7284 34.6049C47.9559 33.8324 46.9108 33.3942 45.8183 33.3847C44.7258 33.3752 43.6733 33.7952 42.8875 34.5542L29.1667 48.275L23.7792 42.8875C22.9933 42.1285 21.9408 41.7085 20.8483 41.718C19.7558 41.7275 18.7108 42.1657 17.9383 42.9383C17.1657 43.7108 16.7275 44.7558 16.718 45.8483C16.7085 46.9408 17.1285 47.9933 17.8875 48.7792L29.1667 60.0583L48.7792 40.4458Z"
+              fill="white" fill-rule="evenodd" />
+          </svg>
+        </div>
+        <span class="auth-header-title sidebar-logo-text">Choice<span class="text-secondary">Draft</span></span>
+        <button class="close-menu sidebar-close-btn" id="closeMenuBtn" title="Close Menu" aria-label="Close Menu">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <!-- User Info Block -->
+      <div id="sidebarUserBlock" class="sidebar-user-block hidden">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div class="user-details">
+          <p class="user-name" id="userName">User Name</p>
+          <p class="user-email" id="userEmail">user@example.com</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a id="adminNavLink" href="admin.html" class="nav-item active hidden">
+          <div class="nav-icon"><i class="fa-solid fa-user-shield"></i></div>
+          <span class="nav-label">Admin Portal</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-user"></i></div>
+          <span class="nav-label">Profile</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-gear"></i></div>
+          <span class="nav-label">Settings</span>
+        </a>
+        <a href="about.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-circle-info"></i></div>
+          <span class="nav-label">About Us</span>
+        </a>
+        <div class="flex-1"></div>
+        <button id="logoutBtn" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+          <span class="nav-label">Log Out</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="home-main">
+      <!-- Header -->
+      <header class="topbar">
+        <div class="flex items-center gap-2">
+          <button id="menuToggleBtn" class="topbar-icon-btn" title="Toggle Menu" aria-label="Toggle Menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <span class="topbar-title">Admin Dashboard</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <a href="home.html" class="topbar-icon-btn flex items-center justify-center" title="Dashboard"
+            aria-label="Dashboard">
+            <i class="fa-solid fa-house topbar-home-icon"></i>
+          </a>
+        </div>
+      </header>
+
+      <!-- Scrollable Content -->
+      <div class="main-scroll-area fade-in">
+        <div class="home-content">
+          <h2 class="section-title mb-6">System Overview</h2>
+
+          <!-- Stats Grid -->
+          <div class="grid grid-cols-3 gap-3 md:gap-6 mb-10">
+            <div class="test-card text-center p-3 md:p-6">
+              <i class="fa-solid fa-users text-primary text-2xl md:text-4xl mb-1 md:mb-2"></i>
+              <h3 class="text-secondary font-bold text-lg md:text-2xl flex justify-center mt-1 mb-1" id="statUsers">
+                <div class="h-6 md:h-8 bg-gray-200 rounded w-12 animate-pulse"></div>
+              </h3>
+              <p class="text-light text-xs md:text-base">Users</p>
+            </div>
+            <div class="test-card text-center p-3 md:p-6">
+              <i class="fa-solid fa-file-lines text-primary text-2xl md:text-4xl mb-1 md:mb-2"></i>
+              <h3 class="text-secondary font-bold text-lg md:text-2xl flex justify-center mt-1 mb-1" id="statTests">
+                <div class="h-6 md:h-8 bg-gray-200 rounded w-12 animate-pulse"></div>
+              </h3>
+              <p class="text-light text-xs md:text-base">Tests</p>
+            </div>
+            <div class="test-card text-center p-3 md:p-6">
+              <i class="fa-solid fa-circle-question text-primary text-2xl md:text-4xl mb-1 md:mb-2"></i>
+              <h3 class="text-secondary font-bold text-lg md:text-2xl flex justify-center mt-1 mb-1" id="statQuestions">
+                <div class="h-6 md:h-8 bg-gray-200 rounded w-12 animate-pulse"></div>
+              </h3>
+              <p class="text-light text-xs md:text-base">Questions</p>
+            </div>
+          </div>
+
+          <!-- User Management Table -->
+          <div class="q-list test-card overflow-hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between p-4 border-b border-light gap-4">
+              <h3 class="text-secondary font-bold text-xl">User Management</h3>
+              <div class="flex flex-wrap items-center gap-3">
+                <select id="roleFilter" class="input-field py-2 bg-white flex-1 md:flex-none md:w-32">
+                  <option value="All">All Roles</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Teacher">Teacher</option>
+                  <option value="Student">Student</option>
+                </select>
+                <div class="relative flex-1 md:flex-none md:w-48">
+                  <input type="text" id="userSearch" class="input-field w-full py-2 pr-10"
+                    placeholder="Search users...">
+                  <i class="fa-solid fa-magnifying-glass absolute right-3 top-1/2 -translate-y-1/2 text-light"></i>
+                </div>
+                <button id="addAdminBtn"
+                  class="btn-primary text-sm py-2 px-4 shadow-md hover:-translate-y-0.5 transition-transform flex items-center justify-center gap-2 w-full md:w-auto mt-2 md:mt-0">
+                  <i class="fa-solid fa-user-plus"></i> Add Admin
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-hidden md:overflow-x-auto bg-gray-100 md:bg-white p-4 md:p-0">
+              <table class="w-full text-left md:border-collapse block md:table">
+                <thead class="bg-gray-50 border-b border-light hidden md:table-header-group">
+                  <tr>
+                    <th class="p-4 font-bold text-secondary cursor-pointer hover:bg-gray-100"
+                      onclick="sortUsers('name')">Name <i class="fa-solid fa-sort text-light ml-1 text-xs"></i></th>
+                    <th class="p-4 font-bold text-secondary cursor-pointer hover:bg-gray-100"
+                      onclick="sortUsers('email')">Email <i class="fa-solid fa-sort text-light ml-1 text-xs"></i></th>
+                    <th class="p-4 font-bold text-secondary cursor-pointer hover:bg-gray-100"
+                      onclick="sortUsers('role')">Role <i class="fa-solid fa-sort text-light ml-1 text-xs"></i></th>
+                    <th class="p-4 font-bold text-secondary cursor-pointer hover:bg-gray-100"
+                      onclick="sortUsers('institution')">Institution <i
+                        class="fa-solid fa-sort text-light ml-1 text-xs"></i></th>
+                    <th class="p-4 font-bold text-secondary cursor-pointer hover:bg-gray-100"
+                      onclick="sortUsers('testsCount')">Tests <i class="fa-solid fa-sort text-light ml-1 text-xs"></i>
+                    </th>
+                    <th class="p-4 font-bold text-secondary text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="userTableBody" class="block md:table-row-group">
+                  <!-- Skeleton Loaders -->
+                  <tr
+                    class="block md:table-row border border-light md:border-b bg-white p-4 md:p-0 mb-4 md:mb-0 rounded-xl md:rounded-none shadow-sm md:shadow-none animate-pulse">
+                    <td class="block md:table-cell p-3 md:p-4 border-b border-gray-100 md:border-none">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 md:w-8 md:h-8 rounded-full bg-gray-200"></div>
+                        <div class="h-4 bg-gray-200 rounded w-24"></div>
+                      </div>
+                    </td>
+                    <td
+                      class="flex justify-between md:table-cell items-center p-3 md:p-4 border-b border-gray-50 md:border-none">
+                      <span class="md:hidden font-bold text-secondary text-sm">Email</span>
+                      <div class="h-4 bg-gray-200 rounded w-32"></div>
+                    </td>
+                    <td
+                      class="flex justify-between md:table-cell items-center p-3 md:p-4 border-b border-gray-50 md:border-none">
+                      <span class="md:hidden font-bold text-secondary text-sm">Role</span>
+                      <div class="h-6 bg-gray-200 rounded-full w-16"></div>
+                    </td>
+                    <td
+                      class="flex justify-between md:table-cell items-center p-3 md:p-4 border-b border-gray-50 md:border-none">
+                      <span class="md:hidden font-bold text-secondary text-sm">Institution</span>
+                      <div class="h-4 bg-gray-200 rounded w-20"></div>
+                    </td>
+                    <td
+                      class="flex justify-between md:table-cell items-center p-3 md:p-4 border-b border-gray-50 md:border-none">
+                      <span class="md:hidden font-bold text-secondary text-sm">Tests</span>
+                      <div class="h-4 bg-gray-200 rounded w-8"></div>
+                    </td>
+                    <td class="flex justify-end md:table-cell items-center p-3 md:p-4 mt-2 md:mt-0 gap-2 md:gap-0">
+                      <div class="h-8 bg-gray-200 rounded w-16 md:mr-1"></div>
+                      <div class="h-8 bg-gray-200 rounded w-16"></div>
+                    </td>
+                  </tr>
+                  <tr
+                    class="block md:table-row border border-light md:border-b bg-white p-4 md:p-0 mb-4 md:mb-0 rounded-xl md:rounded-none shadow-sm md:shadow-none animate-pulse">
+                    <td class="block md:table-cell p-3 md:p-4 border-b border-gray-100 md:border-none">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 md:w-8 md:h-8 rounded-full bg-gray-200"></div>
+                        <div class="h-4 bg-gray-200 rounded w-20"></div>
+                      </div>
+                    </td>
+                    <td
+                      class="flex justify-between md:table-cell items-center p-3 md:p-4 border-b border-gray-50 md:border-none">
+                      <span class="md:hidden font-bold text-secondary text-sm">Email</span>
+                      <div class="h-4 bg-gray-200 rounded w-28"></div>
+                    </td>
+                    <td
+                      class="flex justify-between md:table-cell items-center p-3 md:p-4 border-b border-gray-50 md:border-none">
+                      <span class="md:hidden font-bold text-secondary text-sm">Role</span>
+                      <div class="h-6 bg-gray-200 rounded-full w-16"></div>
+                    </td>
+                    <td
+                      class="flex justify-between md:table-cell items-center p-3 md:p-4 border-b border-gray-50 md:border-none">
+                      <span class="md:hidden font-bold text-secondary text-sm">Institution</span>
+                      <div class="h-4 bg-gray-200 rounded w-24"></div>
+                    </td>
+                    <td
+                      class="flex justify-between md:table-cell items-center p-3 md:p-4 border-b border-gray-50 md:border-none">
+                      <span class="md:hidden font-bold text-secondary text-sm">Tests</span>
+                      <div class="h-4 bg-gray-200 rounded w-6"></div>
+                    </td>
+                    <td class="flex justify-end md:table-cell items-center p-3 md:p-4 mt-2 md:mt-0 gap-2 md:gap-0">
+                      <div class="h-8 bg-gray-200 rounded w-16 md:mr-1"></div>
+                      <div class="h-8 bg-gray-200 rounded w-16"></div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="noUsersFound" class="hidden p-10 text-center text-light">
+              No users match your search.
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Admin Modal -->
+  <div id="addAdminModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-bold text-secondary">Add New Admin</h3>
+        <button id="closeAddAdminBtn" class="text-light hover:text-secondary"><i class="fa-solid fa-times"></i></button>
+      </div>
+      <form id="addAdminForm" class="flex flex-col gap-4">
+        <div class="input-group">
+          <label>Full Name</label>
+          <div class="relative">
+            <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-light"></i>
+            <input type="text" id="adminName" class="input-field pl-10" required>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Email Address</label>
+          <div class="relative">
+            <i class="fa-solid fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-light"></i>
+            <input type="email" id="adminEmail" class="input-field pl-10" required>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Password</label>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-light"></i>
+            <input type="password" id="adminPassword" class="input-field pl-10" required>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Institution (Optional)</label>
+          <div class="relative">
+            <i class="fa-solid fa-building absolute left-3 top-1/2 -translate-y-1/2 text-light"></i>
+            <input type="text" id="adminInstitution" class="input-field pl-10">
+          </div>
+        </div>
+        <button type="submit" id="addAdminSubmitBtn" class="btn-primary mt-2">
+          <i class="fa-solid fa-plus mr-2"></i> Create Admin Account
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- User Details Modal -->
+  <div id="userDetailsModal" class="modal-overlay hidden">
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="flex justify-between items-center mb-4 border-b border-light pb-2">
+        <h3 class="text-xl font-bold text-secondary">User's Tests</h3>
+        <button id="closeUserDetailsBtn" class="text-light hover:text-secondary"><i
+            class="fa-solid fa-times"></i></button>
+      </div>
+      <div class="mt-4">
+        <h4 id="detailsUserName" class="font-bold text-lg text-primary mb-2">Name</h4>
+        <div class="overflow-x-auto max-h-80 overflow-y-auto">
+          <table class="w-full text-left">
+            <thead class="bg-gray-50 border-b border-light sticky top-0">
+              <tr>
+                <th class="p-2 font-bold text-secondary text-sm">Title</th>
+                <th class="p-2 font-bold text-secondary text-sm">Status</th>
+                <th class="p-2 font-bold text-secondary text-sm">Created On</th>
+              </tr>
+            </thead>
+            <tbody id="userTestsTableBody">
+              <!-- Tests injected by JS -->
+            </tbody>
+          </table>
+          <div id="noUserTestsFound" class="hidden p-6 text-center text-light">
+            This user has not created any tests.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./cordova.js"></script>
+  <script src="./js/config.js"></script>
+  <script src="./js/app.js"></script>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const adminNavLink = document.getElementById('adminNavLink');
+
+    const sidebarUserBlock = document.getElementById('sidebarUserBlock');
+    const userNameEl = document.getElementById('userName');
+    const userEmailEl = document.getElementById('userEmail');
+    const userAvatarEl = document.getElementById('userAvatar');
+
+    let allUsers = [];
+    let allGlobalTests = [];
+    let currentSort = { field: 'name', asc: true };
+
+    function toggleSidebar(open) {
+      if (open) {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('open');
+      } else {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('open');
+      }
+    }
+
+    menuToggleBtn.addEventListener('click', () => toggleSidebar(true));
+    closeMenuBtn.addEventListener('click', () => toggleSidebar(false));
+    sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+
+    logoutBtn.addEventListener('click', async () => {
+      await window.ChoiceDraftApp.dataService.logout();
+      window.ChoiceDraftApp.navigateTo('signin.html');
+    });
+
+    async function initAdmin() {
+      const user = await window.ChoiceDraftApp.dataService.getCurrentUser();
+
+      if (!user || user.role !== 'Admin') {
+        window.ChoiceDraftApp.navigateTo('home.html');
+        return;
+      }
+
+      // Sidebar Setup
+      window.ChoiceDraftApp.setupSidebar();
+
+      // Load Data
+      allUsers = await window.apiService.users.getAll();
+      const allTests = await window.apiService.tests.getAll(null, true); // true for isAdmin flag
+      allGlobalTests = allTests;
+
+      let totalQuestions = 0;
+      allTests.forEach(t => {
+        totalQuestions += (t.question_count ? parseInt(t.question_count) : 0);
+      });
+
+      // Render Stats
+      document.getElementById('statUsers').textContent = allUsers.length;
+      document.getElementById('statTests').textContent = allTests.length;
+      document.getElementById('statQuestions').textContent = totalQuestions;
+
+      renderUsers(allUsers);
+    }
+
+    function renderUsers(users) {
+      const tableBody = document.getElementById('userTableBody');
+      const noResults = document.getElementById('noUsersFound');
+
+      if (users.length === 0) {
+        tableBody.innerHTML = '';
+        noResults.classList.remove('hidden');
+        return;
+      }
+
+      noResults.classList.add('hidden');
+      tableBody.innerHTML = users.map(u => `
+        <tr style="margin-bottom:10px;" class="block md:table-row border border-light md:border-b hover:bg-gray-50 transition-colors bg-white p-4 md:p-0 mb-4 md:mb-0 rounded-xl md:rounded-none shadow-sm md:shadow-none">
+          <td class="block md:table-cell p-3 md:p-4 border-b border-gray-100 md:border-none">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 md:w-8 md:h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg md:text-sm shadow-sm">
+                ${u.name.charAt(0).toUpperCase()}
+              </div>
+              <span class="font-bold text-secondary text-lg md:font-medium md:text-base">${u.name}</span>
+            </div>
+          </td>
+          <td class="flex justify-between md:table-cell items-center p-3 md:p-4 text-light md:border-none border-b border-gray-50">
+            <span class="md:hidden font-bold text-secondary text-sm">Email</span>
+            <span class="truncate ml-4 md:ml-0">${u.email}</span>
+          </td>
+          <td class="flex justify-between md:table-cell items-center p-3 md:p-4 text-light md:border-none border-b border-gray-50">
+            <span class="md:hidden font-bold text-secondary text-sm">Role</span>
+            <span class="px-3 py-1 rounded-full text-xs font-bold ${u.role === 'Admin' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}">
+              ${u.role}
+            </span>
+          </td>
+          <td class="flex justify-between md:table-cell items-center p-3 md:p-4 text-light md:border-none border-b border-gray-50">
+            <span class="md:hidden font-bold text-secondary text-sm">Institution</span>
+            <span class="text-right md:text-left">${u.institution || '—'}</span>
+          </td>
+          <td class="flex justify-between md:table-cell items-center p-3 md:p-4 font-bold text-secondary md:border-none border-b border-gray-50">
+            <span class="md:hidden font-bold text-secondary text-sm">Tests Created</span>
+            <span class="bg-gray-100 md:bg-transparent px-3 md:px-0 py-1 md:py-0 rounded-lg md:rounded-none">${u.testsCount || 0}</span>
+          </td>
+          <td class="flex justify-end md:table-cell items-center p-3 md:p-4 text-right mt-2 md:mt-0 gap-2 md:gap-0">
+            ${u.id !== window.sessionManager.getUser().id ? `
+              <button onclick="viewUserTests('${u.id}')" class="flex-1 md:flex-none btn-primary bg-blue-50 text-blue-600 hover:bg-blue-100 text-sm py-2 px-3 md:text-blue-500 md:hover:text-blue-700 md:bg-transparent md:p-2 transition-colors rounded-lg md:rounded-none shadow-none font-bold text-center mr-0 md:mr-1" title="View Tests">
+                <i class="fa-solid fa-eye mr-1 md:mr-0"></i><span class="md:hidden">View</span>
+              </button>
+              <button onclick="deleteUser('${u.id}')" class="flex-1 md:flex-none bg-red-50 text-red-600 hover:bg-red-100 text-sm py-2 px-3 md:bg-transparent md:text-red-500 md:hover:text-red-700 md:p-2 transition-colors rounded-lg md:rounded-none font-bold text-center" title="Delete User">
+                <i class="fa-solid fa-trash mr-1 md:mr-0"></i><span class="md:hidden">Delete</span>
+              </button>
+            ` : `<span class="text-gray-400 text-sm italic w-full md:w-auto text-center md:text-right py-2 md:py-0">Current User</span>`}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterAndSortUsers() {
+      const query = document.getElementById('userSearch').value.toLowerCase();
+      const roleFilter = document.getElementById('roleFilter').value;
+
+      let filtered = allUsers.filter(u => {
+        const matchesQuery = u.name.toLowerCase().includes(query) ||
+          u.email.toLowerCase().includes(query) ||
+          (u.institution && u.institution.toLowerCase().includes(query));
+        const matchesRole = roleFilter === 'All' || u.role === roleFilter;
+        return matchesQuery && matchesRole;
+      });
+
+      filtered.sort((a, b) => {
+        let valA = a[currentSort.field];
+        let valB = b[currentSort.field];
+        if (typeof valA === 'string') valA = valA.toLowerCase();
+        if (typeof valB === 'string') valB = valB.toLowerCase();
+
+        if (valA < valB) return currentSort.asc ? -1 : 1;
+        if (valA > valB) return currentSort.asc ? 1 : -1;
+        return 0;
+      });
+
+      // Calculate tests count per user dynamically
+      filtered.forEach(u => {
+        u.testsCount = allGlobalTests.filter(t => t.owner_id == u.id).length;
+      });
+
+      renderUsers(filtered);
+    }
+
+    function sortUsers(field) {
+      if (currentSort.field === field) {
+        currentSort.asc = !currentSort.asc;
+      } else {
+        currentSort.field = field;
+        currentSort.asc = true;
+      }
+      filterAndSortUsers();
+    }
+
+    document.getElementById('userSearch').addEventListener('input', filterAndSortUsers);
+    document.getElementById('roleFilter').addEventListener('change', filterAndSortUsers);
+
+    // Modals Logic
+    const addAdminModal = document.getElementById('addAdminModal');
+    document.getElementById('addAdminBtn').addEventListener('click', () => {
+      addAdminModal.classList.remove('hidden');
+    });
+    document.getElementById('closeAddAdminBtn').addEventListener('click', () => {
+      addAdminModal.classList.add('hidden');
+    });
+    document.getElementById('addAdminForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('adminName').value;
+      const email = document.getElementById('adminEmail').value;
+      const password = document.getElementById('adminPassword').value;
+      const inst = document.getElementById('adminInstitution').value;
+
+      const btn = document.getElementById('addAdminSubmitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Creating...';
+
+      try {
+        const res = await window.apiService.auth.register(name, email, password, 'Admin', inst);
+        if (res.success) {
+          alert('Admin created successfully!');
+          addAdminModal.classList.add('hidden');
+          document.getElementById('addAdminForm').reset();
+          // Reload users
+          allUsers = await window.apiService.users.getAll();
+          document.getElementById('statUsers').textContent = allUsers.length;
+          filterAndSortUsers();
+        } else {
+          alert('Error: ' + res.error);
+        }
+      } catch (err) {
+        alert('An error occurred.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-plus mr-2"></i> Create Admin Account';
+      }
+    });
+
+    const userDetailsModal = document.getElementById('userDetailsModal');
+    document.getElementById('closeUserDetailsBtn').addEventListener('click', () => {
+      userDetailsModal.classList.add('hidden');
+    });
+
+    function viewUserTests(userId) {
+      const user = allUsers.find(u => u.id == userId);
+      if (!user) return;
+
+      document.getElementById('detailsUserName').textContent = user.name + "'s Tests";
+      const userTests = allGlobalTests.filter(t => t.owner_id == userId);
+
+      const tbody = document.getElementById('userTestsTableBody');
+      const noTests = document.getElementById('noUserTestsFound');
+
+      if (userTests.length === 0) {
+        tbody.innerHTML = '';
+        noTests.classList.remove('hidden');
+      } else {
+        noTests.classList.add('hidden');
+        tbody.innerHTML = userTests.map(t => {
+          let statusClass = 'bg-gray-100 text-gray-700';
+          if (t.status === 'Published') statusClass = 'bg-green-100 text-green-700';
+          if (t.status === 'Draft') statusClass = 'bg-yellow-100 text-yellow-700';
+
+          return `
+            <tr class="border-b border-light hover:bg-gray-50">
+              <td class="p-2 font-medium">${t.title}</td>
+              <td class="p-2"><span class="px-2 py-1 rounded-full text-xs font-bold ${statusClass}">${t.status}</span></td>
+              <td class="p-2 text-sm text-light">${new Date(t.created_at).toLocaleDateString()}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      userDetailsModal.classList.remove('hidden');
+    }
+
+    async function deleteUser(userId) {
+      if (!confirm('Are you sure you want to delete this user? This will also delete their classes and tests.')) return;
+
+      try {
+        await window.apiService.users.delete(userId);
+        allUsers = allUsers.filter(u => u.id !== userId);
+        renderUsers(allUsers);
+
+        // Update stats
+        document.getElementById('statUsers').textContent = allUsers.length;
+      } catch (e) {
+        alert('Failed to delete user: ' + e.message);
+      }
+    }
+
+    initAdmin();
+  </script>
+</body>
+
+</html>

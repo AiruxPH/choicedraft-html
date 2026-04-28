@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChoiceDraft - Test Builder</title>
+  <link rel="stylesheet" href="../../css/styles.css">
+  <script src="https://kit.fontawesome.com/ef9baa832e.js" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/ef9baa832e.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-app">
+  <div class="home-layout">
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header flex items-center gap-3">
+        <div class="sidebar-logo-icon">
+          <svg class="w-full h-full" fill="none" viewBox="0 0 150 150">
+            <path clip-rule="evenodd"
+              d="M137.5 29.1667C134.185 29.1667 131.005 30.4836 128.661 32.8278C126.317 35.172 125 38.3515 125 41.6667V50H150V41.6667C150 38.3515 148.683 35.172 146.339 32.8278C143.995 30.4836 140.815 29.1667 137.5 29.1667ZM150 58.3333H125V127.083L137.5 145.833L150 127.083V58.3333ZM0 12.5V137.5C0 140.815 1.31696 143.995 3.66117 146.339C6.00537 148.683 9.18479 150 12.5 150H104.167C107.482 150 110.661 148.683 113.005 146.339C115.35 143.995 116.667 140.815 116.667 137.5V12.5C116.667 9.18479 115.35 6.00537 113.005 3.66117C110.661 1.31696 107.482 0 104.167 0H12.5C9.18479 0 6.00537 1.31696 3.66117 3.66117C1.31696 6.00537 0 9.18479 0 12.5ZM58.3333 37.5C58.3333 36.3949 58.7723 35.3351 59.5537 34.5537C60.3351 33.7723 61.3949 33.3333 62.5 33.3333H95.8333C96.9384 33.3333 97.9982 33.7723 98.7796 34.5537C99.561 35.3351 100 36.3949 100 37.5C100 38.6051 99.561 39.6649 98.7796 40.4463C97.9982 41.2277 96.9384 41.6667 95.8333 41.6667H62.5C61.3949 41.6667 60.3351 41.2277 59.5537 40.4463C58.7723 39.6649 58.3333 38.6051 58.3333 37.5ZM62.5 50C61.3949 50 60.3351 50.439 59.5537 51.2204C58.7723 52.0018 58.3333 53.0616 58.3333 54.1667C58.3333 55.2717 58.7723 56.3315 59.5537 57.1129C60.3351 57.8943 61.3949 58.3333 62.5 58.3333H95.8333C96.9384 58.3333 97.9982 57.8943 98.7796 57.1129C99.561 56.3315 100 55.2717 100 54.1667C100 53.0616 99.561 52.0018 98.7796 51.2204C97.9982 50.439 96.9384 50 95.8333 50H62.5ZM58.3333 91.6667C58.3333 90.5616 58.7723 89.5018 59.5537 88.7204C60.3351 87.939 61.3949 87.5 62.5 87.5H95.8333C96.9384 87.5 97.9982 87.939 98.7796 88.7204C99.561 89.5018 100 90.5616 100 91.6667C100 92.7717 99.561 93.8315 98.7796 94.6129C97.9982 95.3943 96.9384 95.8333 95.8333 95.8333H62.5C61.3949 95.8333 60.3351 95.3943 59.5537 94.6129C58.7723 93.8315 58.3333 92.7717 58.3333 91.6667ZM62.5 104.167C61.3949 104.167 60.3351 104.606 59.5537 105.387C58.7723 106.168 58.3333 107.228 58.3333 108.333C58.3333 109.438 58.7723 110.498 59.5537 111.28C60.3351 112.061 61.3949 112.5 62.5 112.5H95.8333C96.9384 112.5 97.9982 112.061 98.7796 111.28C99.561 110.498 100 109.438 100 108.333C100 107.228 99.561 110.498 98.7796 105.387C97.9982 104.606 96.9384 104.167 95.8333 104.167H62.5ZM25 91.6667V104.167H37.5V91.6667H25ZM20.8333 83.3333H41.6667C42.7717 83.3333 43.8315 83.7723 44.6129 84.5537C45.3943 85.3351 45.8333 86.3949 45.8333 87.5V108.333C45.8333 109.438 45.3943 110.498 44.6129 111.28C43.8315 112.061 42.7717 112.5 41.6667 112.5H20.8333C19.7283 112.5 18.6685 112.061 17.8871 111.28C17.1057 110.498 16.6667 109.438 16.6667 108.333V87.5C16.6667 86.3949 17.1057 85.3351 17.8871 84.5537C18.6685 83.7723 19.7283 83.3333 20.8333 83.3333ZM48.7792 40.4458C49.5382 39.66 49.9581 38.6075 49.9486 37.515C49.9391 36.4225 49.5009 35.3775 48.7284 34.6049C47.9559 33.8324 46.9108 33.3942 45.8183 33.3847C44.7258 33.3752 43.6733 33.7952 42.8875 34.5542L29.1667 48.275L23.7792 42.8875C22.9933 42.1285 21.9408 41.7085 20.8483 41.718C19.7558 41.7275 18.7108 42.1657 17.9383 42.9383C17.1657 43.7108 16.7275 44.7558 16.718 45.8483C16.7085 46.9408 17.1285 47.9933 17.8875 48.7792L29.1667 60.0583L48.7792 40.4458Z"
+              fill="white" fill-rule="evenodd" />
+          </svg>
+        </div>
+        <span class="auth-header-title sidebar-logo-text">Choice<span class="text-secondary">Draft</span></span>
+        <button class="close-menu sidebar-close-btn" id="closeMenuBtn" title="Close Menu" aria-label="Close Menu">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <!-- User Info Block -->
+      <div id="sidebarUserBlock" class="sidebar-user-block hidden">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div class="user-details">
+          <p class="user-name" id="userName">User Name</p>
+          <p class="user-email" id="userEmail">user@example.com</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="../../home.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-chalkboard"></i></div>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="../../profile.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-user"></i></div>
+          <span class="nav-label">Profile</span>
+        </a>
+        <a href="../../settings.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-gear"></i></div>
+          <span class="nav-label">Settings</span>
+        </a>
+        <a href="../../about.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-circle-info"></i></div>
+          <span class="nav-label">About Us</span>
+        </a>
+        <div class="flex-1"></div>
+        <button id="logoutBtn" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+          <span class="nav-label">Log Out</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="home-main">
+      <!-- Header -->
+      <header class="topbar">
+        <div class="flex items-center gap-2">
+          <button id="menuToggleBtn" class="topbar-icon-btn" title="Toggle Menu" aria-label="Toggle Menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <button id="headerBackBtn" class="topbar-icon-btn" title="Back">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <span class="topbar-logo-text">Test Builder</span>
+        </div>
+      </header>
+
+      <!-- Scrollable Content -->
+      <div class="main-scroll-area">
+        <div class="home-content">
+          <!-- Back Link -->
+          <a href="#" id="contentBackBtn" class="back-link">
+            <i class="fa-solid fa-chevron-left back-link-icon"></i>
+            <span>Back</span>
+          </a>
+
+          <!-- Skeleton loader -->
+          <div id="builderSkeleton">
+            <div class="skeleton" style="height:150px;border-radius:16px;margin-bottom:16px;"></div>
+            <div class="skeleton" style="height:250px;border-radius:16px;margin-bottom:16px;"></div>
+            <div class="skeleton" style="height:80px;border-radius:16px;"></div>
+          </div>
+
+          <!-- Actual Content (hidden until loaded) -->
+          <div id="builderContent" style="display:none;">
+          <!-- Error Message -->
+          <div id="errorBanner" class="error-banner hidden">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span id="errorMessage"></span>
+          </div>
+
+          <!-- Test Information -->
+          <div class="test-card builder-section">
+            <h3 class="builder-section-title">Test Information</h3>
+            <div class="input-group">
+              <label class="input-label">Title *</label>
+              <input type="text" id="testTitle" class="input-field" placeholder="Test Title">
+            </div>
+            <div class="input-group">
+              <label class="input-label">Description</label>
+              <textarea id="testDescription" class="input-field shadow-none h-auto" rows="3"
+                placeholder="Test Description"></textarea>
+            </div>
+            
+            <div class="input-group" style="margin-top: 16px;">
+              <label class="input-label">Visibility (Assign to Class)</label>
+              <select id="testVisibility" class="input-field shadow-none" style="background-color: #2a3b4c; color: white; border: 1px solid #3d5066; border-radius: 8px; padding: 10px;">
+                <option value="">Public (Available to everyone)</option>
+              </select>
+            </div>
+
+            <div class="input-group" style="margin-top: 16px;">
+              <label class="input-label">Status</label>
+              <!-- Status is shown as a read-only badge; progression buttons below control it -->
+              <div id="statusDisplay" style="display:flex; align-items:center; gap:10px; padding: 10px 0;">
+                <span id="statusBadge" class="test-status-badge">Draft</span>
+                <span id="statusHint" style="font-size:13px; color:#757575;"></span>
+              </div>
+              <div id="statusActions" style="display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;">
+                <!-- Populated by JS based on current status -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Test Settings -->
+          <div class="test-card builder-section">
+            <h3 class="builder-section-title">Test Settings</h3>
+
+            <div class="builder-setting-row">
+              <div class="builder-setting-icon"><i class="fa-solid fa-shuffle"></i></div>
+              <div class="flex-1">
+                <p class="setting-label">Shuffle Questions</p>
+                <p class="setting-sub">Randomize question order for each taker</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="shuffleQuestions">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="builder-setting-row">
+              <div class="builder-setting-icon"><i class="fa-solid fa-arrows-rotate"></i></div>
+              <div class="flex-1">
+                <p class="setting-label">Shuffle Choices</p>
+                <p class="setting-sub">Randomize the order of answer choices</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="shuffleChoices">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="builder-setting-row">
+              <div class="builder-setting-icon"><i class="fa-solid fa-eye"></i></div>
+              <div class="flex-1">
+                <p class="setting-label">Show Answer Key</p>
+                <p class="setting-sub">Allow test takers to view the answer key</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="showAnswerKey">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="builder-setting-row">
+              <div class="builder-setting-icon"><i class="fa-solid fa-clock"></i></div>
+              <div class="flex-1">
+                <p class="setting-label">Time Limit</p>
+                <p class="setting-sub">Leave blank for no time limit</p>
+              </div>
+              <div class="flex items-center gap-1">
+                <input type="number" id="timeLimit" class="builder-number-input" placeholder="—" min="1">
+                <span class="setting-unit">min</span>
+              </div>
+            </div>
+
+            <div class="builder-setting-row">
+              <div class="builder-setting-icon"><i class="fa-solid fa-lock"></i></div>
+              <div class="flex-1">
+                <p class="setting-label">Password Protection</p>
+                <p class="setting-sub">Require a password to take this test</p>
+              </div>
+              <div class="flex flex-col items-end gap-2 text-right">
+                <label class="toggle-switch">
+                  <input type="checkbox" id="requirePassword">
+                  <span class="toggle-slider"></span>
+                </label>
+                <input type="text" id="testPassword" class="builder-number-input hidden" placeholder="Enter password" style="width: 120px; text-align: center;">
+              </div>
+            </div>
+
+            <div class="builder-setting-row">
+              <div class="builder-setting-icon"><i class="fa-solid fa-check-circle"></i></div>
+              <div class="flex-1">
+                <p class="setting-label">Passing Score</p>
+                <p class="setting-sub">Minimum percentage to pass</p>
+              </div>
+              <div class="flex items-center gap-1">
+                <input type="number" id="passingScore" class="builder-number-input" value="70" min="0" max="100">
+                <span class="setting-unit">%</span>
+              </div>
+            </div>
+
+            <div class="builder-setting-row">
+              <div class="builder-setting-icon"><i class="fa-solid fa-calendar-plus"></i></div>
+              <div class="flex-1">
+                <p class="setting-label">Start Date</p>
+                <p class="setting-sub">Optional. When the test becomes available</p>
+              </div>
+              <div class="flex items-center gap-1">
+                <input type="datetime-local" id="testStartDate" class="builder-number-input" style="width: auto; font-size: 14px; text-align: left; padding: 6px;">
+              </div>
+            </div>
+
+            <div class="builder-setting-row border-none">
+              <div class="builder-setting-icon"><i class="fa-solid fa-calendar-check"></i></div>
+              <div class="flex-1">
+                <p class="setting-label">End Date</p>
+                <p class="setting-sub">Optional. When the test closes</p>
+              </div>
+              <div class="flex items-center gap-1">
+                <input type="datetime-local" id="testEndDate" class="builder-number-input" style="width: auto; font-size: 14px; text-align: left; padding: 6px;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Question Summary -->
+          <div class="builder-summary-card">
+            <div class="flex items-center justify-between">
+              <div>
+                <p id="questionCount" class="summary-count">0 Questions</p>
+                <p id="totalPoints" class="summary-total">0 total points</p>
+              </div>
+              <button id="manageQuestionsBtn" class="summary-manage-btn">
+                <i class="fa-solid fa-pen-to-square"></i>
+                Manage
+              </button>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <button id="saveChangesBtn" class="btn-primary w-full builder-save-btn">
+            Save Changes
+          </button>
+          <button id="duplicateTestBtn" class="btn-outline w-full" style="height:48px; margin-top:8px; margin-bottom:24px; border-radius:50px; font-size:16px; color: var(--primary); border-color: var(--primary);">
+            <i class="fa-solid fa-copy" style="margin-right:8px;"></i> Duplicate Test
+          </button>
+          </div> <!-- End builderContent -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  
+
+
+<script src="../../cordova.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/app.js"></script>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const headerBackBtn = document.getElementById('headerBackBtn');
+    const contentBackBtn = document.getElementById('contentBackBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    const sidebarUserBlock = document.getElementById('sidebarUserBlock');
+    const userNameEl = document.getElementById('userName');
+    const userEmailEl = document.getElementById('userEmail');
+    const userAvatarEl = document.getElementById('userAvatar');
+
+    const testTitleInput = document.getElementById('testTitle');
+    const testDescInput = document.getElementById('testDescription');
+    const testVisibilityInput = document.getElementById('testVisibility');
+    const shuffleQInput = document.getElementById('shuffleQuestions');
+    const shuffleCInput = document.getElementById('shuffleChoices');
+    const showKeyInput = document.getElementById('showAnswerKey');
+    const timeLimitInput = document.getElementById('timeLimit');
+    const passingScoreInput = document.getElementById('passingScore');
+    const requirePasswordToggle = document.getElementById('requirePassword');
+    const testPasswordInput = document.getElementById('testPassword');
+    const testStatusInput = null; // Removed — status controlled by progression buttons
+    const testStartDateInput = document.getElementById('testStartDate');
+    const testEndDateInput = document.getElementById('testEndDate');
+
+    // Status state machine
+    let currentStatus = 'Draft';
+    const statusBadgeEl = document.getElementById('statusBadge');
+    const statusHintEl = document.getElementById('statusHint');
+    const statusActionsEl = document.getElementById('statusActions');
+
+    function renderStatusUI(status) {
+      currentStatus = status;
+      const cls = status === 'Published' ? 'badge-published' : status === 'Finished' ? 'badge-finished' : 'badge-draft';
+      statusBadgeEl.className = `test-status-badge ${cls}`;
+      statusBadgeEl.textContent = status;
+
+      statusActionsEl.innerHTML = '';
+      if (status === 'Draft') {
+        statusHintEl.textContent = 'Draft tests are only visible to you.';
+        const btn = document.createElement('button');
+        btn.className = 'btn-primary';
+        btn.style = 'width:auto;padding:8px 20px;font-size:15px;border-radius:50px;height:auto;';
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i>Publish';
+        btn.onclick = () => advanceStatus('Published');
+        statusActionsEl.appendChild(btn);
+      } else if (status === 'Published') {
+        statusHintEl.textContent = 'Published — visible to students. You can mark it Finished when done.';
+        const btn = document.createElement('button');
+        btn.className = 'btn-secondary';
+        btn.style = 'width:auto;padding:8px 20px;font-size:15px;border-radius:50px;';
+        btn.innerHTML = '<i class="fa-solid fa-flag-checkered" style="margin-right:6px;"></i>Mark as Finished';
+        btn.onclick = () => {
+          if (confirm('Mark this test as Finished? This cannot be undone.')) advanceStatus('Finished');
+        };
+        statusActionsEl.appendChild(btn);
+      } else if (status === 'Finished') {
+        statusHintEl.textContent = 'Finished — locked. Duplicate it to create a new version.';
+      }
+    }
+
+    async function advanceStatus(newStatus) {
+      const res = await window.ChoiceDraftApp.dataService.updateTest(testId, { status: newStatus });
+      if (res) renderStatusUI(newStatus);
+      else alert('Failed to update status. Please try again.');
+    }
+
+    requirePasswordToggle.addEventListener('change', (e) => {
+      testPasswordInput.classList.toggle('hidden', !e.target.checked);
+      if (e.target.checked) testPasswordInput.focus();
+    });
+
+    const questionCountEl = document.getElementById('questionCount');
+    const totalPointsEl = document.getElementById('totalPoints');
+    const manageQuestionsBtn = document.getElementById('manageQuestionsBtn');
+    const saveChangesBtn = document.getElementById('saveChangesBtn');
+    const errorBanner = document.getElementById('errorBanner');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // Get test ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const testId = urlParams.get('id');
+
+    function toggleSidebar(open) {
+      if (open) {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('open');
+      } else {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('open');
+      }
+    }
+
+    menuToggleBtn.addEventListener('click', () => toggleSidebar(true));
+    closeMenuBtn.addEventListener('click', () => toggleSidebar(false));
+    sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+
+    const goBack = () => {
+      if (testId) {
+        window.ChoiceDraftApp.navigateTo(`../index.html?id=${testId}`);
+      } else {
+        window.ChoiceDraftApp.navigateTo('../../home.html');
+      }
+    };
+
+    headerBackBtn.addEventListener('click', goBack);
+    contentBackBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      goBack();
+    });
+
+    logoutBtn.addEventListener('click', async () => {
+      await window.ChoiceDraftApp.dataService.logout();
+      window.ChoiceDraftApp.navigateTo('../../signin.html');
+    });
+
+    // Load Data
+    async function init() {
+      if (!testId) {
+        window.ChoiceDraftApp.navigateTo('../../home.html');
+        return;
+      }
+
+      const user = await window.ChoiceDraftApp.dataService.getCurrentUser();
+      const test = await window.ChoiceDraftApp.dataService.getTestById(testId);
+
+      if (user) {
+        sidebarUserBlock.classList.remove('hidden');
+        userNameEl.textContent = user.name;
+        userEmailEl.textContent = user.email;
+        userAvatarEl.textContent = user.name.charAt(0).toUpperCase();
+      }
+
+      if (test) {
+        testTitleInput.value = test.title;
+        testDescInput.value = test.description || "";
+        
+        const subjects = await window.ChoiceDraftApp.dataService.getSubjects();
+        const mySubjects = subjects.filter(s => s.teacher_id === user.id);
+        let optionsHtml = '<option value="">Public (Available to everyone)</option>';
+        mySubjects.forEach(s => {
+          optionsHtml += `<option value="${s.id}">${s.name}</option>`;
+        });
+        testVisibilityInput.innerHTML = optionsHtml;
+        testVisibilityInput.value = test.subject_id || "";
+        renderStatusUI(test.status || 'Draft');
+
+        // Hide skeleton, show content
+        document.getElementById('builderSkeleton').style.display = 'none';
+        document.getElementById('builderContent').style.display = 'block';
+
+        // Lock save/inputs if Finished or Published
+        if (test.status === 'Finished') {
+          saveChangesBtn.disabled = true;
+          saveChangesBtn.textContent = 'Test is Finished — locked';
+          saveChangesBtn.style.opacity = '0.5';
+          // Disable all form inputs
+          [testTitleInput, testDescInput, testVisibilityInput, shuffleQInput, shuffleCInput,
+           showKeyInput, timeLimitInput, passingScoreInput, requirePasswordToggle,
+           testPasswordInput, testStartDateInput, testEndDateInput].forEach(el => { if(el) el.disabled = true; });
+        } else if (test.status === 'Published') {
+          saveChangesBtn.disabled = true;
+          saveChangesBtn.textContent = 'Test is Live — editing locked';
+          saveChangesBtn.style.opacity = '0.5';
+          // Show banner
+          errorBanner.classList.remove('hidden');
+          errorBanner.style.background = 'rgba(251,191,36,0.15)';
+          errorBanner.style.borderColor = 'rgba(251,191,36,0.4)';
+          errorMessage.innerHTML = '<i class="fa-solid fa-lock" style="color:#f59e0b;margin-right:6px;"></i><span style="color:#92400e;">This test is currently <strong>Published (live)</strong>. Settings cannot be changed while students can take it. Mark it as Finished to re-enable editing or duplicate it.</span>';
+          // Disable all form inputs
+          [testTitleInput, testDescInput, testVisibilityInput, shuffleQInput, shuffleCInput,
+           showKeyInput, timeLimitInput, passingScoreInput, requirePasswordToggle,
+           testPasswordInput, testStartDateInput, testEndDateInput].forEach(el => { if(el) el.disabled = true; });
+        }
+        testStartDateInput.value = test.start_date ? new Date(test.start_date).toISOString().slice(0, 16) : '';
+        testEndDateInput.value = test.end_date ? new Date(test.end_date).toISOString().slice(0, 16) : '';
+        shuffleQInput.checked = !!test.shuffle_questions;
+        shuffleCInput.checked = !!test.shuffle_choices;
+        showKeyInput.checked = !!test.show_answer_key;
+        timeLimitInput.value = test.time_limit || "";
+        passingScoreInput.value = test.passing_score ?? 70;
+        
+        if (test.password) {
+          requirePasswordToggle.checked = true;
+          testPasswordInput.value = test.password;
+          testPasswordInput.classList.remove('hidden');
+        } else {
+          requirePasswordToggle.checked = false;
+          testPasswordInput.value = "";
+          testPasswordInput.classList.add('hidden');
+        }
+
+        questionCountEl.textContent = `${test.questions.length} Questions`;
+        const totalPoints = test.questions.reduce((sum, q) => sum + (q.points || 0), 0);
+        totalPointsEl.textContent = `${totalPoints} total points`;
+
+        // FIXED: Use correct parameter 'id' for consistency
+        manageQuestionsBtn.addEventListener('click', () => {
+          window.ChoiceDraftApp.navigateTo(`../../test/questions/index.html?id=${testId}`);
+        });
+      } else {
+        window.ChoiceDraftApp.navigateTo('../../home.html');
+      }
+    }
+
+    saveChangesBtn.addEventListener('click', async () => {
+      const title = testTitleInput.value.trim();
+      if (!title) {
+        errorBanner.classList.remove('hidden');
+        errorMessage.textContent = "Title is required.";
+        return;
+      }
+
+      if (requirePasswordToggle.checked && !testPasswordInput.value.trim()) {
+        errorBanner.classList.remove('hidden');
+        errorMessage.textContent = "Please enter a password.";
+        return;
+      }
+
+      errorBanner.classList.add('hidden');
+
+      const updates = {
+        title,
+        description: testDescInput.value.trim(),
+        subject_id: testVisibilityInput.value || null,
+        status: currentStatus, // Controlled by state machine, not a dropdown
+        shuffle_questions: shuffleQInput.checked ? 1 : 0,
+        shuffle_choices: shuffleCInput.checked ? 1 : 0,
+        show_answer_key: showKeyInput.checked ? 1 : 0,
+        passing_score: parseInt(passingScoreInput.value) || 70,
+        time_limit: timeLimitInput.value ? parseInt(timeLimitInput.value) : null,
+        start_date: testStartDateInput.value ? new Date(testStartDateInput.value).toISOString() : null,
+        end_date: testEndDateInput.value ? new Date(testEndDateInput.value).toISOString() : null
+      };
+
+      const success = await window.ChoiceDraftApp.dataService.updateTest(testId, updates);
+
+      if (success) {
+        saveChangesBtn.textContent = "✓ Saved!";
+        saveChangesBtn.style.background = "#002e31";
+        setTimeout(() => {
+          saveChangesBtn.textContent = "Save Changes";
+          saveChangesBtn.style.background = "";
+        }, 2000);
+      }
+    });
+
+    document.getElementById('duplicateTestBtn').addEventListener('click', async () => {
+      const user = await window.ChoiceDraftApp.dataService.getCurrentUser();
+      if (!user) return alert('You must be logged in to duplicate a test.');
+      const original = await window.ChoiceDraftApp.dataService.getTestById(testId);
+      if (!original) return alert('Could not load test data for duplication.');
+
+      const dupPayload = {
+        owner_id: user.id,
+        title: `Copy of ${original.title}`,
+        description: original.description || '',
+        status: 'Draft',
+        time_limit: original.time_limit || null,
+        shuffle_questions: original.shuffle_questions || 0,
+        shuffle_choices: original.shuffle_choices || 0,
+        show_answer_key: original.show_answer_key || 0,
+        passing_score: original.passing_score || 70,
+        start_date: null,
+        end_date: null,
+        subject_id: original.subject_id || null
+      };
+
+      const res = await window.ChoiceDraftApp.dataService.createTest(dupPayload);
+      if (res && res.id) {
+        alert(`Duplicated as "${dupPayload.title}". Redirecting to new test builder.`);
+        window.ChoiceDraftApp.navigateTo(`../../test/builder/index.html?id=${res.id}`);
+      } else {
+        alert('Duplication failed. Please try again.');
+      }
+    });
+
+    init();
+  </script>
+</body>
+
+</html>

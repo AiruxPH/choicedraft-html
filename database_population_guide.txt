@@ -1,0 +1,85 @@
+CHOICEDRAFT DATABASE POPULATION GUIDE
+=====================================
+
+This guide is designed to help you manually populate or seed the ChoiceDraft database for testing and demonstration purposes. It outlines the core tables, their relationships, and the correct order of operations to avoid foreign key constraint errors.
+
+---
+
+### CORE TABLES OVERVIEW
+
+1. `users` - Stores all accounts (Teachers and Students).
+2. `subjects` - Represents the "Classes" created by teachers.
+3. `subject_members` - Links students to classes.
+4. `tests` - The assessments created by teachers. Can be linked to a subject or left public.
+5. `questions` - The questions belonging to a test.
+6. `choices` - The multiple-choice options for a question.
+7. `test_collaborators` - Links co-authors/editors to a specific test.
+8. `attempts` & `attempt_answers` - Records of a student taking a test. (Usually, you let the app generate these by taking the test manually, rather than populating them via SQL).
+
+---
+
+### STEP-BY-STEP POPULATION ORDER
+
+Because of Foreign Key relationships (e.g., you can't create a test without an owner, or a choice without a question), you MUST populate the tables in this exact order:
+
+#### STEP 1: CREATE USERS (`users` table)
+First, create at least one Teacher and a few Students.
+- `id`: Use a unique string (e.g., 'user_123')
+- `role`: Must be either 'Teacher' or 'Student'
+- `school_id`: Required for Students, optional for Teachers.
+- `password`: Passwords in the system are typically hashed (using PHP password_hash). For manual testing, you might need to register via the frontend first to get a properly hashed password, then copy that hash for manual SQL inserts.
+
+#### STEP 2: CREATE CLASSES (`subjects` table)
+Teachers own classes.
+- `id`: Unique string (e.g., 'subj_123')
+- `teacher_id`: Must match a user `id` where role is 'Teacher'.
+- `join_code`: A unique code (e.g., 'MATH101') students use to join.
+
+#### STEP 3: ENROLL STUDENTS (`subject_members` table)
+Assign students to the classes you just created.
+- `subject_id`: The ID of the class.
+- `user_id`: The ID of a Student user.
+
+#### STEP 4: CREATE TESTS (`tests` table)
+Tests can be global (public) or assigned to a specific class.
+- `id`: Unique string (e.g., 'test_123')
+- `owner_id`: The ID of the Teacher who created it.
+- `subject_id`: (Optional) The ID of the class this test belongs to. If NULL, the test is public.
+- `status`: MUST be one of: 'Draft', 'Published', or 'Finished'. 
+    - Draft: Can be edited, cannot be taken.
+    - Published: Cannot be edited, can be taken by students.
+    - Finished: Locked entirely.
+- Dates: `start_date` and `end_date` use standard MySQL DATETIME format (YYYY-MM-DD HH:MM:SS).
+
+#### STEP 5: ADD QUESTIONS (`questions` table)
+- `id`: Unique string (e.g., 'q_123')
+- `test_id`: ID of the test it belongs to.
+- `points`: Integer (e.g., 10).
+
+#### STEP 6: ADD CHOICES (`choices` table)
+Every question needs choices, and EXACTLY ONE choice should be marked as correct.
+- `id`: Unique string (e.g., 'c_123')
+- `question_id`: ID of the question.
+- `is_correct`: Use 1 for the correct answer, and 0 for incorrect answers.
+
+#### STEP 7: ASSIGN COLLABORATORS (`test_collaborators` table) - OPTIONAL
+If you want to test the collaboration feature:
+- `test_id`: ID of the test.
+- `user_id`: ID of the Teacher co-author.
+- `role`: Usually 'editor'.
+
+---
+
+### ⚠️ IMPORTANT RULES & GOTCHAS ⚠️
+
+1. PASSWORD HASHING: 
+   Do not insert plain-text passwords directly into the database. The login API expects `password_verify()` to pass. The easiest workaround is to create one user legitimately via the website's Register page, then copy their hashed password string directly into the database for all your dummy accounts. They will all then share the same password.
+
+2. STATUS WORKFLOW:
+   If you populate a test with `status = 'Published'`, make sure it actually has questions and choices! A published test with 0 questions might cause frontend errors when a student tries to take it.
+
+3. UNIQUE IDs:
+   The frontend generates unique IDs using UUIDs or timestamp-based strings (e.g., `test_8009719d_1777181666`). When populating manually, you can use simpler IDs (like `t1`, `t2`, `q1`, `c1`) as long as they are UNIQUE within their respective tables.
+
+4. DELETION CASCADES:
+   Be careful when deleting. Deleting a Subject will fail if there are tests attached to it (unless handled by PHP logic). Deleting a user will fail if they own tests. Clean up child records (choices -> questions -> tests -> subjects) before deleting parents.

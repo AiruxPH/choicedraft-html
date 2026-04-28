@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChoiceDraft - Settings</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zain:wght@200;300;400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://kit.fontawesome.com/ef9baa832e.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-app">
+  <div class="home-layout">
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header flex items-center gap-3">
+        <div class="sidebar-logo-icon">
+          <svg class="w-full h-full" fill="none" viewBox="0 0 150 150">
+            <path clip-rule="evenodd"
+              d="M137.5 29.1667C134.185 29.1667 131.005 30.4836 128.661 32.8278C126.317 35.172 125 38.3515 125 41.6667V50H150V41.6667C150 38.3515 148.683 35.172 146.339 32.8278C143.995 30.4836 140.815 29.1667 137.5 29.1667ZM150 58.3333H125V127.083L137.5 145.833L150 127.083V58.3333ZM0 12.5V137.5C0 140.815 1.31696 143.995 3.66117 146.339C6.00537 148.683 9.18479 150 12.5 150H104.167C107.482 150 110.661 148.683 113.005 146.339C115.35 143.995 116.667 140.815 116.667 137.5V12.5C116.667 9.18479 115.35 6.00537 113.005 3.66117C110.661 1.31696 107.482 0 104.167 0H12.5C9.18479 0 6.00537 1.31696 3.66117 3.66117C1.31696 6.00537 0 9.18479 0 12.5ZM58.3333 37.5C58.3333 36.3949 58.7723 35.3351 59.5537 34.5537C60.3351 33.7723 61.3949 33.3333 62.5 33.3333H95.8333C96.9384 33.3333 97.9982 33.7723 98.7796 34.5537C99.561 35.3351 100 36.3949 100 37.5C100 38.6051 99.561 39.6649 98.7796 40.4463C97.9982 41.2277 96.9384 41.6667 95.8333 41.6667H62.5C61.3949 41.6667 60.3351 41.2277 59.5537 40.4463C58.7723 39.6649 58.3333 38.6051 58.3333 37.5ZM62.5 50C61.3949 50 60.3351 50.439 59.5537 51.2204C58.7723 52.0018 58.3333 53.0616 58.3333 54.1667C58.3333 55.2717 58.7723 56.3315 59.5537 57.1129C60.3351 57.8943 61.3949 58.3333 62.5 58.3333H95.8333C96.9384 58.3333 97.9982 57.8943 98.7796 57.1129C99.561 56.3315 100 55.2717 100 54.1667C100 53.0616 99.561 52.0018 98.7796 51.2204C97.9982 50.439 96.9384 50 95.8333 50H62.5ZM58.3333 91.6667C58.3333 90.5616 58.7723 89.5018 59.5537 88.7204C60.3351 87.939 61.3949 87.5 62.5 87.5H95.8333C96.9384 87.5 97.9982 87.939 98.7796 88.7204C99.561 89.5018 100 90.5616 100 91.6667C100 92.7717 99.561 93.8315 98.7796 94.6129C97.9982 95.3943 96.9384 95.8333 95.8333 95.8333H62.5C61.3949 95.8333 60.3351 95.3943 59.5537 94.6129C58.7723 93.8315 58.3333 92.7717 58.3333 91.6667ZM62.5 104.167C61.3949 104.167 60.3351 104.606 59.5537 105.387C58.7723 106.168 58.3333 107.228 58.3333 108.333C58.3333 109.438 58.7723 110.498 59.5537 111.28C60.3351 112.061 61.3949 112.5 62.5 112.5H95.8333C96.9384 112.5 97.9982 112.061 98.7796 111.28C99.561 110.498 100 109.438 100 108.333C100 107.228 99.561 110.498 98.7796 105.387C97.9982 104.606 96.9384 104.167 95.8333 104.167H62.5ZM25 91.6667V104.167H37.5V91.6667H25ZM20.8333 83.3333H41.6667C42.7717 83.3333 43.8315 83.7723 44.6129 84.5537C45.3943 85.3351 45.8333 86.3949 45.8333 87.5V108.333C45.8333 109.438 45.3943 110.498 44.6129 111.28C43.8315 112.061 42.7717 112.5 41.6667 112.5H20.8333C19.7283 112.5 18.6685 112.061 17.8871 111.28C17.1057 110.498 16.6667 109.438 16.6667 108.333V87.5C16.6667 86.3949 17.1057 85.3351 17.8871 84.5537C18.6685 83.7723 19.7283 83.3333 20.8333 83.3333ZM48.7792 40.4458C49.5382 39.66 49.9581 38.6075 49.9486 37.515C49.9391 36.4225 49.5009 35.3775 48.7284 34.6049C47.9559 33.8324 46.9108 33.3942 45.8183 33.3847C44.7258 33.3752 43.6733 33.7952 42.8875 34.5542L29.1667 48.275L23.7792 42.8875C22.9933 42.1285 21.9408 41.7085 20.8483 41.718C19.7558 41.7275 18.7108 42.1657 17.9383 42.9383C17.1657 43.7108 16.7275 44.7558 16.718 45.8483C16.7085 46.9408 17.1285 47.9933 17.8875 48.7792L29.1667 60.0583L48.7792 40.4458Z"
+              fill="white" fill-rule="evenodd" />
+          </svg>
+        </div>
+        <span class="auth-header-title sidebar-logo-text">Choice<span class="text-secondary">Draft</span></span>
+        <button class="close-menu sidebar-close-btn" id="closeMenuBtn" title="Close Menu" aria-label="Close Menu">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <!-- User Info Block -->
+      <div id="sidebarUserBlock" class="sidebar-user-block hidden">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div class="user-details">
+          <p class="user-name" id="userName">User Name</p>
+          <p class="user-email" id="userEmail">user@example.com</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="home.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-chalkboard"></i></div>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a id="adminNavLink" href="admin.html" class="nav-item hidden">
+          <div class="nav-icon"><i class="fa-solid fa-user-shield"></i></div>
+          <span class="nav-label">Admin Portal</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-user"></i></div>
+          <span class="nav-label">Profile</span>
+        </a>
+        <a href="settings.html" class="nav-item active">
+          <div class="nav-icon"><i class="fa-solid fa-gear"></i></div>
+          <span class="nav-label">Settings</span>
+        </a>
+        <a href="about.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-circle-info"></i></div>
+          <span class="nav-label">About Us</span>
+        </a>
+        <div class="flex-1"></div>
+        <button id="logoutBtn" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+          <span class="nav-label">Log Out</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="home-main">
+      <!-- Header -->
+      <header class="topbar">
+        <div class="flex items-center gap-2">
+          <button id="menuToggleBtn" class="topbar-icon-btn" title="Toggle Menu" aria-label="Toggle Menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <span class="topbar-title">Settings</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <a href="home.html" class="topbar-icon-btn flex items-center justify-center" title="Go to Dashboard"
+            aria-label="Go to Dashboard">
+            <i class="fa-solid fa-house topbar-home-icon"></i>
+          </a>
+        </div>
+      </header>
+
+      <!-- Scrollable Content -->
+      <div class="main-scroll-area fade-in">
+        <div class="home-content">
+          <div class="test-card settings-card">
+
+            <!-- Change Password -->
+            <div class="settings-section">
+              <h3 class="settings-section-title">Account Security</h3>
+
+              <div class="setting-item" style="flex-direction:column;align-items:flex-start;gap:14px;">
+                <div>
+                  <span class="setting-text">Change Password</span>
+                  <span class="setting-subtext">Update your login credentials securely</span>
+                </div>
+                <div id="pwForm" style="width:100%;display:flex;flex-direction:column;gap:10px;">
+                  <div id="pwSuccess" style="display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:10px 14px;color:#16a34a;font-size:14px;"><i class="fa-solid fa-check-circle" style="margin-right:6px;"></i>Password changed successfully!</div>
+                  <div id="pwError" style="display:none;background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;padding:10px 14px;color:#ef4444;font-size:14px;"></div>
+                  <div class="password-input-wrapper">
+                    <input type="password" id="currentPw" class="input-field password-input" placeholder="Current password">
+                    <button type="button" class="auth-toggle-btn" onclick="togglePw('currentPw','iconCurr')"><i id="iconCurr" class="fa-solid fa-eye"></i></button>
+                  </div>
+                  <div class="password-input-wrapper">
+                    <input type="password" id="newPw" class="input-field password-input" placeholder="New password">
+                    <button type="button" class="auth-toggle-btn" onclick="togglePw('newPw','iconNew')"><i id="iconNew" class="fa-solid fa-eye"></i></button>
+                  </div>
+                  <div class="password-input-wrapper">
+                    <input type="password" id="confirmPw" class="input-field password-input" placeholder="Confirm new password">
+                    <button type="button" class="auth-toggle-btn" onclick="togglePw('confirmPw','iconConf')"><i id="iconConf" class="fa-solid fa-eye"></i></button>
+                  </div>
+                  <button id="changePwBtn" class="btn-primary" style="border-radius:50px;height:auto;padding:10px 24px;width:auto;">Save New Password</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Institution Quick Edit -->
+            <div class="settings-section">
+              <h3 class="settings-section-title">Profile</h3>
+              <div class="setting-item" style="flex-direction:column;align-items:flex-start;gap:10px;">
+                <div>
+                  <span class="setting-text">Institution / School</span>
+                  <span class="setting-subtext" id="currentInstitution">Loading...</span>
+                </div>
+                <div style="display:flex;gap:8px;width:100%;">
+                  <input type="text" id="institutionInput" class="input-field" style="flex:1;" placeholder="Your institution">
+                  <button id="saveInstitutionBtn" class="btn-secondary" style="flex-shrink:0;">Save</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="settings-section last-section">
+              <h3 class="settings-section-title" style="color:#ef4444;">Danger Zone</h3>
+              <div class="setting-item" style="border:1.5px solid #fca5a5;border-radius:12px;padding:14px;">
+                <div>
+                  <span class="setting-text" style="color:#ef4444;">Delete Account</span>
+                  <span class="setting-subtext">Permanently delete your account and all your data. This cannot be undone.</span>
+                </div>
+                <button id="deleteAccountBtn" class="btn-secondary" style="border-color:#ef4444;color:#ef4444;flex-shrink:0;">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+
+
+<script src="./cordova.js"></script>
+  <script src="./js/config.js"></script>
+<script src="./js/app.js"></script>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    function toggleSidebar(open) {
+      sidebar.classList.toggle('open', open);
+      sidebarOverlay.classList.toggle('open', open);
+    }
+
+    menuToggleBtn.addEventListener('click', () => toggleSidebar(true));
+    closeMenuBtn.addEventListener('click', () => toggleSidebar(false));
+    sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+
+    logoutBtn.addEventListener('click', async () => {
+      await window.ChoiceDraftApp.dataService.logout();
+      window.ChoiceDraftApp.navigateTo('signin.html');
+    });
+
+    window.togglePw = function(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      const isPass = input.type === 'password';
+      input.type = isPass ? 'text' : 'password';
+      icon.className = isPass ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+    };
+
+    let currentUser = null;
+
+    async function init() {
+      currentUser = await window.ChoiceDraftApp.dataService.getCurrentUser();
+      if (!currentUser) { window.ChoiceDraftApp.navigateTo('signin.html'); return; }
+      await window.ChoiceDraftApp.dataService.setupSidebar();
+
+      // Populate institution
+      document.getElementById('currentInstitution').textContent = currentUser.institution || 'Not set';
+      document.getElementById('institutionInput').value = currentUser.institution || '';
+    }
+
+    // Change password
+    document.getElementById('changePwBtn').addEventListener('click', async () => {
+      const current = document.getElementById('currentPw').value;
+      const newPw   = document.getElementById('newPw').value;
+      const confirm = document.getElementById('confirmPw').value;
+      const pwError   = document.getElementById('pwError');
+      const pwSuccess = document.getElementById('pwSuccess');
+      pwError.style.display = 'none';
+      pwSuccess.style.display = 'none';
+
+      if (!current || !newPw || !confirm) { pwError.textContent = 'All fields required.'; pwError.style.display = 'block'; return; }
+      if (newPw !== confirm) { pwError.textContent = 'New passwords do not match.'; pwError.style.display = 'block'; return; }
+      if (newPw.length < 6) { pwError.textContent = 'Password must be at least 6 characters.'; pwError.style.display = 'block'; return; }
+
+      const btn = document.getElementById('changePwBtn');
+      btn.disabled = true; btn.textContent = 'Saving...';
+
+      // Verify current password by attempting to fetch user with it
+      const verifyRes = await apiRequest(CONFIG.ENDPOINTS.AUTH, 'POST', {
+        action: 'login', email: currentUser.email, password: current
+      });
+
+      if (!verifyRes || !verifyRes.success) {
+        pwError.textContent = 'Current password is incorrect.'; pwError.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Save New Password'; return;
+      }
+
+      const saveRes = await apiService.users.update(currentUser.id, { password: newPw });
+      btn.disabled = false; btn.textContent = 'Save New Password';
+
+      if (saveRes && saveRes.success) {
+        pwSuccess.style.display = 'block';
+        document.getElementById('currentPw').value = '';
+        document.getElementById('newPw').value = '';
+        document.getElementById('confirmPw').value = '';
+      } else {
+        pwError.textContent = (saveRes && saveRes.error) || 'Failed to update password.'; pwError.style.display = 'block';
+      }
+    });
+
+    // Save institution
+    document.getElementById('saveInstitutionBtn').addEventListener('click', async () => {
+      const val = document.getElementById('institutionInput').value.trim();
+      const res = await window.ChoiceDraftApp.dataService.updateUser(currentUser.id, { institution: val });
+      if (res && res.success) {
+        document.getElementById('currentInstitution').textContent = val || 'Not set';
+        currentUser.institution = val;
+      } else {
+        alert('Failed to save institution.');
+      }
+    });
+
+    // Delete account
+    document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
+      if (!confirm('Delete your account permanently? All your tests, classes, and data will be removed. This CANNOT be undone.')) return;
+      if (!confirm('Are you absolutely sure? Type in the next prompt.')) return;
+      const typed = prompt('Type your email to confirm:');
+      if (!typed || typed.trim().toLowerCase() !== currentUser.email.toLowerCase()) {
+        alert('Email did not match. Account not deleted.'); return;
+      }
+      const res = await window.ChoiceDraftApp.dataService.deleteUser(currentUser.id);
+      if (res && res.success) {
+        sessionManager.clear();
+        window.ChoiceDraftApp.navigateTo('signin.html');
+      } else {
+        alert((res && res.error) || 'Failed to delete account.');
+      }
+    });
+
+    init();
+  </script>
+</body>
+
+</html>

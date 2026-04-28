@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChoiceDraft - Sign In</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://kit.fontawesome.com/ef9baa832e.js" crossorigin="anonymous"></script>
+  <script src="https://kit.fontawesome.com/ef9baa832e.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="auth-body">
+
+  <div class="auth-layout split-layout">
+
+    <!-- Dynamic Header -->
+    <header class="auth-header">
+      <div id="headerLogo" class="auth-header-logo"></div>
+      <p class="auth-header-title">ChoiceDraft</p>
+    </header>
+
+    <!-- Centered Auth Card -->
+    <div class="auth-card-container">
+      <div class="auth-card">
+        <div class="auth-content">
+          <h2 class="auth-title">Welcome Back!</h2>
+          <p class="auth-subtitle">Sign in to continue</p>
+
+          <form id="signInForm" class="auth-form">
+            <div id="errorBox" class="auth-error-box">
+              <i class="fa-solid fa-circle-exclamation auth-error-icon"></i>
+              <p id="errorText" class="auth-error-text"></p>
+            </div>
+
+            <div class="input-group">
+              <label class="input-label">Email Address</label>
+              <input type="email" id="email" class="input-field" placeholder="you@example.com" required
+                autocomplete="email">
+            </div>
+
+            <div class="input-group">
+              <label class="input-label">Password</label>
+              <div class="password-input-wrapper">
+                <input type="password" id="password" class="input-field password-input" placeholder="••••••••" required
+                  autocomplete="current-password">
+                <button type="button" id="togglePwBtn" class="auth-toggle-btn" title="Toggle Password">
+                  <i class="fa-solid fa-eye" id="pwIcon"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn-primary mt-2">
+              Sign In
+            </button>
+          </form>
+
+          <div class="divider-container">
+            <div class="divider-line"></div>
+            <p class="divider-text">or</p>
+            <div class="divider-line"></div>
+          </div>
+
+          <p class="text-center auth-footer-text">
+            Don't have an account? <a href="register.html" class="text-primary font-bold underline">Register</a>
+          </p>
+
+        
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+
+<script src="./cordova.js"></script>
+  <script src="./js/config.js"></script>
+<script src="./js/app.js"></script>
+
+  <script>
+    document.getElementById('headerLogo').innerHTML = window.ChoiceDraftApp.icons.logo;
+
+    const form = document.getElementById('signInForm');
+    const emailInput = document.getElementById('email');
+    const pwInput = document.getElementById('password');
+    const toggleBtn = document.getElementById('togglePwBtn');
+    const pwIcon = document.getElementById('pwIcon');
+    const submitBtn = document.getElementById('submitBtn');
+    const errorBox = document.getElementById('errorBox');
+    const errorText = document.getElementById('errorText');
+
+    // Toggle Password Visibility
+    toggleBtn.addEventListener('click', () => {
+      const type = pwInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      pwInput.setAttribute('type', type);
+      pwIcon.className = type === 'password' ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash';
+    });
+
+    // Handle Submit
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      errorBox.style.display = 'none';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Signing in...';
+
+      const res = await window.ChoiceDraftApp.dataService.login(emailInput.value, pwInput.value);
+
+      if (res.success) {
+        if (res.user.role === 'Admin') {
+          window.ChoiceDraftApp.navigateTo('admin.html');
+        } else {
+          window.ChoiceDraftApp.navigateTo('home.html');
+        }
+      } else {
+        errorText.textContent = res.error;
+        errorBox.style.display = 'flex';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Sign In';
+      }
+    });
+
+  </script>
+</body>
+
+</html>

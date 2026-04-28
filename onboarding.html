@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChoiceDraft - Onboarding</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://kit.fontawesome.com/ef9baa832e.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="auth-body">
+
+  <div class="onboarding-layout overflow-hidden">
+    
+    <!-- Skip button -->
+    <button id="skipBtn" class="onboarding-skip-btn">
+      SKIP
+    </button>
+
+    <!-- Content area -->
+    <div class="onboarding-content-area">
+      
+      <!-- Title -->
+      <div id="slideTitle" class="onboarding-title">
+        Build &amp; Manage<br>Your Pool
+      </div>
+      
+      <!-- Subtitle -->
+      <p id="slideSubtitle" class="onboarding-subtitle">
+        Organize tests, create a pool of questions, and shuffle them for every student.
+      </p>
+
+      <!-- Illustration Area -->
+      <div id="illustrationContainer" class="flex items-center justify-center flex-1">
+        <div class="onboarding-illustration" id="svgWrapper">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom controls -->
+    <div class="onboarding-controls-area">
+      <!-- Dots -->
+      <div class="flex gap-2" id="dotsContainer">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex w-full onboarding-btn-group" id="btnGroup">
+        <button id="prevBtn" class="btn-primary flex-1 rounded-full hidden">
+          <i class="fa-solid fa-chevron-left icon-mr"></i> Previous
+        </button>
+        <button id="nextBtn" class="btn-primary flex-1 rounded-full">
+          Next <i class="fa-solid fa-chevron-right icon-ml-8"></i>
+        </button>
+      </div>
+
+      <!-- Get Started Button (Hidden initially) -->
+      <button id="getStartedBtn" class="btn-primary flex-1 rounded-full hidden">
+        Get Started
+      </button>
+
+    </div>
+  </div>
+
+  
+
+
+<script src="./cordova.js"></script>
+  <script src="./js/config.js"></script>
+<script src="./js/app.js"></script>
+
+  <script>
+    // --- SVG Illustrations (ported from React OnboardingScreen.tsx / Figma design) ---
+
+    const svgPool = `
+      <svg width="100%" height="100%" fill="none" preserveAspectRatio="xMidYMid meet" viewBox="0 0 300 300">
+        <g>
+          <path d="M259.494 31.0543L241.797 22.7732V156.307L273.89 69.6504C279.305 54.5669 273.097 37.2652 259.494 31.0543ZM1.95925 85.7691L67.4656 262.483C69.3945 267.859 72.6848 272.488 76.9318 275.798C81.1788 279.108 86.1973 280.957 91.3701 281.115C94.8039 281.115 98.3698 280.376 101.804 278.749L199.139 233.647C209.044 229.063 215.119 218.12 215.383 207.177C215.515 203.332 214.855 199.043 213.666 195.199L147.632 18.4847C145.771 13.068 142.494 8.40596 138.229 5.10805C133.964 1.81014 128.91 0.0298727 123.727 0C120.293 0 116.859 0.887268 113.558 2.21817L16.3548 47.3209C9.89348 50.2835 4.74739 55.998 2.04791 63.2079C-0.651576 70.4177 -0.683464 78.5329 1.95925 85.7691ZM215.251 29.5755C215.251 21.7316 212.468 14.209 207.515 8.66247C202.561 3.11598 195.843 0 188.837 0H169.687L215.251 123.33" fill="#00C3D0"/>
+          <path d="M233.793 161.035C232.26 160.869 231.18 162.6 231.69 164.407C232.06 165.724 232.545 167.36 233.152 169.246L231.253 170.106C227.054 172.005 223.409 175.176 220.729 179.264C218.048 183.351 216.437 188.194 216.077 193.25L215.209 205.421L207.033 197.341C203.639 193.985 199.476 191.755 195.013 190.899C190.549 190.043 185.961 190.595 181.763 192.495L174.853 195.62C173.654 196.163 172.696 197.217 172.191 198.55C171.686 199.883 171.674 201.386 172.158 202.729C172.643 204.072 173.584 205.144 174.775 205.71C175.965 206.276 177.308 206.289 178.507 205.746L185.416 202.621C187.935 201.483 190.686 201.152 193.363 201.665C196.04 202.179 198.536 203.517 200.573 205.529L214.239 219.029L212.793 239.366C212.576 242.4 211.609 245.306 209.999 247.759C208.39 250.212 206.202 252.114 203.681 253.253L196.776 256.377C195.577 256.919 194.619 257.973 194.114 259.306C193.609 260.639 193.597 262.142 194.081 263.485C194.566 264.828 195.507 265.9 196.698 266.466C197.888 267.032 199.231 267.045 200.43 266.503L207.339 263.377C211.538 261.477 215.181 258.306 217.861 254.219C220.541 250.131 222.151 245.289 222.511 240.235L223.379 228.063L231.555 236.144C234.95 239.499 239.112 241.73 243.575 242.586C248.039 243.442 252.627 242.889 256.826 240.99L258.729 240.129C259.525 242.101 260.238 243.757 260.813 245.029C261.522 246.616 263.188 246.917 264.17 245.63C265.483 243.905 267.368 241.286 269.516 237.852C271.21 235.145 272.793 232.354 274.261 229.486C275.025 227.986 274.384 226.05 272.973 225.581C270.097 224.632 267.182 223.84 264.237 223.208C261.418 222.588 258.574 222.116 255.716 221.792C254.183 221.625 253.103 223.356 253.613 225.163C253.983 226.48 254.468 228.116 255.075 230.003L253.176 230.862C250.657 232.003 247.904 232.335 245.225 231.822C242.546 231.309 240.048 229.971 238.011 227.958L224.349 214.455L225.795 194.119C226.012 191.085 226.979 188.178 228.589 185.725C230.198 183.272 232.386 181.37 234.907 180.232L236.811 179.37C237.607 181.343 238.32 182.999 238.894 184.27C239.604 185.857 241.269 186.158 242.252 184.872C243.565 183.147 245.449 180.527 247.598 177.094C249.292 174.387 250.875 171.595 252.343 168.728C253.106 167.228 252.465 165.292 251.055 164.823C248.179 163.874 245.263 163.082 242.319 162.449C239.499 161.83 236.651 161.359 233.793 161.035Z" fill="#002E31"/>
+          <path d="M102.837 178.41L125.233 168.278L134.282 193.355L111.886 203.487L102.837 178.41Z" fill="white"/>
+          <path clip-rule="evenodd" d="M85.9843 95.6062C75.279 100.449 71.9982 114.605 75.3063 123.773L57.3895 131.878C50.8673 113.803 56.3136 85.6926 78.7454 75.5447C101.106 65.4292 122.332 80.8198 129.057 99.4569C134.768 115.285 127.738 127.8 123.384 135.546L122.649 136.858C117.883 145.455 116.019 149.962 118.469 156.753L100.552 164.859C94.1748 147.184 101.506 133.973 106.217 125.483L106.236 125.451C111.485 115.97 112.961 112.608 111.14 107.562C107.702 98.0331 96.7702 90.7268 85.9843 95.6062Z" fill="white" fill-rule="evenodd"/>
+        </g>
+      </svg>`;
+
+    const svgCollab = `
+      <svg width="100%" height="100%" fill="none" preserveAspectRatio="xMidYMid meet" viewBox="0 0 300 205.973">
+        <g>
+          <path d="M135.418 128.605C130.512 120.006 123.879 112.516 115.936 106.607C107.994 100.698 98.9132 96.4978 89.2671 94.2708C79.6211 92.0438 69.6185 91.8384 59.8892 93.6675C50.1599 95.4966 40.9147 99.3206 32.736 104.899C31.4653 105.779 30.565 107.099 30.2082 108.603L24.5683 133.032C24.2191 134.643 24.5181 136.326 25.4008 137.718C26.2834 139.109 27.6786 140.097 29.2844 140.468L122.928 162.087C124.548 162.461 126.25 162.176 127.659 161.295C129.069 160.414 130.071 159.01 130.445 157.39L136.085 132.961C136.397 131.476 136.16 129.928 135.418 128.605Z" fill="#00C2CB"/>
+          <path d="M91.1456 86.1342C106.886 89.7681 122.592 79.954 126.226 64.2138C129.86 48.4736 120.045 32.7677 104.305 29.1338C88.565 25.4999 72.8591 35.314 69.2252 51.0542C65.5913 66.7944 75.4054 82.5003 91.1456 86.1342Z" fill="#00C2CB"/>
+          <path d="M268.738 111.506C260.759 105.646 251.653 101.502 241.994 99.3345C232.334 97.1669 222.33 97.0231 212.613 98.9121C202.895 100.801 193.673 104.682 185.529 110.31C177.385 115.938 170.494 123.192 165.291 131.614C164.489 132.936 164.203 134.507 164.489 136.027L169.273 160.638C169.609 162.251 170.567 163.667 171.939 164.579C173.311 165.492 174.988 165.827 176.606 165.512L270.946 147.174C272.578 146.857 274.017 145.905 274.947 144.527C275.876 143.148 276.22 141.458 275.903 139.826L271.119 115.215C270.801 113.731 269.955 112.414 268.738 111.506Z" fill="#00C2CB"/>
+          <path d="M211.019 90.7149C226.877 87.6325 237.233 72.2787 234.15 56.4213C231.068 40.5638 215.714 30.2076 199.857 33.29C183.999 36.3723 173.643 51.7261 176.726 67.5836C179.808 83.441 195.162 93.7973 211.019 90.7149Z" fill="#00C2CB"/>
+          <path d="M142.959 180.739C142.959 183.371 144.004 185.896 145.865 187.757C147.726 189.618 150.251 190.663 152.883 190.663C155.515 190.663 158.039 189.618 159.9 187.757C161.761 185.896 162.807 183.371 162.807 180.739V137.735H205.811C208.443 137.735 210.967 136.69 212.828 134.828C214.69 132.967 215.735 130.443 215.735 127.811C215.735 125.179 214.69 122.655 212.828 120.794C210.967 118.933 208.443 117.887 205.811 117.887H162.807V74.8827C162.807 72.2507 161.761 69.7265 159.9 67.8654C158.039 66.0042 155.515 64.9587 152.883 64.9587C150.251 64.9587 147.726 66.0042 145.865 67.8654C144.004 69.7265 142.959 72.2507 142.959 74.8827V117.887H99.9544C97.3224 117.887 94.7982 118.933 92.937 120.794C91.0759 122.655 90.0304 125.179 90.0304 127.811C90.0304 130.443 91.0759 132.967 92.937 134.828C94.7982 136.69 97.3224 137.735 99.9544 137.735H142.959V180.739Z" fill="#002E31"/>
+        </g>
+      </svg>`;
+
+    const svgScoring = `
+      <svg width="100%" height="100%" fill="none" preserveAspectRatio="xMidYMid meet" viewBox="0 0 300 300">
+        <g>
+          <path d="M160.305 197.556L208.855 116.111L228.664 127.222L168.779 227.778L94.2366 186.111L39.6183 277.778H229.008V300H0V100H22.9008V261.556L85.8779 155.556L160.305 197.556Z" fill="#002E31"/>
+          <path d="M135.114 133.333V13.3333C135.114 9.66667 136.461 6.52889 139.154 3.92C141.847 1.31111 145.081 0.00444444 148.855 0H258.779C262.557 0 265.793 1.30667 268.486 3.92C271.179 6.53333 272.524 9.67111 272.519 13.3333V93.3333C272.519 97 271.175 100.14 268.486 102.753C265.798 105.367 262.562 106.671 258.779 106.667H162.595L135.114 133.333ZM203.817 86.6667C205.763 86.6667 207.396 86.0267 208.715 84.7467C210.034 83.4667 210.692 81.8844 210.687 80C210.682 78.1156 210.023 76.5333 208.708 75.2533C207.394 73.9733 205.763 73.3333 203.817 73.3333C201.87 73.3333 200.24 73.9733 198.925 75.2533C197.611 76.5333 196.951 78.1156 196.947 80C196.942 81.8844 197.602 83.4689 198.925 84.7533C200.249 86.0378 201.879 86.6756 203.817 86.6667ZM196.947 60H210.687V20H196.947V60Z" fill="#00C2CB"/>
+          <path d="M251.908 180C242.397 180 233.099 182.737 225.19 187.865C217.282 192.993 211.117 200.281 207.478 208.808C203.838 217.335 202.885 226.718 204.741 235.771C206.596 244.823 211.177 253.139 217.902 259.665C224.628 266.191 233.197 270.636 242.526 272.437C251.855 274.237 261.525 273.313 270.312 269.781C279.1 266.249 286.611 260.268 291.895 252.593C297.179 244.919 300 235.896 300 226.667C300 214.29 294.933 202.42 285.914 193.668C276.895 184.917 264.663 180 251.908 180Z" fill="black"/>
+          <path d="M245.038 245.3L227.863 228.633L233.324 223.333L245.038 234.7L270.492 210L275.975 215.287L245.038 245.3Z" fill="#00FF1A"/>
+        </g>
+      </svg>`;
+
+    // Last slide: The ChoiceDraft signature concentric circles brand icon
+    const svgStart = `
+      <div style="position:relative; display:flex; align-items:center; justify-content:center; width:280px; height:280px;">
+        <div style="width:180px; height:180px; border-radius:50%; background:#00C2CB; opacity:0.2; position:absolute;"></div>
+        <div style="width:120px; height:120px; border-radius:50%; background:#00C2CB; opacity:0.4; position:absolute;"></div>
+        <div style="width:60px;  height:60px;  border-radius:50%; background:#00C2CB; position:absolute;"></div>
+      </div>`;
+
+    const slides = [
+      {
+        title: "Build &amp; Manage<br>Your Pool",
+        subtitle: "Organize tests, create a pool of questions, and shuffle them for every student.",
+        svg: svgPool
+      },
+      {
+        title: "Work Together,<br>Better",
+        subtitle: "Invite colleagues to collaborate on tests and manage user accounts with ease.",
+        svg: svgCollab
+      },
+      {
+        title: "Smart Scoring &amp;<br>Feedback",
+        subtitle: "Automatic grading and detailed performance reports for every test taker.",
+        svg: svgScoring
+      },
+      {
+        title: "Ready to Start<br>Drafting?",
+        subtitle: "Create, format, and share your first test today.",
+        svg: svgStart
+      }
+    ];
+
+    let current = 0;
+    
+    const titleEl = document.getElementById('slideTitle');
+    const subtitleEl = document.getElementById('slideSubtitle');
+    const svgWrapper = document.getElementById('svgWrapper');
+    const dotsContainer = document.getElementById('dotsContainer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const skipBtn = document.getElementById('skipBtn');
+    const getStartedBtn = document.getElementById('getStartedBtn');
+    const btnGroup = document.getElementById('btnGroup');
+    const illustrationContainer = document.getElementById('illustrationContainer');
+
+    function renderSlide() {
+      const slide = slides[current];
+      const isLast = current === slides.length - 1;
+
+      titleEl.innerHTML = slide.title;
+      subtitleEl.innerHTML = slide.subtitle;
+      svgWrapper.innerHTML = slide.svg;
+      illustrationContainer.style.display = 'flex';
+      skipBtn.style.display = isLast ? 'none' : 'block';
+
+      dotsContainer.innerHTML = slides.map((_, i) => `
+        <div class="onboarding-dot ${i === current ? 'active' : 'inactive'}"></div>
+      `).join('');
+
+      if (isLast) {
+        btnGroup.classList.add('hidden');
+        getStartedBtn.classList.remove('hidden');
+      } else {
+        btnGroup.classList.remove('hidden');
+        getStartedBtn.classList.add('hidden');
+        prevBtn.classList.toggle('hidden', current === 0);
+      }
+    }
+
+    function finishOnboarding() {
+      localStorage.setItem('choicedraft_onboarding_seen', 'true');
+      window.ChoiceDraftApp.navigateTo('signin.html');
+    }
+
+    nextBtn.addEventListener('click', () => {
+      if (current < slides.length - 1) { current++; renderSlide(); }
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (current > 0) { current--; renderSlide(); }
+    });
+
+    skipBtn.addEventListener('click', finishOnboarding);
+    getStartedBtn.addEventListener('click', finishOnboarding);
+
+    renderSlide();
+  </script>
+</body>
+</html>

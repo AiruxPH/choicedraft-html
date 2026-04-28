@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Give Feedback - ChoiceDraft</title>
+  <link rel="stylesheet" href="../../css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zain:wght@200;300;400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .rounded-2xl {
+      border-radius: 16px;
+    }
+
+    .rounded-xl {
+      border-radius: 12px;
+    }
+
+    .bg-white shadow-sm border border-e0e0e0 {
+      background-color: #f2f6f9;
+    }
+
+    .bg-e0e0e0 {
+      background-color: #e0e0e0;
+    }
+
+    .bg-red-50 {
+      background-color: #fef2f2;
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/ef9baa832e.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-app">
+  <div class="home-layout">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <main class="home-main">
+      <header class="topbar">
+        <div class="flex items-center gap-2">
+          <button id="menuToggleBtn" class="topbar-icon-btn"><i class="fa-solid fa-bars topbar-menu-icon"></i></button>
+          <span class="topbar-title">Give Feedback</span>
+        </div>
+        <div class="flex items-center gap-1"><a href="../../home.html"
+            class="topbar-icon-btn flex items-center justify-center"><i
+              class="fa-solid fa-house topbar-home-icon"></i></a></div>
+      </header>
+
+      <div class="main-scroll-area fade-in">
+        <a href="#" id="backLink" class="back-link"><i
+            class="fa-solid fa-chevron-left back-link-icon"></i><span>Back</span></a>
+        <div class="q-list2 px-4 mb-4">
+          <h2 class="font-zain font-800 text-24 text-primary-dark mb-1">Give Feedback</h2>
+          <p class="font-zain text-15 text-a9a9a9">Provide personalized feedback to each test taker.</p>
+        </div>
+        <div id="attemptsContent" class="q-list2 px-4 pb-6 flex flex-col gap-3"></div>
+        <div id="emptyState" class="hidden flex flex-col items-center justify-center py-12 px-4">
+          <div
+            class="w-16 h-16 rounded-full bg-white shadow-sm border border-e0e0e0 flex items-center justify-center mb-4">
+            <i class="fa-solid fa-comment-dots text-3xl text-a9a9a9"></i>
+          </div>
+          <p class="font-zain text-17 text-a9a9a9 text-center">No submissions yet.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  
+
+
+<script src="../../cordova.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/app.js"></script>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    sidebar.innerHTML = `
+      <div class="sidebar-header flex items-center gap-3"><div class="sidebar-logo-icon"></div><span class="auth-header-title sidebar-logo-text">Choice<span class="text-secondary">Draft</span></span><button class="close-menu sidebar-close-btn" id="closeMenuBtn"><i class="fa-solid fa-times"></i></button></div>
+      <div id="sidebarUserBlock" class="sidebar-user-block hidden"><div class="user-avatar" id="userAvatar">?</div><div class="user-details"><p class="user-name" id="userName">User</p><p class="user-email" id="userEmail">@</p></div></div>
+      <nav class="sidebar-nav">
+        <a href="../../home.html" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-chalkboard"></i></div><span class="nav-label">Dashboard</span></a>
+        <a href="../../profile.html" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-user"></i></div><span class="nav-label">Profile</span></a>
+        <a href="../../settings.html" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-gear"></i></div><span class="nav-label">Settings</span></a>
+        <a href="../../about.html" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-circle-info"></i></div><span class="nav-label">About Us</span></a>
+        <div class="flex-1"></div><button id="logoutBtn" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></div><span class="nav-label">Log Out</span></button>
+      </nav>
+    `;
+
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const sidebarUserBlock = document.getElementById('sidebarUserBlock');
+
+    const backLink = document.getElementById('backLink');
+    const attemptsContent = document.getElementById('attemptsContent');
+    const emptyState = document.getElementById('emptyState');
+
+    const params = new URLSearchParams(window.location.search);
+    const testId = params.get('id');
+
+    let currentTest = null;
+    let expandedAttemptId = null;
+
+    function toggleSidebar(open) { sidebar.classList.toggle('open', open); sidebarOverlay.classList.toggle('open', open); }
+
+    menuToggleBtn.addEventListener('click', () => toggleSidebar(true));
+    closeMenuBtn.addEventListener('click', () => toggleSidebar(false));
+    sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+    logoutBtn.addEventListener('click', async () => { await window.ChoiceDraftApp.dataService.logout(); window.ChoiceDraftApp.navigateTo('../../signin.html'); });
+
+    async function init() {
+      if (!testId) { window.ChoiceDraftApp.navigateTo('../../home.html'); return; }
+
+      await window.ChoiceDraftApp.dataService.init();
+      const user = await window.ChoiceDraftApp.dataService.getCurrentUser();
+      currentTest = await window.ChoiceDraftApp.dataService.getTestById(testId);
+
+      if (user) {
+        sidebarUserBlock.classList.remove('hidden');
+        document.getElementById('userName').textContent = user.name;
+        document.getElementById('userEmail').textContent = user.email;
+        document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+      }
+
+      if (currentTest) {
+        renderAttempts();
+      }
+    }
+
+    function renderAttempts() {
+      const attempts = currentTest.attempts || [];
+      const passingScore = currentTest.passing_score ?? 70;
+
+      if (attempts.length === 0) { emptyState.classList.remove('hidden'); attemptsContent.innerHTML = ''; return; }
+
+      emptyState.classList.add('hidden');
+
+      attemptsContent.innerHTML = attempts.map(attempt => {
+        const passed = attempt.percentage >= passingScore;
+        const aid = attempt.id || attempt.userId;
+        const isExpanded = expandedAttemptId === aid;
+        const hasFeedback = !!attempt.feedback;
+
+        return `
+          <div class="bg-white shadow-sm border border-e0e0e0 rounded-2xl overflow-hidden">
+            <div class="pad-a flex items-center gap-3 px-5 py-4 cursor-pointer" onclick="toggleExpand('${aid}')">
+              <div class="w-11 h-11 rounded-full flex items-center justify-center shrink-0 ${passed ? 'bg-cyan' : 'bg-red-500'}">
+                <span class="font-zain font-800 text-16 text-white">${attempt.percentage}%</span>
+              </div>
+              <div class="flex-1">
+                <p class="font-zain font-700 text-17 text-primary-dark">${attempt.user_name || attempt.userName || 'Student'}</p>
+                <p class="font-zain text-13 text-a9a9a9">${attempt.score}/${attempt.totalPoints} pts · ${new Date(attempt.completedAt || attempt.timestamp).toLocaleDateString()}</p>
+                ${hasFeedback && !isExpanded ? `<p class="font-zain text-13 text-cyan mt-0.5">✓ Feedback given</p>` : ''}
+              </div>
+              <div class="w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-sm"><i class="fa-solid ${hasFeedback ? 'fa-comment-dots text-cyan' : 'fa-comment text-a9a9a9'}"></i></div>
+            </div>
+
+            ${hasFeedback && !isExpanded ? `
+              <div class="pad-a q-list2 border-c mx-4 mb-3 bg-white rounded-xl px-3 py-2.5 border-l-4 border-cyan" style="margin-bottom: 10px;">
+                <p class="pad-a font-zain text-14 text-primary-dark" style="line-height: 1.5;">"${attempt.feedback}"</p>
+              </div>
+            ` : ''}
+
+            ${isExpanded ? `
+              <div class="q-list q-list2 px-5 pb-5 flex flex-col gap-2.5" style="margin-bottom: 10px;">
+                <div class="pad-a bg-white rounded-xl p-2.5 flex gap-3 border border-e0e0e0">
+                  <div class="flex-1 text-center"><p class="font-700 text-16 text-primary-dark">${attempt.percentage}%</p><p class="text-12 text-a9a9a9">Score</p></div>
+                  <div class="flex-1 text-center"><p class="font-700 text-16 text-primary-dark">${attempt.score}/${attempt.totalPoints}</p><p class="text-12 text-a9a9a9">Points</p></div>
+                  <div class="flex-1 text-center"><p class="font-700 text-16 ${passed ? 'text-cyan' : 'text-red-500'}">${passed ? 'PASSED' : 'FAILED'}</p><p class="text-12 text-a9a9a9">Status</p></div>
+                </div>
+
+                <textarea id="feedbackText_${aid}" rows="3" class="pad-a items-center border-2 border-e0e0e0 rounded-xl px-3.5 py-2 outline-none focus:border-cyan resize-none font-zain font-400 text-15" style="font-family: 'Zain'; font-size: 15px; width: 100%" placeholder="Write personalized feedback for this student...">${attempt.feedback || ''}</textarea>
+                
+                <div class="flex flex-wrap gap-1.5">
+                  ${["Great work!", "Keep practicing.", "Excellent effort!", "See me after class."].map(phrase => `
+                    <button class="bg-white border border-e0e0e0 rounded-full px-2.5 py-1 font-zain text-13 text-primary-dark cursor-pointer" onclick="appendPhrase('${aid}', '${phrase}')">${phrase}</button>
+                  `).join('')}
+                </div>
+
+                <button class="flex items-center justify-center gap-2 h-11 bg-cyan rounded-full cursor-pointer text-white mt-1" onclick="saveFeedback('${aid}')" id="saveBtn_${aid}">
+                  <i class="fa-solid fa-paper-plane"></i>
+                  <span class="font-zain font-700 text-17">${attempt.feedback ? 'Update Feedback' : 'Send Feedback'}</span>
+                </button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.toggleExpand = function (attemptId) { expandedAttemptId = expandedAttemptId === attemptId ? null : attemptId; renderAttempts(); };
+
+    window.appendPhrase = function (attemptId, phrase) {
+      const textarea = document.getElementById(`feedbackText_${attemptId}`);
+      if (textarea) textarea.value = textarea.value ? textarea.value + " " + phrase : phrase;
+    };
+
+    window.saveFeedback = async function (attemptId) {
+      const textarea = document.getElementById(`feedbackText_${attemptId}`);
+      const btn = document.getElementById(`saveBtn_${attemptId}`);
+      if (!textarea) return;
+
+      const text = textarea.value.trim();
+      if (!text) return;
+
+      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+      const success = await window.ChoiceDraftApp.dataService.addFeedback(testId, attemptId, text);
+
+      if (success) { currentTest = await window.ChoiceDraftApp.dataService.getTestById(testId); expandedAttemptId = null; renderAttempts(); }
+      else { alert("Failed to save feedback."); btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Send Feedback</span>'; btn.disabled = false; }
+    };
+
+    init();
+  </script>
+</body>
+
+</html>

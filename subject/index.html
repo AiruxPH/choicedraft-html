@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Class - ChoiceDraft</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zain:wght@200;300;400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://kit.fontawesome.com/ef9baa832e.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    .rounded-2xl { border-radius: 16px; }
+    .rounded-xl  { border-radius: 12px; }
+    .bg-e0e0e0   { background-color: #e0e0e0; }
+    .bg-red-50   { background-color: #fef2f2; }
+
+    .class-hero {
+      background: linear-gradient(135deg, #002e31 0%, #00494d 100%);
+      border-radius: 16px;
+      padding: 24px;
+      color: #fff;
+      margin: 0 16px 16px;
+    }
+    .class-hero-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+    .class-hero-desc  { font-size: 14px; color: rgba(255,255,255,0.6); }
+    .class-hero-meta  { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+    .class-hero-chip  {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.12); border-radius: 999px;
+      padding: 5px 12px; font-size: 13px;
+    }
+
+    .section-label {
+      font-size: 13px; font-weight: 700; color: #a9a9a9;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 8px; padding: 0 16px;
+    }
+
+    .member-card {
+      background: #fff; border: 1px solid #e0e0e0; border-radius: 14px;
+      padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+    }
+    .member-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(0,194,203,0.15); display: flex; align-items: center;
+      justify-content: center; font-size: 16px; font-weight: 800;
+      color: #00c2cb; flex-shrink: 0;
+    }
+    .member-name  { font-size: 15px; font-weight: 700; color: #002e31; }
+    .member-meta  { font-size: 13px; color: #a9a9a9; }
+    .member-badge {
+      font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px;
+      background: rgba(0,194,203,0.1); color: #00c2cb;
+    }
+
+    .inline-edit-row { display: flex; align-items: center; gap: 10px; }
+    .inline-input {
+      flex: 1; border: 1.5px solid #e0e0e0; border-radius: 10px;
+      padding: 9px 12px; font-family: 'Zain'; font-size: 15px;
+      outline: none; background: #fff;
+    }
+    .inline-input:focus { border-color: #00c2cb; }
+
+    .btn-save-inline {
+      background: #00c2cb; color: #fff; border: none; border-radius: 10px;
+      padding: 9px 16px; font-family: 'Zain'; font-size: 15px; font-weight: 700;
+      cursor: pointer; white-space: nowrap;
+    }
+    .btn-save-inline:hover { background: #00a8b0; }
+
+    .danger-section {
+      margin: 8px 16px 24px; border: 1.5px solid #fca5a5; border-radius: 14px; padding: 16px;
+    }
+    .danger-title { font-size: 15px; font-weight: 700; color: #ef4444; margin-bottom: 4px; }
+    .danger-desc  { font-size: 13px; color: #a9a9a9; margin-bottom: 12px; }
+
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #002e31; color: #fff; border-radius: 999px; padding: 10px 20px;
+      font-family: 'Zain'; font-size: 14px; z-index: 9999;
+      opacity: 0; transition: opacity 0.3s; pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+    .toast.error { background: #ef4444; }
+  </style>
+</head>
+<body class="bg-app">
+  <div class="home-layout">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <main class="home-main">
+      <header class="topbar">
+        <div class="flex items-center gap-2">
+          <button id="menuToggleBtn" class="topbar-icon-btn"><i class="fa-solid fa-bars topbar-menu-icon"></i></button>
+          <span class="topbar-title" id="pageTitle">Manage Class</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <a href="../home.html" class="topbar-icon-btn flex items-center justify-center">
+            <i class="fa-solid fa-house topbar-home-icon"></i>
+          </a>
+        </div>
+      </header>
+
+      <div class="main-scroll-area fade-in" id="pageContent">
+        <a href="../home.html" class="back-link"><i class="fa-solid fa-chevron-left back-link-icon"></i><span>Dashboard</span></a>
+
+        <!-- Skeleton (shown while loading) -->
+        <div id="pageSkeleton">
+          <div style="margin:16px;background:#e0e0e0;border-radius:16px;height:110px;animation:skeleton-pulse 1.4s ease-in-out infinite;"></div>
+          <div style="margin:0 16px 12px;display:flex;flex-direction:column;gap:10px;">
+            <div class="skeleton" style="height:44px;border-radius:10px;"></div>
+            <div class="skeleton" style="height:44px;border-radius:10px;"></div>
+          </div>
+          <div style="margin:0 16px;display:flex;flex-direction:column;gap:10px;">
+            <div class="skeleton skeleton-card" style="height:64px;"></div>
+            <div class="skeleton skeleton-card" style="height:64px;"></div>
+          </div>
+        </div>
+
+        <!-- Actual Content (hidden until loaded) -->
+        <div id="subjectContent" style="display:none;">
+          <!-- Hero -->
+          <div class="class-hero" id="heroSection">
+          <div id="heroTitle" class="class-hero-title">Loading...</div>
+          <div id="heroDesc" class="class-hero-desc">â€”</div>
+          <div class="class-hero-meta">
+            <div class="class-hero-chip"><i class="fa-solid fa-users"></i><span id="heroCount">0 students</span></div>
+            <div class="class-hero-chip"><i class="fa-solid fa-key"></i><span id="heroCode">â€”</span></div>
+          </div>
+        </div>
+		
+        <div id="config_content">
+		</div>
+
+        <!-- Tests in This Class -->
+        <p class="section-label" id="testsLabel" style="display:none;">Tests in This Class</p>
+        <div id="testsList" style="margin: 0 16px 24px; display: flex; flex-direction: column; gap: 10px;"></div>
+
+        </div> <!-- End subjectContent -->
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="../cordova.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    sidebar.innerHTML = `
+      <div class="sidebar-header flex items-center gap-3"><div class="sidebar-logo-icon"></div><span class="auth-header-title sidebar-logo-text">Choice<span class="text-secondary">Draft</span></span><button class="close-menu sidebar-close-btn" id="closeMenuBtn"><i class="fa-solid fa-times"></i></button></div>
+      <div id="sidebarUserBlock" class="sidebar-user-block hidden"><div class="user-avatar" id="userAvatar">?</div><div class="user-details"><p class="user-name" id="userName">User</p><p class="user-email" id="userEmail">@</p></div></div>
+      <nav class="sidebar-nav">
+        <a href="../home.html" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-chalkboard"></i></div><span class="nav-label">Dashboard</span></a>
+        <a href="../profile.html" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-user"></i></div><span class="nav-label">Profile</span></a>
+        <a href="../settings.html" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-gear"></i></div><span class="nav-label">Settings</span></a>
+        <div class="flex-1"></div><button id="logoutBtn" class="nav-item"><div class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></div><span class="nav-label">Log Out</span></button>
+      </nav>
+    `;
+
+    const params = new URLSearchParams(window.location.search);
+    const subjectId = params.get('id');
+
+    let currentSubject = null;
+    let currentUser = null;
+
+    document.getElementById('sidebarOverlay').addEventListener('click', () => toggleSidebar(false));
+    document.getElementById('menuToggleBtn').addEventListener('click', () => toggleSidebar(true));
+    document.getElementById('closeMenuBtn').addEventListener('click', () => toggleSidebar(false));
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await window.ChoiceDraftApp.dataService.logout();
+      window.ChoiceDraftApp.navigateTo('../signin.html');
+    });
+
+    function toggleSidebar(open) {
+      document.getElementById('sidebar').classList.toggle('open', open);
+      document.getElementById('sidebarOverlay').classList.toggle('open', open);
+    }
+
+    function showToast(msg, isError = false) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast show' + (isError ? ' error' : '');
+      setTimeout(() => t.className = 'toast', 2800);
+    }
+
+    function renderPage() {
+      const s = currentSubject;
+      document.title = `Manage ${s.name} - ChoiceDraft`;
+      document.getElementById('pageTitle').textContent = s.name;
+      document.getElementById('heroTitle').textContent = s.name;
+      document.getElementById('heroDesc').textContent = s.description || 'No description set.';
+      document.getElementById('heroCount').textContent = `${s.enrolled_count || 0} student${s.enrolled_count !== 1 ? 's' : ''}`;
+      document.getElementById('heroCode').textContent = s.join_code ? `Code: ${s.join_code}` : 'No join code';
+      // FEAT
+	  /*
+	  document.getElementById('editName').value = s.name;
+      document.getElementById('editDescription').value = s.description || '';
+      document.getElementById('editJoinCode').value = s.join_code || '';
+
+      const members = s.members || [];
+      document.getElementById('membersLabel').textContent = `Members (${members.length})`;
+
+      const list = document.getElementById('membersList');
+      if (members.length === 0) {
+        list.innerHTML = `<p style="font-size:14px;color:#a9a9a9;text-align:center;padding:16px 0;">No students enrolled yet.</p>`;
+      } else {
+        list.innerHTML = members.map(m => `
+          <div class="member-card">
+            <div class="member-avatar">${m.name.charAt(0).toUpperCase()}</div>
+            <div style="flex:1;">
+              <p class="member-name">${m.name}</p>
+              <p class="member-meta">${m.email}${m.school_id ? ` · ID: ${m.school_id}` : ''}</p>
+            </div>
+            <span class="member-badge">Student</span>
+            <button onclick="removeStudent('${m.id}', '${m.name}')"
+              style="width:30px;height:30px;border-radius:50%;background:#fef2f2;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i class="fa-solid fa-user-minus" style="color:#ef4444;font-size:12px;"></i>
+            </button>
+          </div>
+        `).join('');
+      }*/
+
+    }
+
+
+    window.saveField = async function(field) {
+      let value;
+      if (field === 'name')        value = document.getElementById('editName').value.trim();
+      if (field === 'description') value = document.getElementById('editDescription').value.trim();
+      if (field === 'join_code')   value = document.getElementById('editJoinCode').value.trim();
+
+      if (field === 'name' && !value) { showToast('Class name cannot be empty.', true); return; }
+
+      const res = await window.ChoiceDraftApp.dataService.updateSubject(subjectId, { [field]: value });
+      if (res.success) {
+        currentSubject[field] = value;
+        renderPage();
+        showToast('Saved!');
+      } else {
+        showToast(res.error || 'Failed to save.', true);
+      }
+    };
+
+    window.addStudent = async function() {
+      const schoolId = document.getElementById('addSchoolId').value.trim();
+      const errEl = document.getElementById('addStudentError');
+      errEl.style.display = 'none';
+      if (!schoolId) { errEl.textContent = 'Please enter a School ID.'; errEl.style.display = 'block'; return; }
+
+      const btn = document.getElementById('addStudentBtn');
+      btn.disabled = true;
+      const res = await window.ChoiceDraftApp.dataService.addStudentBySchoolId(subjectId, schoolId);
+      btn.disabled = false;
+
+      if (res.success) {
+        document.getElementById('addSchoolId').value = '';
+        // Reload subject to get fresh member list
+        currentSubject = await window.ChoiceDraftApp.dataService.getSubjectById(subjectId);
+        renderPage();
+        showToast(`${res.student.name} added successfully!`);
+      } else {
+        errEl.textContent = res.error || 'Failed to add student.';
+        errEl.style.display = 'block';
+      }
+    };
+
+    window.removeStudent = async function(userId, name) {
+      if (!confirm(`Remove ${name} from this class?`)) return;
+      const res = await window.ChoiceDraftApp.dataService.removeStudentFromClass(subjectId, userId);
+      if (res.success) {
+        currentSubject = await window.ChoiceDraftApp.dataService.getSubjectById(subjectId);
+        renderPage();
+        showToast(`${name} removed.`);
+      } else {
+        showToast('Failed to remove student.', true);
+      }
+    };
+
+
+	// FEAT
+	/*document.getElementById('deleteClassBtn').addEventListener('click', async () => {
+      if (!confirm('Are you sure you want to delete this class? This cannot be undone.')) return;
+      const res = await window.ChoiceDraftApp.dataService.deleteSubject(subjectId);
+      if (res.success) {
+        window.ChoiceDraftApp.navigateTo('../home.html');
+      } else {
+        showToast(res.error || 'Cannot delete this class.', true);
+      }
+    });*/
+
+    async function init() {
+      if (!subjectId) { window.ChoiceDraftApp.navigateTo('../home.html'); return; }
+      await window.ChoiceDraftApp.dataService.init();
+      currentUser = await window.ChoiceDraftApp.dataService.getCurrentUser();
+      if (!currentUser) { window.ChoiceDraftApp.navigateTo('../signin.html'); return; }
+
+      await window.ChoiceDraftApp.dataService.setupSidebar();
+
+		
+		let conf_cont = document.getElementById('config_content');
+		let conf_cont_content = "";
+		
+		if(currentUser.role == "Teacher"){
+			conf_cont_content = `
+					<!-- Edit Class Details -->
+        <p class="section-label">Class Details</p>
+        <div style="margin: 0 16px 16px; display: flex; flex-direction: column; gap: 10px;">
+          <div class="inline-edit-row">
+            <input type="text" id="editName" class="inline-input" placeholder="Class name">
+            <button class="btn-save-inline" onclick="saveField('name')">Save</button>
+          </div>
+          <div class="inline-edit-row">
+            <input type="text" id="editDescription" class="inline-input" placeholder="Description (optional)">
+            <button class="btn-save-inline" onclick="saveField('description')">Save</button>
+          </div>
+          <div class="inline-edit-row">
+            <input type="text" id="editJoinCode" class="inline-input" placeholder="Join code (e.g. ENG101)">
+            <button class="btn-save-inline" onclick="saveField('join_code')">Save</button>
+          </div>
+        </div>
+
+        <!-- Add Student -->
+        <p class="section-label">Add Student by School ID</p>
+        <div style="margin: 0 16px 20px;">
+          <div class="inline-edit-row">
+            <input type="text" id="addSchoolId" class="inline-input" placeholder="Enter student's School ID">
+            <button class="btn-save-inline" id="addStudentBtn" onclick="addStudent()"><i class="fa-solid fa-user-plus"></i> Add</button>
+          </div>
+          <p id="addStudentError" style="font-size:13px;color:#ef4444;margin-top:6px;display:none;"></p>
+        </div>
+
+        <!-- Members List -->
+        <p class="section-label" id="membersLabel">Members (0)</p>
+        <div id="membersList" style="margin: 0 16px 20px; display: flex; flex-direction: column; gap: 8px;"></div>
+
+        <!-- Danger Zone -->
+        <p class="section-label">Danger Zone</p>
+        <div class="danger-section">
+          <p class="danger-title">Delete Class</p>
+          <p class="danger-desc">You can only delete a class if there are no enrolled students and no ongoing (Published) tests.</p>
+          <button id="deleteClassBtn" class="btn-primary" style="background:#ef4444;border-color:#ef4444;width:100%;">
+            <i class="fa-solid fa-trash-can"></i> Delete This Class
+          </button>
+        </div>
+			`
+			conf_cont.innerHTML = conf_cont_content
+		}
+
+      const sidebarUserBlock = document.getElementById('sidebarUserBlock');
+      if (sidebarUserBlock && currentUser) {
+        sidebarUserBlock.classList.remove('hidden');
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userEmail').textContent = currentUser.email;
+        document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+      }
+
+      currentSubject = await window.ChoiceDraftApp.dataService.getSubjectById(subjectId);
+      if (!currentSubject) { showToast('Class not found.', true); return; }
+      renderPage();
+
+      // Load tests for this class
+      const allTests = await window.ChoiceDraftApp.dataService.getTests();
+      const subjectTests = allTests.filter(t => t.subject_id === subjectId);
+      renderSubjectTests(subjectTests);
+
+      // Hide skeleton and show content only after EVERYTHING is loaded
+      document.getElementById('pageSkeleton').style.display = 'none';
+      document.getElementById('subjectContent').style.display = 'block';
+    }
+
+    function renderSubjectTests(tests) {
+      const label = document.getElementById('testsLabel');
+      const list  = document.getElementById('testsList');
+      label.style.display = 'block';
+
+      if (!tests || tests.length === 0) {
+        list.innerHTML = `<p style="font-size:14px;color:#a9a9a9;text-align:center;padding:12px 0;">No tests assigned to this class yet.</p>`;
+        return;
+      }
+
+      const isTeacher = currentUser && currentUser.role !== 'Student';
+      list.innerHTML = tests.map(t => {
+        const statusClass = t.status === 'Published' ? 'badge-published' : t.status === 'Finished' ? 'badge-finished' : 'badge-draft';
+        const isOwner = t.owner_id === currentUser.id;
+        const isEditable = isOwner && t.status !== 'Published';
+        const isDeletable = isOwner && (t.status === 'Draft' || t.status === 'Finished');
+        const qCount = t.question_count || 0;
+        return `
+          <div style="background:#fff;border:1px solid #e0e0e0;border-radius:14px;padding:14px 16px;cursor:pointer;" onclick="window.location.href='../test/index.html?id=${t.id}'">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+              <p style="font-size:15px;font-weight:700;color:#002e31;flex:1;margin-right:8px;">${t.title}</p>
+              <span class="test-status-badge ${statusClass}">${t.status || 'Draft'}</span>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+              <span class="test-card-chip"><i class="fa-solid fa-list-ol"></i> ${qCount} questions</span>
+              <span class="test-card-chip"><i class="fa-solid fa-user-pen"></i> ${t.owner_name || 'Unknown'}</span>
+            </div>
+            ${isOwner ? `<div style="display:flex;gap:6px;" onclick="event.stopPropagation()">
+              ${isEditable ? `<button class="btn-secondary" style="padding:6px 10px;font-size:13px;" onclick="window.location.href='../test/builder/index.html?id=${t.id}'"><i class="fa-solid fa-pencil"></i></button>` : ''}
+              <button class="btn-secondary" style="padding:6px 10px;font-size:13px;" onclick="window.location.href='../test/questions/index.html?id=${t.id}'"><i class="fa-solid fa-list-ol"></i></button>
+              <button class="btn-secondary" style="padding:6px 10px;font-size:13px;" onclick="window.location.href='../test/index.html?id=${t.id}'"><i class="fa-solid fa-eye"></i></button>
+              ${isDeletable ? `<button class="btn-secondary" style="padding:6px 10px;font-size:13px;color:#ef4444;" onclick="deleteTest('${t.id}', '${t.title.replace(/'/g, "\\'")}')"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+            </div>` : `<button class="btn-secondary" style="padding:6px 10px;font-size:13px;" onclick="event.stopPropagation();window.location.href='../test/index.html?id=${t.id}'"><i class="fa-solid fa-eye"></i> View</button>`}
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.deleteTest = async function(testId, title) {
+      if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
+      const res = await window.ChoiceDraftApp.dataService.deleteTest(testId);
+      if (res && res.success) {
+        const allTests = await window.ChoiceDraftApp.dataService.getTests();
+        renderSubjectTests(allTests.filter(t => t.subject_id === subjectId));
+        showToast('Test deleted.');
+      } else {
+        showToast((res && res.error) || 'Cannot delete this test.', true);
+      }
+    };
+
+    init();
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collaboration - ChoiceDraft</title>
+  <link rel="stylesheet" href="../../css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zain:wght@200;300;400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .rounded-2xl {
+      border-radius: 16px;
+    }
+
+    .rounded-xl {
+      border-radius: 12px;
+    }
+
+    .bg-white shadow-sm border border-e0e0e0 {
+      background-color: #f2f6f9;
+    }
+
+    .bg-e0e0e0 {
+      background-color: #e0e0e0;
+    }
+
+    .bg-red-50 {
+      background-color: #fef2f2;
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/ef9baa832e.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-app">
+  <div class="home-layout">
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header flex items-center gap-3">
+        <div class="sidebar-logo-icon"></div>
+        <span class="auth-header-title sidebar-logo-text">Choice<span class="text-secondary">Draft</span></span>
+        <button class="close-menu sidebar-close-btn" id="closeMenuBtn" title="Close Menu"><i
+            class="fa-solid fa-times"></i></button>
+      </div>
+      <div id="sidebarUserBlock" class="sidebar-user-block hidden">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div class="user-details">
+          <p class="user-name" id="userName">User Name</p>
+          <p class="user-email" id="userEmail">user@example.com</p>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="../../home.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-chalkboard"></i></div><span class="nav-label">Dashboard</span>
+        </a>
+        <a href="../../profile.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-user"></i></div><span class="nav-label">Profile</span>
+        </a>
+        <a href="../../settings.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-gear"></i></div><span class="nav-label">Settings</span>
+        </a>
+        <a href="../../about.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-circle-info"></i></div><span class="nav-label">About Us</span>
+        </a>
+        <div class="flex-1"></div><button id="logoutBtn" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></div><span class="nav-label">Log
+            Out</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="home-main">
+      <!-- Header -->
+      <header class="topbar">
+        <div class="flex items-center gap-2">
+          <button id="menuToggleBtn" class="topbar-icon-btn" title="Toggle Menu"><i
+              class="fa-solid fa-bars topbar-menu-icon"></i></button>
+          <span class="topbar-title">Collaborate</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <a href="../../home.html" class="topbar-icon-btn flex items-center justify-center"><i
+              class="fa-solid fa-house topbar-home-icon"></i></a>
+        </div>
+      </header>
+
+      <!-- Scrollable Content -->
+      <div class="main-scroll-area fade-in">
+        <a href="#" id="backLink" class="back-link"><i
+            class="fa-solid fa-chevron-left back-link-icon"></i><span>Back</span></a>
+
+        <div class="q-list2 px-4 pb-6 flex flex-col gap-5">
+          <div>
+            <h2 class="font-zain font-800 text-24 text-primary-dark mb-1">Collaboration</h2>
+            <p class="font-zain text-15 text-a9a9a9" id="testSubtitle">Invite colleagues to help build</p>
+          </div>
+
+          <!-- Alerts -->
+          <div id="errorBanner" class="hidden items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
+            <i class="fa-solid fa-circle-exclamation text-red-500"></i>
+            <p class="font-zain text-14 text-red-500" id="errorMessage"></p>
+          </div>
+          <div id="successBanner" class="hidden items-center gap-2 rounded-xl px-3 py-2"
+            style="background-color: #f0fffe; border: 1px solid rgba(0, 194, 203, 0.3);"><i
+              class="fa-solid fa-circle-check text-cyan"></i>
+            <p class="font-zain text-14 text-cyan" id="successMessage"></p>
+          </div>
+
+          <!-- Invite Form -->
+          <div class="bg-white shadow-sm border border-e0e0e0 rounded-2xl p-4">
+            <p class="font-zain font-700 text-18 text-primary-dark mb-3">Invite Collaborator</p>
+            <div class="flex flex-col gap-3">
+              <input type="email" id="inviteEmail" placeholder="colleague@example.com"
+                class="q-list pad-a w-full bg-white border-2 border-e0e0e0 rounded-xl px-3.5 py-2.5 outline-none focus:border-cyan font-zain text-15">
+              <div class="flex gap-2">
+                <button id="roleEditor"
+                  class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 cursor-pointer transition-all border-cyan bg-cyan text-white"
+                  onclick="selectRole('editor')"><i class="fa-solid fa-pen-to-square"></i><span
+                    class="font-zain font-700 text-16">Editor</span></button>
+                <button id="roleViewer"
+                  class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 cursor-pointer transition-all border-e0e0e0 bg-white text-a9a9a9"
+                  onclick="selectRole('viewer')"><i class="fa-solid fa-eye"></i><span
+                    class="font-zain font-700 text-16">Viewer</span></button>
+              </div>
+              <div class="bg-white rounded-xl px-3 py-2">
+                <p id="roleDesc" class="font-zain text-13 text-a9a9a9"><span
+                    class="font-700 text-primary-dark">Editor</span> — Can add, edit, and delete questions.</p>
+              </div>
+              <button id="inviteBtn"
+                class="flex items-center justify-center gap-2 h-12 bg-cyan rounded-full cursor-pointer text-white"><i
+                  class="fa-solid fa-user-plus"></i><span class="font-zain font-700 text-18">Add
+                  Collaborator</span></button>
+            </div>
+          </div>
+
+          <!-- Members -->
+          <div>
+            <p class="font-zain font-700 text-18 text-primary-dark mb-2" id="membersCountLabel">Team Members (1)</p>
+            <div id="membersList" class="flex flex-col gap-2"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  
+
+
+<script src="../../cordova.js"></script>
+  <script src="../../js/config.js"></script>
+  <script src="../../js/app.js"></script>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const sidebarUserBlock = document.getElementById('sidebarUserBlock');
+
+    const backLink = document.getElementById('backLink');
+    const testSubtitle = document.getElementById('testSubtitle');
+    const membersCountLabel = document.getElementById('membersCountLabel');
+    const membersList = document.getElementById('membersList');
+    const inviteEmail = document.getElementById('inviteEmail');
+    const inviteBtn = document.getElementById('inviteBtn');
+    const roleEditor = document.getElementById('roleEditor');
+    const roleViewer = document.getElementById('roleViewer');
+    const roleDesc = document.getElementById('roleDesc');
+    const errorBanner = document.getElementById('errorBanner');
+    const errorMessage = document.getElementById('errorMessage');
+    const successBanner = document.getElementById('successBanner');
+    const successMessage = document.getElementById('successMessage');
+
+    const params = new URLSearchParams(window.location.search);
+    const testId = params.get('id');
+
+    let currentRole = 'editor';
+    let currentTest = null;
+
+    function toggleSidebar(open) {
+      sidebar.classList.toggle('open', open);
+      sidebarOverlay.classList.toggle('open', open);
+    }
+
+    menuToggleBtn.addEventListener('click', () => toggleSidebar(true));
+    closeMenuBtn.addEventListener('click', () => toggleSidebar(false));
+    sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+    logoutBtn.addEventListener('click', async () => { await window.ChoiceDraftApp.dataService.logout(); window.ChoiceDraftApp.navigateTo('../../signin.html'); });
+
+    window.selectRole = function (role) {
+      currentRole = role;
+      if (role === 'editor') {
+        roleEditor.className = "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 cursor-pointer transition-all border-cyan bg-cyan text-white";
+        roleViewer.className = "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 cursor-pointer transition-all border-e0e0e0 bg-white text-a9a9a9";
+        roleDesc.innerHTML = `<span class="font-700 text-primary-dark">Editor</span> — Can add, edit, and delete questions and modify test settings.`;
+      } else {
+        roleViewer.className = "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 cursor-pointer transition-all border-cyan bg-cyan text-white";
+        roleEditor.className = "flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 cursor-pointer transition-all border-e0e0e0 bg-white text-a9a9a9";
+        roleDesc.innerHTML = `<span class="font-700 text-primary-dark">Viewer</span> — Can view the test and its questions, but cannot make changes.`;
+      }
+    };
+
+    async function init() {
+      if (!testId) { window.ChoiceDraftApp.navigateTo('../../home.html'); return; }
+
+      await window.ChoiceDraftApp.dataService.init();
+      const user = await window.ChoiceDraftApp.dataService.getCurrentUser();
+      currentTest = await window.ChoiceDraftApp.dataService.getTestById(testId);
+
+      if (user) {
+        sidebarUserBlock.classList.remove('hidden');
+        document.getElementById('userName').textContent = user.name;
+        document.getElementById('userEmail').textContent = user.email;
+        document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+      }
+
+      if (currentTest) {
+        testSubtitle.textContent = `Invite colleagues to help build "${currentTest.title}"`;
+        backLink.href = `../index.html?id=${testId}`;
+        renderMembers();
+      }
+    }
+
+    function renderMembers() {
+      if (!currentTest) return;
+
+      const collaborators = currentTest.collaborators || [];
+      membersCountLabel.textContent = `Team Members (${1 + collaborators.length})`;
+
+      let html = `
+        <div class="pad-a flex items-center gap-3 bg-[#002e31] rounded-2xl px-5 py-4">
+          <div class="w-10 h-10 rounded-full bg-cyan flex items-center justify-center shrink-0">
+            <span class="font-zain font-700 text-18 text-white">${(currentTest.owner_name || 'O').charAt(0).toUpperCase()}</span>
+          </div>
+          <div class="flex-1">
+            <p class="font-zain font-700 text-16 text-white">${currentTest.owner_name || 'Owner'}</p>
+            <p class="font-zain text-13 text-white/50">Owner</p>
+          </div>
+          <div class="pad-a flex items-center gap-1 bg-cyan rounded-full px-2.5 py-1">
+            <i class="fa-solid fa-crown text-white text-xs"></i>
+            <span class="font-zain text-12 text-white font-700">Owner</span>
+          </div>
+        </div>
+      `;
+
+      collaborators.forEach(c => {
+        html += `
+          <div class="pad-a flex items-center gap-3 bg-white shadow-sm border border-e0e0e0 rounded-2xl px-5 py-4">
+            <div class="w-10 h-10 rounded-full bg-cyan/20 flex items-center justify-center shrink-0">
+              <span class="font-zain font-700 text-18 text-primary-dark">${c.name.charAt(0).toUpperCase()}</span>
+            </div>
+            <div class="flex-1">
+              <p class="font-zain font-700 text-16 text-primary-dark">${c.name || 'Member'}</p>
+              <p class="font-zain text-13 text-a9a9a9">${c.email || ''}</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="pad-a flex items-center gap-1 rounded-full px-2.5 py-1" style="background-color: ${c.role === 'editor' ? 'rgba(0,194,203,0.2)' : 'rgba(169,169,169,0.2)'}; color: ${c.role === 'editor' ? '#00c2cb' : '#a9a9a9'}">
+                <i class="fa-solid ${c.role === 'editor' ? 'fa-pen-to-square' : 'fa-eye'} text-xs"></i>
+                <span class="font-zain text-12 font-700 text-capitalize">${c.role}</span>
+              </div>
+              <button class="w-7 h-7 rounded-full bg-red-50 flex items-center justify-center cursor-pointer" onclick="removeCollaborator('${c.user_id}')">
+                <i class="fa-solid fa-trash-can text-red-500 text-xs"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      if (collaborators.length === 0) {
+        html += `<div class="text-center py-5"><p class="font-zain text-15 text-a9a9a9">No collaborators yet. Invite someone above!</p></div>`;
+      }
+
+      membersList.innerHTML = html;
+    }
+
+    inviteBtn.addEventListener('click', async () => {
+      const email = inviteEmail.value.trim();
+      errorBanner.classList.add('hidden');
+      successBanner.classList.add('hidden');
+
+      if (!email) { errorBanner.classList.remove('hidden'); errorMessage.textContent = "Please enter an email."; return; }
+
+      inviteBtn.disabled = true;
+      inviteBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Adding...</span>';
+
+      const result = await window.ChoiceDraftApp.dataService.addCollaborator(testId, email, currentRole);
+
+      inviteBtn.disabled = false;
+      inviteBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> <span>Add Collaborator</span>';
+
+      if (result.success) {
+        successBanner.classList.remove('hidden'); successMessage.textContent = "Collaborator added successfully!";
+        inviteEmail.value = ''; currentTest = await window.ChoiceDraftApp.dataService.getTestById(testId); renderMembers();
+      } else {
+        errorBanner.classList.remove('hidden'); errorMessage.textContent = result.error || "Failed to add.";
+      }
+    });
+
+    window.removeCollaborator = async function (userId) {
+      if (confirm("Are you sure?")) {
+        const success = await window.ChoiceDraftApp.dataService.removeCollaborator(testId, userId);
+        if (success) { currentTest = await window.ChoiceDraftApp.dataService.getTestById(testId); renderMembers(); }
+      }
+    };
+
+    init();
+  </script>
+</body>
+
+</html>

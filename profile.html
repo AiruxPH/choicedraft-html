@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChoiceDraft - Profile</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zain:wght@200;300;400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://kit.fontawesome.com/ef9baa832e.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-app">
+  <div class="home-layout">
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header flex items-center gap-3">
+        <div class="sidebar-logo-icon">
+          <svg class="w-full h-full" fill="none" viewBox="0 0 150 150">
+            <path clip-rule="evenodd"
+              d="M137.5 29.1667C134.185 29.1667 131.005 30.4836 128.661 32.8278C126.317 35.172 125 38.3515 125 41.6667V50H150V41.6667C150 38.3515 148.683 35.172 146.339 32.8278C143.995 30.4836 140.815 29.1667 137.5 29.1667ZM150 58.3333H125V127.083L137.5 145.833L150 127.083V58.3333ZM0 12.5V137.5C0 140.815 1.31696 143.995 3.66117 146.339C6.00537 148.683 9.18479 150 12.5 150H104.167C107.482 150 110.661 148.683 113.005 146.339C115.35 143.995 116.667 140.815 116.667 137.5V12.5C116.667 9.18479 115.35 6.00537 113.005 3.66117C110.661 1.31696 107.482 0 104.167 0H12.5C9.18479 0 6.00537 1.31696 3.66117 3.66117C1.31696 6.00537 0 9.18479 0 12.5ZM58.3333 37.5C58.3333 36.3949 58.7723 35.3351 59.5537 34.5537C60.3351 33.7723 61.3949 33.3333 62.5 33.3333H95.8333C96.9384 33.3333 97.9982 33.7723 98.7796 34.5537C99.561 35.3351 100 36.3949 100 37.5C100 38.6051 99.561 39.6649 98.7796 40.4463C97.9982 41.2277 96.9384 41.6667 95.8333 41.6667H62.5C61.3949 41.6667 60.3351 41.2277 59.5537 40.4463C58.7723 39.6649 58.3333 38.6051 58.3333 37.5ZM62.5 50C61.3949 50 60.3351 50.439 59.5537 51.2204C58.7723 52.0018 58.3333 53.0616 58.3333 54.1667C58.3333 55.2717 58.7723 56.3315 59.5537 57.1129C60.3351 57.8943 61.3949 58.3333 62.5 58.3333H95.8333C96.9384 58.3333 97.9982 57.8943 98.7796 57.1129C99.561 56.3315 100 55.2717 100 54.1667C100 53.0616 99.561 52.0018 98.7796 51.2204C97.9982 50.439 96.9384 50 95.8333 50H62.5ZM58.3333 91.6667C58.3333 90.5616 58.7723 89.5018 59.5537 88.7204C60.3351 87.939 61.3949 87.5 62.5 87.5H95.8333C96.9384 87.5 97.9982 87.939 98.7796 88.7204C99.561 89.5018 100 90.5616 100 91.6667C100 92.7717 99.561 93.8315 98.7796 94.6129C97.9982 95.3943 96.9384 95.8333 95.8333 95.8333H62.5C61.3949 95.8333 60.3351 95.3943 59.5537 94.6129C58.7723 93.8315 58.3333 92.7717 58.3333 91.6667ZM62.5 104.167C61.3949 104.167 60.3351 104.606 59.5537 105.387C58.7723 106.168 58.3333 107.228 58.3333 108.333C58.3333 109.438 58.7723 110.498 59.5537 111.28C60.3351 112.061 61.3949 112.5 62.5 112.5H95.8333C96.9384 112.5 97.9982 112.061 98.7796 111.28C99.561 110.498 100 109.438 100 108.333C100 107.228 99.561 110.498 98.7796 105.387C97.9982 104.606 96.9384 104.167 95.8333 104.167H62.5ZM25 91.6667V104.167H37.5V91.6667H25ZM20.8333 83.3333H41.6667C42.7717 83.3333 43.8315 83.7723 44.6129 84.5537C45.3943 85.3351 45.8333 86.3949 45.8333 87.5V108.333C45.8333 109.438 45.3943 110.498 44.6129 111.28C43.8315 112.061 42.7717 112.5 41.6667 112.5H20.8333C19.7283 112.5 18.6685 112.061 17.8871 111.28C17.1057 110.498 16.6667 109.438 16.6667 108.333V87.5C16.6667 86.3949 17.1057 85.3351 17.8871 84.5537C18.6685 83.7723 19.7283 83.3333 20.8333 83.3333ZM48.7792 40.4458C49.5382 39.66 49.9581 38.6075 49.9486 37.515C49.9391 36.4225 49.5009 35.3775 48.7284 34.6049C47.9559 33.8324 46.9108 33.3942 45.8183 33.3847C44.7258 33.3752 43.6733 33.7952 42.8875 34.5542L29.1667 48.275L23.7792 42.8875C22.9933 42.1285 21.9408 41.7085 20.8483 41.718C19.7558 41.7275 18.7108 42.1657 17.9383 42.9383C17.1657 43.7108 16.7275 44.7558 16.718 45.8483C16.7085 46.9408 17.1285 47.9933 17.8875 48.7792L29.1667 60.0583L48.7792 40.4458Z"
+              fill="white" fill-rule="evenodd" />
+          </svg>
+        </div>
+        <span class="auth-header-title sidebar-logo-text">Choice<span class="text-secondary">Draft</span></span>
+        <button class="close-menu sidebar-close-btn" id="closeMenuBtn" title="Close Menu" aria-label="Close Menu">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      <!-- User Info Block -->
+      <div id="sidebarUserBlock" class="sidebar-user-block hidden">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div class="user-details">
+          <p class="user-name" id="userName">User Name</p>
+          <p class="user-email" id="userEmail">user@example.com</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="home.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-chalkboard"></i></div>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a id="adminNavLink" href="admin.html" class="nav-item hidden">
+          <div class="nav-icon"><i class="fa-solid fa-user-shield"></i></div>
+          <span class="nav-label">Admin Portal</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+          <div class="nav-icon"><i class="fa-solid fa-user"></i></div>
+          <span class="nav-label">Profile</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-gear"></i></div>
+          <span class="nav-label">Settings</span>
+        </a>
+        <a href="about.html" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-circle-info"></i></div>
+          <span class="nav-label">About Us</span>
+        </a>
+        <div class="flex-1"></div>
+        <button id="logoutBtn" class="nav-item">
+          <div class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+          <span class="nav-label">Log Out</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="home-main">
+      <!-- Header -->
+      <header class="topbar">
+        <div class="flex items-center gap-2">
+          <button id="menuToggleBtn" class="topbar-icon-btn"><i class="fa-solid fa-bars topbar-menu-icon"></i></button>
+          <span class="topbar-title">My Profile</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <a href="home.html" class="topbar-icon-btn flex items-center justify-center">
+            <i class="fa-solid fa-house topbar-home-icon"></i>
+          </a>
+        </div>
+      </header>
+
+      <!-- Scrollable Content -->
+      <div class="main-scroll-area fade-in">
+        <div class="home-content">
+
+          <!-- Skeleton loader -->
+          <div id="profileSkeleton">
+            <div class="skeleton" style="height:150px;border-radius:16px;margin-bottom:14px;"></div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
+              <div class="skeleton" style="height:90px;border-radius:14px;"></div>
+              <div class="skeleton" style="height:90px;border-radius:14px;"></div>
+              <div class="skeleton" style="height:90px;border-radius:14px;"></div>
+            </div>
+            <div class="skeleton" style="height:240px;border-radius:16px;"></div>
+          </div>
+
+          <!-- Actual Content (hidden until loaded) -->
+          <div id="profileContent" style="display:none;">
+
+            <!-- Profile Hero Banner -->
+            <div id="profileHero" style="
+              background: linear-gradient(135deg, #002e31 0%, #004d52 100%);
+              border-radius: 16px; margin-bottom: 16px; padding: 28px 24px;
+              display: flex; align-items: center; gap: 20px; position: relative; overflow: hidden;
+            ">
+              <!-- Decorative circle -->
+              <div
+                style="position:absolute;right:-30px;top:-30px;width:160px;height:160px;border-radius:50%;background:rgba(0,194,203,0.08);">
+              </div>
+              <div
+                style="position:absolute;right:40px;bottom:-50px;width:120px;height:120px;border-radius:50%;background:rgba(0,194,203,0.05);">
+              </div>
+              <div id="heroAvatar" style="
+              width: 72px; height: 72px; border-radius: 50%; flex-shrink: 0; z-index:1;
+              background: rgba(0,194,203,0.2); border: 3px solid rgba(0,194,203,0.5);
+              display: flex; align-items: center; justify-content: center;
+              font-size: 30px; font-weight: 900; color: #00c2cb;
+            ">?</div>
+              <div style="z-index:1;">
+                <p id="heroName" style="font-size:22px;font-weight:900;color:#fff;margin-bottom:2px;">Loading...</p>
+                <p id="heroEmail" style="font-size:14px;color:rgba(255,255,255,0.55);margin-bottom:8px;"></p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                  <span id="heroRoleBadge"
+                    style="background:rgba(0,194,203,0.2);color:#00c2cb;border:1px solid rgba(0,194,203,0.3);border-radius:999px;padding:4px 12px;font-size:12px;font-weight:700;"></span>
+                  <span id="heroSchoolId"
+                    style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);border-radius:999px;padding:4px 12px;font-size:12px;"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div id="statsRow" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;">
+              <div id="statTestsCard" class="test-card" style="padding:14px;text-align:center;">
+                <p style="font-size:24px;font-weight:900;color:#002e31;" id="statTests">â€”</p>
+                <p style="font-size:12px;color:#a9a9a9;margin-top:2px;">Tests</p>
+              </div>
+              <div class="test-card" style="padding:14px;text-align:center;">
+                <p style="font-size:24px;font-weight:900;color:#002e31;" id="statClasses">â€”</p>
+                <p style="font-size:12px;color:#a9a9a9;margin-top:2px;">Classes</p>
+              </div>
+              <div class="test-card" style="padding:14px;text-align:center;">
+                <p style="font-size:24px;font-weight:900;color:#002e31;" id="statAttempts">â€”</p>
+                <p style="font-size:12px;color:#a9a9a9;margin-top:2px;">Attempts</p>
+              </div>
+            </div>
+
+            <!-- Info Section -->
+            <div id="infoCard" class="test-card" style="margin-bottom:16px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <h3 style="font-size:16px;font-weight:800;color:#002e31;">Account Info</h3>
+                <button id="editProfileBtn"
+                  style="background:rgba(0,194,203,0.1);color:#00c2cb;border:none;border-radius:999px;padding:6px 14px;font-family:Zain;font-size:13px;font-weight:700;cursor:pointer;">
+                  <i class="fa-solid fa-pen-to-square" style="margin-right:4px;"></i>Edit
+                </button>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div
+                    style="width:34px;height:34px;border-radius:10px;background:rgba(0,194,203,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="fa-solid fa-user" style="color:#00c2cb;font-size:14px;"></i>
+                  </div>
+                  <div>
+                    <p style="font-size:11px;color:#a9a9a9;text-transform:uppercase;letter-spacing:0.06em;">Full Name
+                    </p>
+                    <p id="infoName" style="font-size:15px;font-weight:700;color:#002e31;">â€”</p>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div
+                    style="width:34px;height:34px;border-radius:10px;background:rgba(0,194,203,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="fa-solid fa-envelope" style="color:#00c2cb;font-size:14px;"></i>
+                  </div>
+                  <div>
+                    <p style="font-size:11px;color:#a9a9a9;text-transform:uppercase;letter-spacing:0.06em;">Email</p>
+                    <p id="infoEmail" style="font-size:15px;font-weight:700;color:#002e31;">â€”</p>
+                  </div>
+                </div>
+                <div id="institutionRow" style="display:flex;align-items:center;gap:12px;">
+                  <div
+                    style="width:34px;height:34px;border-radius:10px;background:rgba(0,194,203,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="fa-solid fa-building-columns" style="color:#00c2cb;font-size:14px;"></i>
+                  </div>
+                  <div>
+                    <p style="font-size:11px;color:#a9a9a9;text-transform:uppercase;letter-spacing:0.06em;">Institution
+                    </p>
+                    <p id="infoInstitution" style="font-size:15px;font-weight:700;color:#002e31;">â€”</p>
+                  </div>
+                </div>
+                <div id="schoolIdRow" style="display:flex;align-items:center;gap:12px;">
+                  <div
+                    style="width:34px;height:34px;border-radius:10px;background:rgba(0,194,203,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="fa-solid fa-id-card" style="color:#00c2cb;font-size:14px;"></i>
+                  </div>
+                  <div>
+                    <p style="font-size:11px;color:#a9a9a9;text-transform:uppercase;letter-spacing:0.06em;">School ID
+                    </p>
+                    <p id="infoSchoolId" style="font-size:15px;font-weight:700;color:#002e31;">â€”</p>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div
+                    style="width:34px;height:34px;border-radius:10px;background:rgba(0,194,203,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="fa-solid fa-calendar" style="color:#00c2cb;font-size:14px;"></i>
+                  </div>
+                  <div>
+                    <p style="font-size:11px;color:#a9a9a9;text-transform:uppercase;letter-spacing:0.06em;">Member Since
+                    </p>
+                    <p id="infoSince" style="font-size:15px;font-weight:700;color:#002e31;">â€”</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> <!-- End profileContent -->
+
+          <!-- Edit Modal Overlay -->
+          <div id="editOverlay"
+            style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:flex-end;justify-content:center;">
+            <div
+              style="background:#fff;border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:520px;max-height:80vh;overflow-y:auto;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+                <h3 style="font-size:18px;font-weight:900;color:#002e31;">Edit Profile</h3>
+                <button id="cancelEditBtn"
+                  style="background:none;border:none;font-size:20px;color:#a9a9a9;cursor:pointer;"><i
+                    class="fa-solid fa-times"></i></button>
+              </div>
+              <div id="editErrorBox"
+                style="display:none;background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;padding:10px 14px;margin-bottom:14px;color:#ef4444;font-size:14px;">
+              </div>
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div class="input-group">
+                  <label class="input-label">Full Name</label>
+                  <input type="text" id="editName" class="input-field" placeholder="Your full name">
+                </div>
+                <div class="input-group">
+                  <label class="input-label">Email Address</label>
+                  <input type="email" id="editEmail" class="input-field" placeholder="your@email.com">
+                </div>
+                <div class="input-group">
+                  <label class="input-label">Institution / School</label>
+                  <input type="text" id="editInstitution" class="input-field" placeholder="Institution name">
+                </div>
+                <div class="input-group" id="editSchoolIdGroup">
+                  <label class="input-label">School ID</label>
+                  <input type="text" id="editSchoolId" class="input-field" placeholder="e.g. 2024-00123">
+                </div>
+              </div>
+              <button id="saveProfileBtn" class="btn-primary" style="margin-top:20px;">Save Changes</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"
+    style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#002e31;color:#fff;border-radius:999px;padding:10px 20px;font-family:Zain;font-size:14px;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;">
+  </div>
+
+  <script src="./cordova.js"></script>
+  <script src="./js/config.js"></script>
+  <script src="./js/app.js"></script>
+
+  <script>
+    document.getElementById('menuToggleBtn').addEventListener('click', () => toggleSidebar(true));
+    document.getElementById('closeMenuBtn').addEventListener('click', () => toggleSidebar(false));
+    document.getElementById('sidebarOverlay').addEventListener('click', () => toggleSidebar(false));
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await window.ChoiceDraftApp.dataService.logout();
+      window.ChoiceDraftApp.navigateTo('signin.html');
+    });
+
+    function toggleSidebar(open) {
+      document.getElementById('sidebar').classList.toggle('open', open);
+      document.getElementById('sidebarOverlay').classList.toggle('open', open);
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.style.opacity = '1';
+      setTimeout(() => t.style.opacity = '0', 2800);
+    }
+
+    let currentUser = null;
+
+    function populateView(user) {
+      const initial = user.name.charAt(0).toUpperCase();
+      document.getElementById('heroAvatar').textContent = initial;
+      document.getElementById('heroName').textContent = user.name;
+      document.getElementById('heroEmail').textContent = user.email;
+      document.getElementById('heroRoleBadge').textContent = user.role || '—';
+      document.getElementById('heroSchoolId').textContent = user.school_id ? `ID: ${user.school_id}` : '';
+      document.getElementById('infoName').textContent = user.name;
+      document.getElementById('infoEmail').textContent = user.email;
+      document.getElementById('infoInstitution').textContent = user.institution || '—';
+      document.getElementById('infoSchoolId').textContent = user.school_id || '—';
+      document.getElementById('infoSince').textContent = user.created_at
+        ? new Date(user.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+        : '—';
+      // Hide School ID row for non-Students
+      document.getElementById('schoolIdRow').style.display = user.role === 'Student' ? 'flex' : 'none';
+      document.getElementById('editSchoolIdGroup').style.display = user.role === 'Student' ? 'block' : 'none';
+
+      // Role-specific visibility
+      if (user.role === 'Admin') {
+        document.getElementById('statsRow').style.display = 'none';
+        document.getElementById('institutionRow').style.display = 'none';
+      } else if (user.role === 'Student') {
+        document.getElementById('statTestsCard').style.display = 'none';
+      }
+    }
+
+    // Edit Modal
+    document.getElementById('editProfileBtn').addEventListener('click', () => {
+      document.getElementById('editName').value = currentUser.name;
+      document.getElementById('editEmail').value = currentUser.email;
+      document.getElementById('editInstitution').value = currentUser.institution || '';
+      document.getElementById('editSchoolId').value = currentUser.school_id || '';
+      document.getElementById('editErrorBox').style.display = 'none';
+      document.getElementById('editOverlay').style.display = 'flex';
+    });
+    document.getElementById('cancelEditBtn').addEventListener('click', () => {
+      document.getElementById('editOverlay').style.display = 'none';
+    });
+
+    document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+      const newName = document.getElementById('editName').value.trim();
+      const newEmail = document.getElementById('editEmail').value.trim();
+      const newInstitution = document.getElementById('editInstitution').value.trim();
+      const newSchoolId = document.getElementById('editSchoolId').value.trim();
+      const errBox = document.getElementById('editErrorBox');
+
+      if (!newName || !newEmail) {
+        errBox.textContent = 'Name and email are required.';
+        errBox.style.display = 'block';
+        return;
+      }
+
+      const updates = { name: newName, email: newEmail, institution: newInstitution };
+      if (currentUser.role === 'Student') updates.school_id = newSchoolId;
+
+      const btn = document.getElementById('saveProfileBtn');
+      btn.disabled = true; btn.textContent = 'Saving...';
+
+      const res = await window.ChoiceDraftApp.dataService.updateUser(currentUser.id, updates);
+      btn.disabled = false; btn.textContent = 'Save Changes';
+
+      if (res && res.success) {
+        currentUser = { ...currentUser, ...updates };
+        populateView(currentUser);
+        // Update sidebar
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userEmail').textContent = currentUser.email;
+        document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+        document.getElementById('editOverlay').style.display = 'none';
+        showToast('Profile updated!');
+      } else {
+        errBox.textContent = (res && res.error) || 'Failed to save changes.';
+        errBox.style.display = 'block';
+      }
+    });
+
+    async function init() {
+      currentUser = await window.ChoiceDraftApp.dataService.getCurrentUser();
+      if (!currentUser) { window.ChoiceDraftApp.navigateTo('signin.html'); return; }
+
+      // Fetch fresh from API
+      const fresh = await apiService.users.getById(currentUser.id);
+      if (fresh) { currentUser = { ...currentUser, ...fresh }; sessionManager.setUser(currentUser); }
+
+      await window.ChoiceDraftApp.dataService.setupSidebar();
+      populateView(currentUser);
+
+      // Load stats
+      const [tests, subjects] = await Promise.all([
+        window.ChoiceDraftApp.dataService.getTests(),
+        window.ChoiceDraftApp.dataService.getSubjects()
+      ]);
+
+      const myTests = tests.filter(t => t.owner_id === currentUser.id);
+      document.getElementById('statTests').textContent = myTests.length;
+      document.getElementById('statClasses').textContent = subjects.length;
+
+      // Attempts count (only available for teachers; skip for simplicity)
+      let attemptsCount = 0;
+      if (currentUser.role === 'Student') {
+        // Count attempts from tests (approximate from enrolled)
+        attemptsCount = 'â€”';
+      } else {
+        // Count published/finished tests owned
+        attemptsCount = myTests.filter(t => t.status === 'Published' || t.status === 'Finished').length;
+      }
+      document.getElementById('statAttempts').textContent = attemptsCount;
+
+      // Hide skeleton and reveal content only after all stats are loaded
+      document.getElementById('profileSkeleton').style.display = 'none';
+      document.getElementById('profileContent').style.display = 'block';
+    }
+
+    init();
+  </script>
+</body>
+
+</html>
