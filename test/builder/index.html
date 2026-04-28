@@ -549,8 +549,29 @@
 
       const res = await window.ChoiceDraftApp.dataService.createTest(dupPayload);
       if (res && res.id) {
-        alert(`Duplicated as "${dupPayload.title}". Redirecting to new test builder.`);
-        window.ChoiceDraftApp.navigateTo(`../../test/builder/index.html?id=${res.id}`);
+        const newTestId = res.id;
+
+        // Duplicate questions and their choices
+        const questions = original.questions || [];
+        for (const q of questions) {
+          const qPayload = {
+            test_id: newTestId,
+            text: q.text,
+            points: q.points || 1,
+            is_bold: q.is_bold || 0,
+            is_italic: q.is_italic || 0,
+            is_underline: q.is_underline || 0,
+            pool_tag: q.pool_tag || null,
+            choices: (q.choices || []).map(c => ({
+              text: c.text,
+              is_correct: c.is_correct || 0
+            }))
+          };
+          await window.apiService.questions.create(qPayload);
+        }
+
+        alert(`Duplicated as "${dupPayload.title}" with ${questions.length} question(s). Redirecting to new test builder.`);
+        window.ChoiceDraftApp.navigateTo(`../../test/builder/index.html?id=${newTestId}`);
       } else {
         alert('Duplication failed. Please try again.');
       }

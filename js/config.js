@@ -180,6 +180,11 @@ const apiService = {
             return result.attempts || [];
         },
         
+        getAllByUser: async (userId) => {
+            const result = await apiRequest(CONFIG.ENDPOINTS.ATTEMPTS, 'GET', null, { user_id: userId });
+            return result.attempts || [];
+        },
+        
         submit: async (testId, userId, answers, isAnonymous = false) => {
             return await apiRequest(CONFIG.ENDPOINTS.ATTEMPTS, 'POST', { 
                 test_id: testId, 
@@ -228,11 +233,12 @@ const apiService = {
             return result.collaborators || [];
         },
         
-        add: async (testId, email, currentUserId) => {
+        add: async (testId, email, currentUserId, role) => {
             return await apiRequest(CONFIG.ENDPOINTS.COLLABORATORS, 'POST', { 
                 test_id: testId, 
                 email, 
-                current_user_id: currentUserId 
+                current_user_id: currentUserId,
+                role
             });
         },
         
@@ -240,6 +246,15 @@ const apiService = {
             return await apiRequest(CONFIG.ENDPOINTS.COLLABORATORS, 'DELETE', null, { 
                 test_id: testId, 
                 user_id: userId 
+            });
+        },
+        
+        updateRole: async (testId, userId, role, currentUserId) => {
+            return await apiRequest(CONFIG.ENDPOINTS.COLLABORATORS, 'PUT', { 
+                test_id: testId, 
+                user_id: userId,
+                role: role,
+                current_user_id: currentUserId
             });
         }
     },

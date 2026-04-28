@@ -155,7 +155,7 @@
                       onclick="sortUsers('institution')">Institution <i
                         class="fa-solid fa-sort text-light ml-1 text-xs"></i></th>
                     <th class="p-4 font-bold text-secondary cursor-pointer hover:bg-gray-100"
-                      onclick="sortUsers('testsCount')">Tests <i class="fa-solid fa-sort text-light ml-1 text-xs"></i>
+                      onclick="sortUsers('activity_count')">Activity <i class="fa-solid fa-sort text-light ml-1 text-xs"></i>
                     </th>
                     <th class="p-4 font-bold text-secondary text-right">Actions</th>
                   </tr>
@@ -367,6 +367,12 @@
 
       // Load Data
       allUsers = await window.apiService.users.getAll();
+      
+      // Normalize activity counts for sorting
+      allUsers.forEach(u => {
+        u.activity_count = u.role === 'Student' ? parseInt(u.attempts_count || 0) : parseInt(u.tests_count || 0);
+      });
+
       const allTests = await window.apiService.tests.getAll(null, true); // true for isAdmin flag
       allGlobalTests = allTests;
 
@@ -419,8 +425,10 @@
             <span class="text-right md:text-left">${u.institution || '—'}</span>
           </td>
           <td class="flex justify-between md:table-cell items-center p-3 md:p-4 font-bold text-secondary md:border-none border-b border-gray-50">
-            <span class="md:hidden font-bold text-secondary text-sm">Tests Created</span>
-            <span class="bg-gray-100 md:bg-transparent px-3 md:px-0 py-1 md:py-0 rounded-lg md:rounded-none">${u.testsCount || 0}</span>
+            <span class="md:hidden font-bold text-secondary text-sm">${u.role === 'Student' ? 'Tests Taken' : 'Tests Created'}</span>
+            <span class="bg-gray-100 md:bg-transparent px-3 md:px-0 py-1 md:py-0 rounded-lg md:rounded-none">
+              ${u.role === 'Student' ? (u.attempts_count || 0) : (u.tests_count || 0)}
+            </span>
           </td>
           <td class="flex justify-end md:table-cell items-center p-3 md:p-4 text-right mt-2 md:mt-0 gap-2 md:gap-0">
             ${u.id !== window.sessionManager.getUser().id ? `
@@ -457,11 +465,6 @@
         if (valA < valB) return currentSort.asc ? -1 : 1;
         if (valA > valB) return currentSort.asc ? 1 : -1;
         return 0;
-      });
-
-      // Calculate tests count per user dynamically
-      filtered.forEach(u => {
-        u.testsCount = allGlobalTests.filter(t => t.owner_id == u.id).length;
       });
 
       renderUsers(filtered);
@@ -525,37 +528,82 @@
       userDetailsModal.classList.add('hidden');
     });
 
-    function viewUserTests(userId) {
+    async function viewUserTests(userId) {
       const user = allUsers.find(u => u.id == userId);
       if (!user) return;
 
-      document.getElementById('detailsUserName').textContent = user.name + "'s Tests";
-      const userTests = allGlobalTests.filter(t => t.owner_id == userId);
-
+      const userDetailsModal = document.getElementById('userDetailsModal');
       const tbody = document.getElementById('userTestsTableBody');
       const noTests = document.getElementById('noUserTestsFound');
-
-      if (userTests.length === 0) {
-        tbody.innerHTML = '';
-        noTests.classList.remove('hidden');
-      } else {
-        noTests.classList.add('hidden');
-        tbody.innerHTML = userTests.map(t => {
-          let statusClass = 'bg-gray-100 text-gray-700';
-          if (t.status === 'Published') statusClass = 'bg-green-100 text-green-700';
-          if (t.status === 'Draft') statusClass = 'bg-yellow-100 text-yellow-700';
-
-          return `
-            <tr class="border-b border-light hover:bg-gray-50">
-              <td class="p-2 font-medium">${t.title}</td>
-              <td class="p-2"><span class="px-2 py-1 rounded-full text-xs font-bold ${statusClass}">${t.status}</span></td>
-              <td class="p-2 text-sm text-light">${new Date(t.created_at).toLocaleDateString()}</td>
-            </tr>
-          `;
-        }).join('');
-      }
-
+      const tableHead = userDetailsModal.querySelector('thead');
+      
+      // Loading state
+      tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Loading data...</td></tr>';
+      noTests.classList.add('hidden');
       userDetailsModal.classList.remove('hidden');
+
+      if (user.role === 'Student') {
+        document.getElementById('detailsUserName').textContent = user.name + "'s Tests Taken";
+        tableHead.innerHTML = `
+          <tr class="bg-gray-50 border-b border-light">
+            <th class="p-2 font-bold text-secondary text-sm">Test Title</th>
+            <th class="p-2 font-bold text-secondary text-sm">Result</th>
+            <th class="p-2 font-bold text-secondary text-sm">Date</th>
+          </tr>
+        `;
+        
+        try {
+          const attempts = await window.apiService.attempts.getAllByUser(userId);
+          if (attempts.length === 0) {
+            tbody.innerHTML = '';
+            noTests.textContent = "This student has not taken any tests yet.";
+            noTests.classList.remove('hidden');
+          } else {
+            tbody.innerHTML = attempts.map(a => `
+              <tr class="border-b border-light hover:bg-gray-50">
+                <td class="p-2 font-medium">${a.test_title || 'Untitled Test'}</td>
+                <td class="p-2">
+                  <span class="px-2 py-1 rounded-full text-xs font-bold ${Number(a.percentage) >= 70 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+                    ${Math.round(a.percentage)}% (${a.score}/${a.total_points})
+                  </span>
+                </td>
+                <td class="p-2 text-sm text-light">${new Date(a.completed_at.replace(/-/g, "/")).toLocaleDateString()}</td>
+              </tr>
+            `).join('');
+          }
+        } catch (err) {
+          tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center text-red-500">Error loading attempts</td></tr>';
+        }
+      } else {
+        document.getElementById('detailsUserName').textContent = user.name + "'s Tests Created";
+        tableHead.innerHTML = `
+          <tr class="bg-gray-50 border-b border-light">
+            <th class="p-2 font-bold text-secondary text-sm">Title</th>
+            <th class="p-2 font-bold text-secondary text-sm">Status</th>
+            <th class="p-2 font-bold text-secondary text-sm">Created On</th>
+          </tr>
+        `;
+        
+        const userTests = allGlobalTests.filter(t => t.owner_id == userId);
+        if (userTests.length === 0) {
+          tbody.innerHTML = '';
+          noTests.textContent = "This teacher has not created any tests yet.";
+          noTests.classList.remove('hidden');
+        } else {
+          tbody.innerHTML = userTests.map(t => {
+            let statusClass = 'bg-gray-100 text-gray-700';
+            if (t.status === 'Published') statusClass = 'bg-green-100 text-green-700';
+            if (t.status === 'Draft') statusClass = 'bg-yellow-100 text-yellow-700';
+            return `
+              <tr class="border-b border-light hover:bg-gray-50">
+                <td class="p-2 font-medium">${t.title}</td>
+                <td class="p-2"><span class="px-2 py-1 rounded-full text-xs font-bold ${statusClass}">${t.status}</span></td>
+                <td class="p-2 text-sm text-light">${new Date(t.created_at).toLocaleDateString()}</td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
     }
 
     async function deleteUser(userId) {

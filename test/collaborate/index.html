@@ -263,10 +263,13 @@
               <p class="font-zain text-13 text-a9a9a9">${c.email || ''}</p>
             </div>
             <div class="flex items-center gap-2">
-              <div class="pad-a flex items-center gap-1 rounded-full px-2.5 py-1" style="background-color: ${c.role === 'editor' ? 'rgba(0,194,203,0.2)' : 'rgba(169,169,169,0.2)'}; color: ${c.role === 'editor' ? '#00c2cb' : '#a9a9a9'}">
-                <i class="fa-solid ${c.role === 'editor' ? 'fa-pen-to-square' : 'fa-eye'} text-xs"></i>
+              <button class="pad-a flex items-center gap-1 rounded-full px-2.5 py-1 cursor-pointer transition-all hover:opacity-80" 
+                style="background-color: ${c.role.toLowerCase() === 'editor' ? 'rgba(0,194,203,0.2)' : 'rgba(169,169,169,0.2)'}; color: ${c.role.toLowerCase() === 'editor' ? '#00c2cb' : '#a9a9a9'}"
+                onclick="toggleCollaboratorRole('${c.user_id}', '${c.role}')"
+                title="Click to change role">
+                <i class="fa-solid ${c.role.toLowerCase() === 'editor' ? 'fa-pen-to-square' : 'fa-eye'} text-xs"></i>
                 <span class="font-zain text-12 font-700 text-capitalize">${c.role}</span>
-              </div>
+              </button>
               <button class="w-7 h-7 rounded-full bg-red-50 flex items-center justify-center cursor-pointer" onclick="removeCollaborator('${c.user_id}')">
                 <i class="fa-solid fa-trash-can text-red-500 text-xs"></i>
               </button>
@@ -281,6 +284,20 @@
 
       membersList.innerHTML = html;
     }
+
+    window.toggleCollaboratorRole = async function(userId, currentRole) {
+      const newRole = currentRole.toLowerCase() === 'editor' ? 'Viewer' : 'Editor';
+      
+      // Visual feedback could be added here, but the DB call is usually fast enough
+      const result = await window.ChoiceDraftApp.dataService.updateCollaboratorRole(testId, userId, newRole);
+      
+      if (result && (result.success !== false)) {
+        currentTest = await window.ChoiceDraftApp.dataService.getTestById(testId);
+        renderMembers();
+      } else {
+        alert(result.error || "Failed to change role.");
+      }
+    };
 
     inviteBtn.addEventListener('click', async () => {
       const email = inviteEmail.value.trim();

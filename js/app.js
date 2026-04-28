@@ -99,7 +99,16 @@ const dataService = {
     },
 
     async getTestById(id) {
-        return await apiService.tests.getById(id);
+        const test = await apiService.tests.getById(id);
+        if (test) {
+            try {
+                test.attempts = await apiService.attempts.getByTest(id);
+            } catch (e) {
+                console.warn('Failed to fetch attempts:', e);
+                test.attempts = [];
+            }
+        }
+        return test;
     },
 
     async createTest(testData) {
@@ -134,7 +143,7 @@ const dataService = {
     async addCollaborator(testId, email, role) {
         const user = sessionManager.getUser();
         try {
-            const res = await apiService.collaborators.add(testId, email, user.id);
+            const res = await apiService.collaborators.add(testId, email, user.id, role);
             return res; // {success: true}
         } catch(e) {
             return { success: false, error: e.message };
@@ -143,6 +152,16 @@ const dataService = {
 
     async removeCollaborator(testId, userId) {
         return await apiService.collaborators.remove(testId, userId);
+    },
+
+    async updateCollaboratorRole(testId, userId, role) {
+        const user = sessionManager.getUser();
+        if (!user) return { success: false, error: "Not logged in" };
+        try {
+            return await apiService.collaborators.updateRole(testId, userId, role, user.id);
+        } catch(e) {
+            return { success: false, error: e.message };
+        }
     },
 
     async addFeedback(testId, attemptId, feedbackText) {
@@ -329,3 +348,59 @@ window.ChoiceDraftApp = {
     formatDate,
     icons
 };
+// --- Cordova Device Initialization ---
+document.addEventListener("deviceready", function () {
+    // Intercept the physical back button on Android
+    document.addEventListener("backbutton", function (e) {
+        e.preventDefault(); // Stop native browser history backtracking
+
+        const currentUrl = window.location.href.toLowerCase();
+
+        // If we are on root pages, confirm before exiting the app
+        if (currentUrl.includes('home.html') || currentUrl.includes('signin.html') || currentUrl.includes('signup.html')) {
+            const exitMessage = 'Are you sure you want to exit the app?';
+            const exitTitle = 'Exit App';
+            
+            if (navigator.notification && navigator.notification.confirm) {
+                navigator.notification.confirm(
+                    exitMessage,
+                    function(buttonIndex) {
+                        if (buttonIndex === 1) { // 'Yes' button clicked
+                            if (navigator.app && navigator.app.exitApp) navigator.app.exitApp();
+                        }
+                    },
+                    exitTitle,
+                    ['Yes', 'No']
+                );
+            } else {
+                // Fallback for browsers or if notification plugin isn't installed
+                if (confirm(exitMessage)) {
+                    if (navigator.app && navigator.app.exitApp) navigator.app.exitApp();
+                }
+            }
+            return;
+        }
+
+        // Otherwise, try to find the on-screen back button and trigger it
+        const backLink = document.getElementById('backLink');
+        const backBtn = document.getElementById('backBtn');
+        const quitBtn = document.getElementById('quitBtn'); // For test taking
+        const confirmQuitBtn = document.getElementById('confirmQuitBtn'); // For modal in test taking
+
+        if (confirmQuitBtn && confirmQuitBtn.closest('div:not(.hidden)')) {
+            // If quit modal is open, click confirm or cancel depending on logic, let's just do confirm for now
+            // Actually, usually back button dismisses modal. Let's find cancel.
+            const cancelBtn = document.getElementById('cancelQuitBtn');
+            if (cancelBtn) cancelBtn.click();
+        } else if (backLink) {
+            backLink.click();
+        } else if (backBtn) {
+            backBtn.click();
+        } else if (quitBtn) {
+            quitBtn.click();
+        } else {
+            // Fallback if no UI button is found
+            window.history.back(); 
+        }
+    }, false);
+}, false);

@@ -54,9 +54,10 @@
       </header>
 
       <div class="main-scroll-area fade-in">
-        <a href="#" id="backLink" class="back-link"><i
-            class="fa-solid fa-chevron-left back-link-icon"></i><span>Back</span></a>
-        <div class="q-list2 px-4 mb-4">
+        <div class="max-w-4xl mx-auto">
+          <a href="#" id="backLink" class="back-link"><i
+              class="fa-solid fa-chevron-left back-link-icon"></i><span>Back</span></a>
+          <div class="q-list2 px-4 mb-4">
           <h2 class="font-zain font-800 text-24 text-primary-dark mb-1">Give Feedback</h2>
           <p class="font-zain text-15 text-a9a9a9">Provide personalized feedback to each test taker.</p>
         </div>
@@ -69,7 +70,8 @@
           <p class="font-zain text-17 text-a9a9a9 text-center">No submissions yet.</p>
         </div>
       </div>
-    </main>
+    </div>
+  </main>
   </div>
 
   
@@ -130,6 +132,8 @@
         document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
       }
 
+      backLink.href = `../index.html?id=${testId}`;
+
       if (currentTest) {
         renderAttempts();
       }
@@ -137,30 +141,32 @@
 
     function renderAttempts() {
       const attempts = currentTest.attempts || [];
-      const passingScore = currentTest.passing_score ?? 70;
+      const passingScore = Number(currentTest.passing_score ?? 70);
 
       if (attempts.length === 0) { emptyState.classList.remove('hidden'); attemptsContent.innerHTML = ''; return; }
 
       emptyState.classList.add('hidden');
 
       attemptsContent.innerHTML = attempts.map(attempt => {
-        const passed = attempt.percentage >= passingScore;
-        const aid = attempt.id || attempt.userId;
-        const isExpanded = expandedAttemptId === aid;
+        const passed = Number(attempt.percentage) >= passingScore;
+        const aid = String(attempt.id || attempt.userId);
+        const isExpanded = String(expandedAttemptId) === aid;
         const hasFeedback = !!attempt.feedback;
 
         return `
-          <div class="bg-white shadow-sm border border-e0e0e0 rounded-2xl overflow-hidden">
-            <div class="pad-a flex items-center gap-3 px-5 py-4 cursor-pointer" onclick="toggleExpand('${aid}')">
-              <div class="w-11 h-11 rounded-full flex items-center justify-center shrink-0 ${passed ? 'bg-cyan' : 'bg-red-500'}">
-                <span class="font-zain font-800 text-16 text-white">${attempt.percentage}%</span>
+          <div class="bg-white shadow-sm border border-e0e0e0 rounded-2xl overflow-hidden hover:border-cyan hover:shadow-md transition-all duration-300">
+            <div class="pad-a flex items-center gap-3 px-5 py-4 cursor-pointer group" onclick="toggleExpand('${aid}')">
+              <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 ${passed ? 'bg-cyan' : 'bg-red-500'} shadow-sm">
+                <span class="font-zain font-800 text-16 text-white">${Math.round(attempt.percentage)}%</span>
               </div>
               <div class="flex-1">
-                <p class="font-zain font-700 text-17 text-primary-dark">${attempt.user_name || attempt.userName || 'Student'}</p>
-                <p class="font-zain text-13 text-a9a9a9">${attempt.score}/${attempt.totalPoints} pts · ${new Date(attempt.completedAt || attempt.timestamp).toLocaleDateString()}</p>
-                ${hasFeedback && !isExpanded ? `<p class="font-zain text-13 text-cyan mt-0.5">✓ Feedback given</p>` : ''}
+                <p class="font-zain font-700 text-18 text-primary-dark group-hover:text-cyan transition-colors">${attempt.user_name || attempt.userName || 'Student'}</p>
+                <p class="font-zain text-14 text-a9a9a9">${attempt.score}/${attempt.total_points || attempt.totalPoints || 0} pts · ${new Date((attempt.completed_at || attempt.completedAt || attempt.timestamp).replace(/-/g, "/")).toLocaleDateString()}</p>
+                <p class="font-zain text-12 text-cyan mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity">${isExpanded ? 'Click to collapse' : 'Click to give feedback'}</p>
               </div>
-              <div class="w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-sm"><i class="fa-solid ${hasFeedback ? 'fa-comment-dots text-cyan' : 'fa-comment text-a9a9a9'}"></i></div>
+              <div class="w-8 h-8 rounded-full bg-f8f8f8 flex items-center justify-center transition-transform duration-300 ${isExpanded ? 'rotate-180 bg-cyan text-white' : 'text-a9a9a9'}">
+                <i class="fa-solid fa-chevron-down text-12"></i>
+              </div>
             </div>
 
             ${hasFeedback && !isExpanded ? `
@@ -206,17 +212,36 @@
     window.saveFeedback = async function (attemptId) {
       const textarea = document.getElementById(`feedbackText_${attemptId}`);
       const btn = document.getElementById(`saveBtn_${attemptId}`);
-      if (!textarea) return;
+      if (!textarea || !btn) return;
 
       const text = textarea.value.trim();
-      if (!text) return;
+      
+      btn.disabled = true; 
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
-      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-
-      const success = await window.ChoiceDraftApp.dataService.addFeedback(testId, attemptId, text);
-
-      if (success) { currentTest = await window.ChoiceDraftApp.dataService.getTestById(testId); expandedAttemptId = null; renderAttempts(); }
-      else { alert("Failed to save feedback."); btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Send Feedback</span>'; btn.disabled = false; }
+      try {
+        const result = await window.ChoiceDraftApp.dataService.addFeedback(testId, attemptId, text);
+        
+        // Even if result is an object, we check for success field
+        if (result && (result.success !== false)) { 
+          btn.innerHTML = '<i class="fa-solid fa-check"></i> <span>Saved!</span>';
+          btn.classList.replace('bg-cyan', 'bg-green-500');
+          
+          setTimeout(async () => {
+            currentTest = await window.ChoiceDraftApp.dataService.getTestById(testId); 
+            expandedAttemptId = null; 
+            renderAttempts(); 
+          }, 800);
+        } else {
+          throw new Error(result.error || "Server error");
+        }
+      } catch (err) {
+        console.error("Feedback error:", err);
+        alert("Failed to save feedback: " + err.message);
+        btn.innerHTML = originalHtml;
+        btn.disabled = false;
+      }
     };
 
     init();

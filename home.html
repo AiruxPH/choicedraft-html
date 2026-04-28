@@ -400,6 +400,7 @@
         switchTab('classes'); // Default to classes for students
       } else {
         myTestsTab.classList.remove('hidden');
+        takeTestTab.classList.add('hidden'); // Teachers don't need the Public Tests tab
         switchTab('my'); // Default for Teachers
       }
     }

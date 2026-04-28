@@ -199,35 +199,54 @@
       document.getElementById('heroDesc').textContent = s.description || 'No description set.';
       document.getElementById('heroCount').textContent = `${s.enrolled_count || 0} student${s.enrolled_count !== 1 ? 's' : ''}`;
       document.getElementById('heroCode').textContent = s.join_code ? `Code: ${s.join_code}` : 'No join code';
-      // FEAT
-	  /*
-	  document.getElementById('editName').value = s.name;
-      document.getElementById('editDescription').value = s.description || '';
-      document.getElementById('editJoinCode').value = s.join_code || '';
+      if (currentUser && currentUser.role === 'Teacher') {
+        const editName = document.getElementById('editName');
+        if (editName) editName.value = s.name || '';
+        const editDesc = document.getElementById('editDescription');
+        if (editDesc) editDesc.value = s.description || '';
+        const editJoin = document.getElementById('editJoinCode');
+        if (editJoin) editJoin.value = s.join_code || '';
 
-      const members = s.members || [];
-      document.getElementById('membersLabel').textContent = `Members (${members.length})`;
+        const members = s.members || [];
+        const membersLabel = document.getElementById('membersLabel');
+        if (membersLabel) membersLabel.textContent = `Members (${members.length})`;
 
-      const list = document.getElementById('membersList');
-      if (members.length === 0) {
-        list.innerHTML = `<p style="font-size:14px;color:#a9a9a9;text-align:center;padding:16px 0;">No students enrolled yet.</p>`;
-      } else {
-        list.innerHTML = members.map(m => `
-          <div class="member-card">
-            <div class="member-avatar">${m.name.charAt(0).toUpperCase()}</div>
-            <div style="flex:1;">
-              <p class="member-name">${m.name}</p>
-              <p class="member-meta">${m.email}${m.school_id ? ` · ID: ${m.school_id}` : ''}</p>
-            </div>
-            <span class="member-badge">Student</span>
-            <button onclick="removeStudent('${m.id}', '${m.name}')"
-              style="width:30px;height:30px;border-radius:50%;background:#fef2f2;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <i class="fa-solid fa-user-minus" style="color:#ef4444;font-size:12px;"></i>
-            </button>
-          </div>
-        `).join('');
-      }*/
-
+        const list = document.getElementById('membersList');
+        if (list) {
+          if (members.length === 0) {
+            list.innerHTML = `<p style="font-size:14px;color:#a9a9a9;text-align:center;padding:16px 0;">No students enrolled yet.</p>`;
+          } else {
+            list.innerHTML = members.map(m => `
+              <div class="member-card">
+                <div class="member-avatar">${m.name.charAt(0).toUpperCase()}</div>
+                <div style="flex:1;">
+                  <p class="member-name">${m.name}</p>
+                  <p class="member-meta">${m.email}${m.school_id ? ` · ID: ${m.school_id}` : ''}</p>
+                </div>
+                <span class="member-badge">Student</span>
+                <button onclick="removeStudent('${m.id}', '${m.name}')"
+                  style="width:30px;height:30px;border-radius:50%;background:#fef2f2;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <i class="fa-solid fa-user-minus" style="color:#ef4444;font-size:12px;"></i>
+                </button>
+              </div>
+            `).join('');
+          }
+        }
+        
+        const deleteBtn = document.getElementById('deleteClassBtn');
+        if (deleteBtn && !deleteBtn.hasAttribute('data-initialized')) {
+          deleteBtn.setAttribute('data-initialized', 'true');
+          deleteBtn.addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to delete this class? This cannot be undone.')) return;
+            const res = await window.ChoiceDraftApp.dataService.deleteSubject(subjectId);
+            if (res.success) {
+              window.ChoiceDraftApp.navigateTo('../home.html');
+            } else {
+              showToast(res.error || 'Cannot delete this class.', true);
+            }
+          });
+        }
+      }
     }
 
 
@@ -285,16 +304,6 @@
     };
 
 
-	// FEAT
-	/*document.getElementById('deleteClassBtn').addEventListener('click', async () => {
-      if (!confirm('Are you sure you want to delete this class? This cannot be undone.')) return;
-      const res = await window.ChoiceDraftApp.dataService.deleteSubject(subjectId);
-      if (res.success) {
-        window.ChoiceDraftApp.navigateTo('../home.html');
-      } else {
-        showToast(res.error || 'Cannot delete this class.', true);
-      }
-    });*/
 
     async function init() {
       if (!subjectId) { window.ChoiceDraftApp.navigateTo('../home.html'); return; }

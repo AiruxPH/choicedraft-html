@@ -26,7 +26,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-end;
       width: 20%;
+      height: 100%;
       position: relative;
     }
 
@@ -106,8 +108,9 @@
       </header>
 
       <div class="main-scroll-area fade-in">
-        <a href="#" id="backLink" class="back-link"><i
-            class="fa-solid fa-chevron-left back-link-icon"></i><span>Back</span></a>
+        <div class="max-w-4xl mx-auto">
+          <a href="#" id="backLink" class="back-link"><i
+              class="fa-solid fa-chevron-left back-link-icon"></i><span>Back</span></a>
 
         <div class="q-list q-list2 mx-4 rounded-2xl p-4 mb-4 text-white" style="background-color: #002e31;">
           <h2 class="font-zain font-800 text-20 mb-1" id="reportTestTitle">Test Title</h2>
@@ -187,13 +190,14 @@
           <p class="font-zain text-17 text-a9a9a9 text-center">No submissions yet.</p>
         </div>
       </div>
-    </main>
+    </div>
+  </main>
   </div>
 
-  
 
 
-<script src="../../cordova.js"></script>
+
+  <script src="../../cordova.js"></script>
   <script src="../../js/config.js"></script>
   <script src="../../js/app.js"></script>
 
@@ -244,6 +248,8 @@
 
       if (user) { sidebarUserBlock.classList.remove('hidden'); document.getElementById('userName').textContent = user.name; document.getElementById('userEmail').textContent = user.email; document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase(); }
 
+      backLink.href = `../index.html?id=${testId}`;
+
       if (currentTest) {
         renderReport();
       }
@@ -251,27 +257,33 @@
 
     function renderReport() {
       const attempts = currentTest.attempts || [];
-      const passingScore = currentTest.passing_score ?? 70;
+      const passingScore = Number(currentTest.passing_score ?? 70);
 
+      document.getElementById('reportTestTitle').textContent = currentTest.title || 'Untitled Test';
       reportSubmissionsCount.textContent = `Performance Report — ${attempts.length} submission${attempts.length !== 1 ? 's' : ''}`;
 
       if (attempts.length === 0) { emptyState.classList.remove('hidden'); reportContent.classList.add('hidden'); return; }
 
       emptyState.classList.add('hidden'); reportContent.classList.remove('hidden');
 
-      const avg = attempts.reduce((sum, a) => sum + a.percentage, 0) / attempts.length;
+      const avg = attempts.reduce((sum, a) => sum + Number(a.percentage), 0) / attempts.length;
       document.getElementById('avgScore').textContent = `${Math.round(avg)}%`;
 
-      const passes = attempts.filter(a => a.percentage >= passingScore).length;
+      const passes = attempts.filter(a => Number(a.percentage) >= passingScore).length;
       document.getElementById('passRate').textContent = `${Math.round((passes / attempts.length) * 100)}%`;
       document.getElementById('passedCount').textContent = passes;
       document.getElementById('failedCount').textContent = attempts.length - passes;
 
-      const scores = attempts.map(a => a.percentage);
+      const scores = attempts.map(a => Number(a.percentage));
       document.getElementById('highScore').textContent = `${Math.max(...scores)}%`;
       document.getElementById('lowScore').textContent = `${Math.min(...scores)}%`;
 
-      const ranges = [{ label: "0-49", count: attempts.filter(a => a.percentage < 50).length }, { label: "50-69", count: attempts.filter(a => a.percentage >= 50 && a.percentage < 70).length }, { label: "70-89", count: attempts.filter(a => a.percentage >= 70 && a.percentage < 90).length }, { label: "90-100", count: attempts.filter(a => a.percentage >= 90).length }];
+      const ranges = [
+        { label: "0-49%", count: attempts.filter(a => Number(a.percentage) < 50).length }, 
+        { label: "50-69%", count: attempts.filter(a => Number(a.percentage) >= 50 && Number(a.percentage) < 70).length }, 
+        { label: "70-89%", count: attempts.filter(a => Number(a.percentage) >= 70 && Number(a.percentage) < 90).length }, 
+        { label: "90-100%", count: attempts.filter(a => Number(a.percentage) >= 90).length }
+      ];
       const maxCount = Math.max(...ranges.map(r => r.count), 1);
 
       document.getElementById('distributionChart').innerHTML = ranges.map((r, idx) => `
@@ -294,10 +306,12 @@
 
       document.getElementById('attemptsList').innerHTML = attempts.map(a => `
         <div class="bg-white shadow-sm border border-e0e0e0 rounded-xl px-5 py-4 flex items-center gap-3" style="padding:1rem">
-          <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${a.percentage >= passingScore ? 'bg-cyan' : 'bg-red-500'}"><span class="font-800 text-14 text-white font-zain">${a.percentage}%</span></div>
+          <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 ${Number(a.percentage) >= passingScore ? 'bg-cyan' : 'bg-red-500'} shadow-sm">
+            <span class="font-800 text-16 text-white font-zain">${Math.round(a.percentage)}%</span>
+          </div>
           <div class="flex-1">
-            <p class="font-700 text-16 text-primary-dark font-zain">${a.user_name || a.userName || 'Student'}</p>
-            <p class="text-13 text-a9a9a9 font-zain">${a.score}/${a.totalPoints} pts · ${new Date(a.completedAt || a.timestamp).toLocaleDateString()}</p>
+            <p class="font-700 text-18 text-primary-dark font-zain">${a.user_name || a.userName || 'Student'}</p>
+            <p class="text-14 text-a9a9a9 font-zain">${a.score}/${a.total_points || a.totalPoints || 0} pts · ${new Date((a.completed_at || a.completedAt || a.timestamp).replace(/-/g, "/")).toLocaleDateString()}</p>
           </div>
         </div>
       `).join('');
