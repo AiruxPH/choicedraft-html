@@ -337,8 +337,8 @@
             <span class="font-800 text-16 text-white font-zain">${Math.round(p)}%</span>
           </div>
           <div class="flex-1">
-            <p class="font-700 text-18 text-primary-dark font-zain">${a.score}/${a.total_points} pts</p>
-            <p class="text-14 text-a9a9a9 font-zain">${new Date(a.completed_at.replace(/-/g,'/')).toLocaleDateString()}</p>
+            <p class="font-700 text-18 text-primary-dark font-zain">${a.score}/${a.total_points || 0} pts</p>
+            <p class="text-14 text-a9a9a9 font-zain">${a.completed_at ? new Date(a.completed_at.replace(/-/g,'/')).toLocaleDateString() : 'N/A'}</p>
             ${a.feedback ? `<div class="mt-2 p-3 rounded-xl" style="background:#f0fafa;border:1px solid #b2e8eb">
               <p class="text-13 font-700 text-primary-dark font-zain" style="color:#00c2cb">Teacher Feedback</p>
               <p class="text-14 text-primary-dark font-zain mt-1">${a.feedback}</p>
@@ -407,8 +407,8 @@
             <span class="font-800 text-16 text-white font-zain">${Math.round(a.percentage)}%</span>
           </div>
           <div class="flex-1">
-            <p class="font-700 text-18 text-primary-dark font-zain">${a.user_name || a.userName || 'Student'}</p>
-            <p class="text-14 text-a9a9a9 font-zain">${a.score}/${a.total_points || a.totalPoints || 0} pts · ${new Date((a.completed_at || a.completedAt || a.timestamp).replace(/-/g, "/")).toLocaleDateString()}</p>
+            <p class="font-700 text-18 text-primary-dark font-zain">${a.user_name || 'Student'}</p>
+            <p class="text-14 text-a9a9a9 font-zain">${a.score}/${a.total_points || 0} pts · ${a.completed_at ? new Date(a.completed_at.replace(/-/g, "/")).toLocaleDateString() : 'N/A'}</p>
           </div>
         </div>
       `).join('');
