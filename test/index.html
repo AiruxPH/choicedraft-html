@@ -328,6 +328,28 @@
             <i class="fa-solid fa-chevron-left detail-action-arrow text-a9a9a9" style="transform: rotate(180deg)"></i>
           </button>
         `;
+      } else if (currentUser?.role === 'Student') {
+        makerActionsSection.classList.remove('hidden');
+        const sectionTitle = document.querySelector('#makerActionsSection .action-section-title');
+        if (sectionTitle) sectionTitle.textContent = "My Progress";
+        makerActionGroup.innerHTML = `
+          <button class="detail-action-btn bg-f2f6f9" onclick="window.location.href='feedback/index.html?id=${test.id}'">
+            <div class="detail-action-icon bg-cyan"><i class="fa-solid fa-comment-dots text-white"></i></div>
+            <div class="flex-1 text-left">
+              <p class="detail-action-label text-primary-dark">View Results & Feedback</p>
+              <p class="detail-action-sub text-a9a9a9">See your past attempts and teacher comments</p>
+            </div>
+            <i class="fa-solid fa-chevron-left detail-action-arrow text-a9a9a9" style="transform: rotate(180deg)"></i>
+          </button>
+          <button class="detail-action-btn bg-f2f6f9" onclick="window.location.href='report/index.html?id=${test.id}'">
+            <div class="detail-action-icon bg-cyan"><i class="fa-solid fa-chart-simple text-white"></i></div>
+            <div class="flex-1 text-left">
+              <p class="detail-action-label text-primary-dark">Performance Report</p>
+              <p class="detail-action-sub text-a9a9a9">View your detailed score analysis</p>
+            </div>
+            <i class="fa-solid fa-chevron-left detail-action-arrow text-a9a9a9" style="transform: rotate(180deg)"></i>
+          </button>
+        `;
       }
 
 
