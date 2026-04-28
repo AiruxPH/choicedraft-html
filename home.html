@@ -509,7 +509,7 @@
             ${test.description ? `<p class="test-card-desc">${test.description.length > 80 ? test.description.slice(0, 80) + '...' : test.description}</p>` : ''}
             <div class="test-card-chips">
               <span class="test-card-chip"><i class="fa-solid fa-list-ol"></i> ${qCount} questions</span>
-              ${subjectName ? `<span class="test-card-chip" style="color:#00c2cb;"><i class="fa-solid fa-users-rectangle"></i> ${subjectName}</span>` : ''}
+              ${subjectName ? `<span class="test-card-chip" style="color:#00c2cb;"><i class="fa-solid fa-users-rectangle"></i> ${subjectName}</span>` : `<span class="test-card-chip" style="color:#64748b;"><i class="fa-solid fa-earth-americas"></i> Public Test</span>`}
               ${isCollaborator && !isOwner ? `<span class="test-card-chip" style="color:#f59e0b;"><i class="fa-solid fa-handshake"></i> Collaborator</span>` : ''}
             </div>
             <div class="test-card-footer">

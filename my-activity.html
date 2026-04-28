@@ -121,6 +121,13 @@
                 </select>
               </div>
               <div class="flex-1">
+                <select id="typeSelect" class="w-full bg-white border border-e0e0e0 rounded-xl py-2 px-3 font-zain text-15 outline-none focus:border-cyan appearance-none">
+                  <option value="all">All Types</option>
+                  <option value="class">Class Based</option>
+                  <option value="public">Public Tests</option>
+                </select>
+              </div>
+              <div class="flex-1">
                 <select id="sortSelect" class="w-full bg-white border border-e0e0e0 rounded-xl py-2 px-3 font-zain text-15 outline-none focus:border-cyan appearance-none">
                   <option value="newest">Newest First</option>
                   <option value="oldest">Oldest First</option>
@@ -213,6 +220,7 @@
     const emptyState = document.getElementById('emptyState');
     const searchInput = document.getElementById('searchInput');
     const filterSelect = document.getElementById('filterSelect');
+    const typeSelect = document.getElementById('typeSelect');
     const sortSelect = document.getElementById('sortSelect');
     const pageSizeSelect = document.getElementById('pageSizeSelect');
     const prevPageBtn = document.getElementById('prevPageBtn');
@@ -231,6 +239,7 @@
         pageSize: 10,
         search: '',
         filter: 'all',
+        type: 'all',
         sort: 'newest'
     };
 
@@ -262,6 +271,12 @@
 
     filterSelect.addEventListener('change', (e) => {
         state.filter = e.target.value;
+        state.page = 1;
+        applyControls();
+    });
+
+    typeSelect.addEventListener('change', (e) => {
+        state.type = e.target.value;
         state.page = 1;
         applyControls();
     });
@@ -352,7 +367,11 @@
             if (state.filter === 'passed') matchesStatus = scorePct >= 75;
             else if (state.filter === 'failed') matchesStatus = scorePct < 75;
             
-            return matchesSearch && matchesStatus;
+            let matchesType = true;
+            if (state.type === 'class') matchesType = !!attempt.subject_id;
+            else if (state.type === 'public') matchesType = !attempt.subject_id;
+            
+            return matchesSearch && matchesStatus && matchesType;
         });
 
         // 2. Sort
@@ -412,6 +431,7 @@
     function renderActivity(attempts) {
       activityList.innerHTML = attempts.map(attempt => {
         const title = attempt.test_title || 'Unknown Test';
+        const isPublic = !attempt.subject_id;
         let date = 'N/A';
         try {
             if (attempt.completed_at) {
@@ -437,7 +457,12 @@
                 <span class="font-zain font-800 text-16 text-white">${scorePct}%</span>
               </div>
               <div class="flex-1">
-                <h3 class="font-zain font-700 text-18 text-primary-dark">${title}</h3>
+                <div class="flex items-center gap-2 mb-0.5">
+                    <h3 class="font-zain font-700 text-18 text-primary-dark line-clamp-1">${title}</h3>
+                    <span class="font-zain text-11 px-2 py-0.5 rounded-md uppercase font-800 ${isPublic ? 'bg-f8f8f8 text-a9a9a9' : 'bg-cyan/10 text-cyan'}">
+                        ${isPublic ? 'Public' : 'Class'}
+                    </span>
+                </div>
                 <p class="font-zain text-14 text-a9a9a9">${attempt.score}/${attempt.total_points} pts · ${date}</p>
               </div>
               <div class="flex flex-col items-end gap-1">
