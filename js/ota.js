@@ -20,17 +20,17 @@ const otaService = {
             // 1. Fetch remote version info
             const response = await fetch(OTA_CONFIG.RAW_VERSION_URL + "?t=" + Date.now());
             const remote = await response.json();
-            
+
             const localVersion = localStorage.getItem(OTA_CONFIG.LOCAL_STORAGE_KEY) || "1.0.0";
-            
+
             console.log(`OTA: Local version ${localVersion}, Remote version ${remote.version}`);
-            
+
             if (remote.version !== localVersion) {
                 console.log("OTA: Update found! Starting download...");
                 await this.downloadAndInstall(remote.download_url, remote.version);
                 return true; // Reload required
             }
-            
+
             console.log("OTA: App is up to date.");
             return false;
         } catch (error) {
@@ -50,10 +50,10 @@ const otaService = {
                 targetPath,
                 async (entry) => {
                     console.log("OTA: Download complete: " + entry.toURL());
-                    
+
                     // Unzip
                     const destPath = cordova.file.dataDirectory + OTA_CONFIG.UPDATE_DIR;
-                    
+
                     zip.unzip(entry.toURL(), destPath, (status) => {
                         if (status === 0) {
                             console.log("OTA: Unzip successful!");
@@ -77,7 +77,7 @@ const otaService = {
         const useOTA = localStorage.getItem("cd_use_ota_path") === "true";
         const isLoggedIn = window.sessionManager && window.sessionManager.isLoggedIn();
         const hasSeenOnboarding = localStorage.getItem('choicedraft_onboarding_seen') === 'true';
-        
+
         let targetPage = "signin.html";
         if (isLoggedIn) {
             targetPage = "home.html";
@@ -86,12 +86,18 @@ const otaService = {
         }
 
         if (useOTA && window.cordova) {
-            // Note: GitHub ZIP extraction usually creates a nested folder
-            return cordova.file.dataDirectory + OTA_CONFIG.UPDATE_DIR + "/choicedraft-html-main/www/" + targetPage;
+            // Note: GitHub ZIP extraction creates a folder like "repo-name-branch"
+            // For this repo, it is "choicedraft-html-main"
+            return cordova.file.dataDirectory + OTA_CONFIG.UPDATE_DIR + "/choicedraft-html-main/" + targetPage;
         }
-        
+
         return targetPage;
     }
 };
+
+// Debug Alert for testing
+if (localStorage.getItem("cd_use_ota_path") === "true") {
+    console.log("OTA: Running from updated local storage.");
+}
 
 window.otaService = otaService;
