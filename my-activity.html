@@ -137,6 +137,21 @@
           </div>
 
           <!-- Activity List -->
+          <div id="activityList" class="flex flex-col gap-4 mb-10">
+            <!-- Loading State -->
+            <div id="loadingState" class="flex flex-col items-center justify-center py-12">
+                <i class="fa-solid fa-spinner fa-spin text-3xl text-cyan mb-4"></i>
+                <p class="font-zain text-17 text-a9a9a9">Loading your history...</p>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div id="emptyState" class="flex flex-col items-center justify-center py-12 hidden">
+            <div class="w-20 h-20 bg-f8f8f8 rounded-full flex items-center justify-center mb-4">
+                <i class="fa-solid fa-clipboard-question text-32 text-e0e0e0"></i>
+            </div>
+            <p class="font-zain text-18 text-primary-dark font-700">No activity yet</p>
+            <p class="font-zain text-15 text-a9a9a9">Take a test to see your results here.</p>
           </div>
 
           <!-- Pagination Section -->
