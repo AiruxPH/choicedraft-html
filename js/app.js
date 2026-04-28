@@ -240,7 +240,12 @@ const dataService = {
                 });
             } else if (user.role === 'Student') {
                 if (adminNavLink) adminNavLink.classList.add('hidden');
-                if (activityNavLink) activityNavLink.classList.remove('hidden');
+                if (activityNavLink) {
+                    activityNavLink.classList.remove('hidden');
+                    // Ensure correct relative path based on current location
+                    const isSubdir = window.location.pathname.includes('/subject/') || window.location.pathname.includes('/test/');
+                    activityNavLink.href = isSubdir ? '../my-activity.html' : 'my-activity.html';
+                }
                 if (dashboardNavLink) dashboardNavLink.classList.remove('hidden');
             } else {
                 if (adminNavLink) adminNavLink.classList.add('hidden');

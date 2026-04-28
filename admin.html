@@ -155,7 +155,8 @@
                       onclick="sortUsers('institution')">Institution <i
                         class="fa-solid fa-sort text-light ml-1 text-xs"></i></th>
                     <th class="p-4 font-bold text-secondary cursor-pointer hover:bg-gray-100"
-                      onclick="sortUsers('activity_count')">Activity <i class="fa-solid fa-sort text-light ml-1 text-xs"></i>
+                      onclick="sortUsers('activity_count')">Activity <i
+                        class="fa-solid fa-sort text-light ml-1 text-xs"></i>
                     </th>
                     <th class="p-4 font-bold text-secondary text-right">Actions</th>
                   </tr>
@@ -374,7 +375,7 @@
 
       // Load Data
       allUsers = await window.apiService.users.getAll();
-      
+
       // Normalize activity counts for sorting
       allUsers.forEach(u => {
         u.activity_count = u.role === 'Student' ? parseInt(u.attempts_count || 0) : parseInt(u.tests_count || 0);
@@ -543,7 +544,7 @@
       const tbody = document.getElementById('userTestsTableBody');
       const noTests = document.getElementById('noUserTestsFound');
       const tableHead = userDetailsModal.querySelector('thead');
-      
+
       // Loading state
       tbody.innerHTML = '<tr><td colspan="3" class="p-4 text-center"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Loading data...</td></tr>';
       noTests.classList.add('hidden');
@@ -558,7 +559,7 @@
             <th class="p-2 font-bold text-secondary text-sm">Date</th>
           </tr>
         `;
-        
+
         try {
           const attempts = await window.apiService.attempts.getAllByUser(userId);
           if (attempts.length === 0) {
@@ -590,7 +591,7 @@
             <th class="p-2 font-bold text-secondary text-sm">Created On</th>
           </tr>
         `;
-        
+
         const userTests = allGlobalTests.filter(t => t.owner_id == userId);
         if (userTests.length === 0) {
           tbody.innerHTML = '';
