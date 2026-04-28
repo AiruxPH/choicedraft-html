@@ -308,9 +308,10 @@
       document.getElementById('lowScore').textContent = `${Math.min(...attempts.map(a => Number(a.percentage)))}%`;
 
       // Hide distribution chart card for students (they only see their own)
+      // Hide distribution chart card for students (they only see their own)
       const chartEl = document.getElementById('distributionChart');
       if (chartEl) {
-          const card = chartEl.closest('.bg-white');
+          const card = chartEl.parentElement; // The div containing "Score Distribution"
           if (card) card.style.display = 'none';
       }
 
@@ -382,6 +383,12 @@
         { label: "90-100%", count: attempts.filter(a => Number(a.percentage) >= 90).length }
       ];
       const maxCount = Math.max(...ranges.map(r => r.count), 1);
+      
+      const chartEl = document.getElementById('distributionChart');
+      if (chartEl) {
+          const card = chartEl.parentElement;
+          if (card) card.style.display = 'block';
+      }
 
       document.getElementById('distributionChart').innerHTML = ranges.map((r, idx) => {
         const height = (r.count / maxCount) * 100;

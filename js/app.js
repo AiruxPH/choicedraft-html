@@ -242,14 +242,11 @@ const dataService = {
                 if (adminNavLink) adminNavLink.classList.add('hidden');
                 if (activityNavLink) {
                     activityNavLink.classList.remove('hidden');
-                    // Ensure correct relative path based on current location
-                    const isSubdir = window.location.pathname.includes('/subject/') || window.location.pathname.includes('/test/');
-                    activityNavLink.href = isSubdir ? '../my-activity.html' : 'my-activity.html';
                 }
                 if (dashboardNavLink) dashboardNavLink.classList.remove('hidden');
             } else {
                 if (adminNavLink) adminNavLink.classList.add('hidden');
-                if (activityNavLink) activityNavLink.classList.add('hidden');
+                if (activityNavLink) activityNavLink.classList.remove('hidden');
                 if (dashboardNavLink) dashboardNavLink.classList.remove('hidden');
             }
         }
