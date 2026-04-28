@@ -105,17 +105,62 @@
             <p class="font-zain text-15 text-a9a9a9 mt-1">Review your past test results and teacher feedback.</p>
           </div>
 
+          <!-- Controls Section -->
+          <div class="flex flex-col gap-4 mb-6">
+            <div class="relative">
+              <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-a9a9a9 text-14"></i>
+              <input type="text" id="searchInput" placeholder="Search tests..." class="w-full bg-white border border-e0e0e0 rounded-2xl py-3 pl-10 pr-4 font-zain text-16 outline-none focus:border-cyan focus:shadow-md transition-all">
+            </div>
+            
+            <div class="flex items-center gap-3">
+              <div class="flex-1">
+                <select id="filterSelect" class="w-full bg-white border border-e0e0e0 rounded-xl py-2 px-3 font-zain text-15 outline-none focus:border-cyan appearance-none">
+                  <option value="all">All Status</option>
+                  <option value="passed">Passed</option>
+                  <option value="failed">Failed</option>
+                </select>
+              </div>
+              <div class="flex-1">
+                <select id="sortSelect" class="w-full bg-white border border-e0e0e0 rounded-xl py-2 px-3 font-zain text-15 outline-none focus:border-cyan appearance-none">
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                  <option value="highest">Highest Score</option>
+                  <option value="lowest">Lowest Score</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
           <!-- Filter / Stats Section (Optional) -->
           <div id="statsRow" class="flex gap-4 mb-8 hidden">
             <!-- Stats cards injected by JS -->
           </div>
 
           <!-- Activity List -->
-          <div id="activityList" class="flex flex-col gap-4 mb-10">
-            <!-- Loading State -->
-            <div id="loadingState" class="flex flex-col items-center justify-center py-12">
-                <i class="fa-solid fa-spinner fa-spin text-3xl text-cyan mb-4"></i>
-                <p class="font-zain text-17 text-a9a9a9">Loading your history...</p>
+          </div>
+
+          <!-- Pagination Section -->
+          <div id="paginationRow" class="flex flex-col items-center gap-4 mb-12 hidden">
+            <div class="flex items-center gap-2">
+                <button id="prevPageBtn" class="w-10 h-10 rounded-xl bg-white border border-e0e0e0 flex items-center justify-center text-primary-dark disabled:opacity-30 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div id="pageNumbers" class="flex items-center gap-1">
+                    <!-- Page buttons injected by JS -->
+                </div>
+                <button id="nextPageBtn" class="w-10 h-10 rounded-xl bg-white border border-e0e0e0 flex items-center justify-center text-primary-dark disabled:opacity-30 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <span class="font-zain text-14 text-a9a9a9">Show</span>
+                <select id="pageSizeSelect" class="bg-white border border-e0e0e0 rounded-lg py-1 px-2 font-zain text-14 outline-none">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                </select>
+                <span class="font-zain text-14 text-a9a9a9">per page</span>
             </div>
           </div>
 
@@ -151,10 +196,28 @@
     const activityList = document.getElementById('activityList');
     const loadingState = document.getElementById('loadingState');
     const emptyState = document.getElementById('emptyState');
+    const searchInput = document.getElementById('searchInput');
+    const filterSelect = document.getElementById('filterSelect');
+    const sortSelect = document.getElementById('sortSelect');
+    const pageSizeSelect = document.getElementById('pageSizeSelect');
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    const nextPageBtn = document.getElementById('nextPageBtn');
+    const pageNumbers = document.getElementById('pageNumbers');
+    const paginationRow = document.getElementById('paginationRow');
     const sidebarUserBlock = document.getElementById('sidebarUserBlock');
     const userNameEl = document.getElementById('userName');
     const userEmailEl = document.getElementById('userEmail');
     const userAvatarEl = document.getElementById('userAvatar');
+
+    let allAttempts = [];
+    let filteredAttempts = [];
+    let state = {
+        page: 1,
+        pageSize: 10,
+        search: '',
+        filter: 'all',
+        sort: 'newest'
+    };
 
     function toggleSidebar(open) {
       if (open) {
@@ -173,6 +236,46 @@
     logoutBtn.addEventListener('click', async () => {
       await window.ChoiceDraftApp.dataService.logout();
       window.ChoiceDraftApp.navigateTo('signin.html');
+    });
+
+    // Control Event Listeners
+    searchInput.addEventListener('input', (e) => {
+        state.search = e.target.value.toLowerCase();
+        state.page = 1;
+        applyControls();
+    });
+
+    filterSelect.addEventListener('change', (e) => {
+        state.filter = e.target.value;
+        state.page = 1;
+        applyControls();
+    });
+
+    sortSelect.addEventListener('change', (e) => {
+        state.sort = e.target.value;
+        state.page = 1;
+        applyControls();
+    });
+
+    pageSizeSelect.addEventListener('change', (e) => {
+        state.pageSize = parseInt(e.target.value);
+        state.page = 1;
+        applyControls();
+    });
+
+    prevPageBtn.addEventListener('click', () => {
+        if (state.page > 1) {
+            state.page--;
+            applyControls();
+        }
+    });
+
+    nextPageBtn.addEventListener('click', () => {
+        const totalPages = Math.ceil(filteredAttempts.length / state.pageSize);
+        if (state.page < totalPages) {
+            state.page++;
+            applyControls();
+        }
     });
 
     async function init() {
@@ -199,20 +302,22 @@
         const user = window.sessionManager.getUser();
         if (!user) return;
 
-        const attempts = await window.apiService.attempts.getAllByUser(user.id);
+        allAttempts = await window.apiService.attempts.getAllByUser(user.id);
         
         loadingState.classList.add('hidden');
         
-        if (!attempts || attempts.length === 0) {
+        if (!allAttempts || allAttempts.length === 0) {
           emptyState.classList.remove('hidden');
           activityList.classList.add('hidden');
+          paginationRow.classList.add('hidden');
           return;
         }
 
         emptyState.classList.add('hidden');
         activityList.classList.remove('hidden');
+        paginationRow.classList.remove('hidden');
         
-        renderActivity(attempts);
+        applyControls();
       } catch (error) {
         console.error("Failed to load activity:", error);
         loadingState.innerHTML = `
@@ -221,6 +326,73 @@
         `;
       }
     }
+
+    function applyControls() {
+        // 1. Filter
+        filteredAttempts = allAttempts.filter(attempt => {
+            const matchesSearch = attempt.test_title.toLowerCase().includes(state.search);
+            const scorePct = Math.round(attempt.percentage);
+            
+            let matchesStatus = true;
+            if (state.filter === 'passed') matchesStatus = scorePct >= 75;
+            else if (state.filter === 'failed') matchesStatus = scorePct < 75;
+            
+            return matchesSearch && matchesStatus;
+        });
+
+        // 2. Sort
+        filteredAttempts.sort((a, b) => {
+            if (state.sort === 'newest') return new Date(b.completed_at) - new Date(a.completed_at);
+            if (state.sort === 'oldest') return new Date(a.completed_at) - new Date(b.completed_at);
+            if (state.sort === 'highest') return b.percentage - a.percentage;
+            if (state.sort === 'lowest') return a.percentage - b.percentage;
+            return 0;
+        });
+
+        // 3. Paginate
+        const start = (state.page - 1) * state.pageSize;
+        const pagedItems = filteredAttempts.slice(start, start + state.pageSize);
+        
+        renderActivity(pagedItems);
+        renderPagination();
+    }
+
+    function renderPagination() {
+        const totalPages = Math.ceil(filteredAttempts.length / state.pageSize);
+        
+        if (totalPages <= 1) {
+            paginationRow.classList.add('hidden');
+        } else {
+            paginationRow.classList.remove('hidden');
+        }
+
+        prevPageBtn.disabled = state.page === 1;
+        nextPageBtn.disabled = state.page === totalPages || totalPages === 0;
+
+        // Render page numbers
+        let numbersHtml = '';
+        const maxVisiblePages = 3;
+        let startPage = Math.max(1, state.page - 1);
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+        
+        if (endPage - startPage < maxVisiblePages - 1) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            numbersHtml += `
+                <button onclick="goToPage(${i})" class="w-10 h-10 rounded-xl font-zain font-700 text-15 transition-all ${i === state.page ? 'bg-cyan text-white shadow-md' : 'bg-white border border-e0e0e0 text-primary-dark'}">
+                    ${i}
+                </button>
+            `;
+        }
+        pageNumbers.innerHTML = numbersHtml;
+    }
+
+    window.goToPage = (page) => {
+        state.page = page;
+        applyControls();
+    };
 
     function renderActivity(attempts) {
       activityList.innerHTML = attempts.map(attempt => {
