@@ -49,13 +49,13 @@ const otaService = {
             fileTransfer.download(
                 uri,
                 targetPath,
-                async (entry) => {
+                (entry) => {
                     alert("Download complete! Unzipping...");
                     console.log("OTA: Download complete: " + entry.toURL());
-                    
+
                     // Unzip
                     const destPath = cordova.file.dataDirectory + OTA_CONFIG.UPDATE_DIR;
-                    
+
                     zip.unzip(entry.toURL(), destPath, (status) => {
                         if (status === 0) {
                             alert("Update Successful! App will now restart.");

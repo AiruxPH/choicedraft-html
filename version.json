@@ -1,6 +1,6 @@
 {
-  "version": "1.2.4",
+  "version": "1.3",
   "name": "ChoiceDraft Release",
   "download_url": "https://github.com/AiruxPH/choicedraft-html/archive/refs/heads/main.zip",
-  "force_update": true
+  "force_update": false
 }
