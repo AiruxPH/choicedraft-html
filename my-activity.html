@@ -396,13 +396,21 @@
 
     function renderActivity(attempts) {
       activityList.innerHTML = attempts.map(attempt => {
-        const date = new Date(attempt.completed_at.replace(/-/g, '/')).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-        });
+        const title = attempt.test_title || 'Unknown Test';
+        let date = 'N/A';
+        try {
+            if (attempt.completed_at) {
+                date = new Date(attempt.completed_at.replace(/-/g, '/')).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+            }
+        } catch (e) {
+            console.warn("Date parsing error:", e);
+        }
         
-        const scorePct = Math.round(attempt.percentage);
+        const scorePct = Math.round(attempt.percentage || 0);
         let scoreColor = 'bg-red-500';
         if (scorePct >= 75) scoreColor = 'bg-cyan';
         else if (scorePct >= 50) scoreColor = 'bg-yellow-500';
@@ -414,7 +422,7 @@
                 <span class="font-zain font-800 text-16 text-white">${scorePct}%</span>
               </div>
               <div class="flex-1">
-                <h3 class="font-zain font-700 text-18 text-primary-dark">${attempt.test_title}</h3>
+                <h3 class="font-zain font-700 text-18 text-primary-dark">${title}</h3>
                 <p class="font-zain text-14 text-a9a9a9">${attempt.score}/${attempt.total_points} pts · ${date}</p>
               </div>
               <div class="flex flex-col items-end gap-1">
