@@ -392,22 +392,22 @@
       populateView(currentUser);
 
       // Load stats
-      const [tests, subjects] = await Promise.all([
+      const [tests, subjects, userAttempts] = await Promise.all([
         window.ChoiceDraftApp.dataService.getTests(),
-        window.ChoiceDraftApp.dataService.getSubjects()
+        window.ChoiceDraftApp.dataService.getSubjects(),
+        window.apiService.attempts.getAllByUser(currentUser.id)
       ]);
 
       const myTests = tests.filter(t => t.owner_id === currentUser.id);
       document.getElementById('statTests').textContent = myTests.length;
       document.getElementById('statClasses').textContent = subjects.length;
 
-      // Attempts count (only available for teachers; skip for simplicity)
+      // Attempts count
       let attemptsCount = 0;
       if (currentUser.role === 'Student') {
-        // Count attempts from tests (approximate from enrolled)
-        attemptsCount = 'â€”';
+        attemptsCount = userAttempts ? userAttempts.length : 0;
       } else {
-        // Count published/finished tests owned
+        // Teachers see the number of tests they've created that are active or finished
         attemptsCount = myTests.filter(t => t.status === 'Published' || t.status === 'Finished').length;
       }
       document.getElementById('statAttempts').textContent = attemptsCount;
