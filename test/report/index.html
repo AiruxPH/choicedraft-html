@@ -87,8 +87,11 @@
       border-radius: 12px;
     }
 
-    .bg-white shadow-sm border border-e0e0e0 {
-      background-color: #f2f6f9;
+    .report-card {
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
     .bg-e0e0e0 {
@@ -320,8 +323,9 @@
           const correct = answered === q.correct_choice_id;
           const color = correct ? 'linear-gradient(to right, #00c2cb, #00e0eb)' : 'linear-gradient(to right, #ef4444, #f87171)';
           const rawColor = correct ? '#00c2cb' : '#ef4444';
-          return `<div><div class="flex items-center justify-between mb-1">
-            <p class="font-zain text-14 text-primary-dark"><span class="font-700">Q${idx + 1}</span>: ${q.text.slice(0, 60)}${q.text.length > 60 ? '…' : ''}</p>
+        const qText = (q.text || '').replace(/`/g, '\\`').slice(0, 60);
+        return `<div><div class="flex items-center justify-between mb-1">
+            <p class="font-zain text-14 text-primary-dark"><span class="font-700">Q${idx + 1}</span>: ${qText}${q.text.length > 60 ? '…' : ''}</p>
             <span class="font-700 font-zain text-14" style="color:${rawColor}">${correct ? '✓' : '✗'}</span>
           </div>
           <div class="w-full h-2 bg-e0e0e0 rounded-full overflow-hidden"><div class="h-full" style="width:${correct ? 100 : 0}%;background:${color};transition:width 0.8s ease"></div></div>
@@ -332,7 +336,7 @@
       document.getElementById('attemptsList').innerHTML = attempts.map(a => {
         const p = Number(a.percentage);
         const color = p >= passingScore ? 'linear-gradient(135deg, #00c2cb, #00e0eb)' : 'linear-gradient(135deg, #ef4444, #f87171)';
-        return `<div class="bg-white shadow-sm border border-e0e0e0 rounded-xl px-5 py-4 flex items-start gap-3" style="padding:1rem">
+        return `<div class="report-card px-5 py-4 flex items-start gap-3" style="padding:1rem">
           <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 shadow-sm" style="background:${color}">
             <span class="font-800 text-16 text-white font-zain">${Math.round(p)}%</span>
           </div>
@@ -341,7 +345,7 @@
             <p class="text-14 text-a9a9a9 font-zain">${a.completed_at ? new Date(a.completed_at.replace(/-/g,'/')).toLocaleDateString() : 'N/A'}</p>
             ${a.feedback ? `<div class="mt-2 p-3 rounded-xl" style="background:#f0fafa;border:1px solid #b2e8eb">
               <p class="text-13 font-700 text-primary-dark font-zain" style="color:#00c2cb">Teacher Feedback</p>
-              <p class="text-14 text-primary-dark font-zain mt-1">${a.feedback}</p>
+              <p class="text-14 text-primary-dark font-zain mt-1">${a.feedback.replace(/`/g, "'")}</p>
             </div>` : ''}
           </div>
         </div>`;
@@ -396,13 +400,14 @@
         const correctCount = attempts.filter(a => a.answers && a.answers[q.id] === q.correct_choice_id).length;
         const rate = Math.round((correctCount / attempts.length) * 100);
         const color = rate >= 70 ? '#00c2cb' : '#ef4444';
+        const qText = (q.text || '').replace(/`/g, '\\`').slice(0, 40);
         return `
-          <div><div class="flex items-center justify-between mb-1"><p class="font-zain text-14 text-primary-dark"><span class="font-700">Q${idx + 1}</span>: ${q.text.slice(0, 40)}${q.text.length > 40 ? '…' : ''}</p><span class="font-700 font-zain text-14" style="color: ${color}">${rate}%</span></div><div class="w-full h-2 bg-e0e0e0 rounded-full overflow-hidden"><div class="h-full" style="width: ${rate}%; background: ${color}"></div></div></div>
+          <div><div class="flex items-center justify-between mb-1"><p class="font-zain text-14 text-primary-dark"><span class="font-700">Q${idx + 1}</span>: ${qText}${q.text.length > 40 ? '…' : ''}</p><span class="font-700 font-zain text-14" style="color: ${color}">${rate}%</span></div><div class="w-full h-2 bg-e0e0e0 rounded-full overflow-hidden"><div class="h-full" style="width: ${rate}%; background: ${color}"></div></div></div>
         `;
       }).join('');
 
       document.getElementById('attemptsList').innerHTML = attempts.map(a => `
-        <div class="bg-white shadow-sm border border-e0e0e0 rounded-xl px-5 py-4 flex items-center gap-3" style="padding:1rem">
+        <div class="report-card px-5 py-4 flex items-center gap-3" style="padding:1rem">
           <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 ${Number(a.percentage) >= passingScore ? 'bg-cyan' : 'bg-red-500'} shadow-sm">
             <span class="font-800 text-16 text-white font-zain">${Math.round(a.percentage)}%</span>
           </div>
