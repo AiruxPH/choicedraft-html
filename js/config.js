@@ -310,6 +310,13 @@ const apiService = {
                 id: subjectId,
                 user_id: userId
             });
+        },
+        
+        getAnalytics: async (id) => {
+            return await apiRequest(CONFIG.ENDPOINTS.SUBJECTS, 'GET', null, { 
+                id: id,
+                analytics: 1
+            });
         }
     }
 };

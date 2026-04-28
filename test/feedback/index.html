@@ -135,8 +135,54 @@
       backLink.href = `../index.html?id=${testId}`;
 
       if (currentTest) {
-        renderAttempts();
+        if (user && user.role === 'Student') {
+          // Students: filter to own attempts, render read-only
+          currentTest.attempts = (currentTest.attempts || []).filter(a => a.user_id === user.id);
+          renderStudentFeedback();
+        } else {
+          renderAttempts();
+        }
       }
+    }
+
+    // Read-only feedback view for students
+    function renderStudentFeedback() {
+      const attempts = currentTest.attempts || [];
+      const passingScore = Number(currentTest.passing_score ?? 70);
+
+      if (attempts.length === 0) {
+        emptyState.classList.remove('hidden');
+        attemptsContent.innerHTML = '';
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      attemptsContent.innerHTML = attempts.map(attempt => {
+        const passed = Number(attempt.percentage) >= passingScore;
+        return `
+          <div class="bg-white shadow-sm border border-e0e0e0 rounded-2xl overflow-hidden">
+            <div class="pad-a flex items-center gap-3 px-5 py-4">
+              <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 ${passed ? 'bg-cyan' : 'bg-red-500'} shadow-sm">
+                <span class="font-zain font-800 text-16 text-white">${Math.round(attempt.percentage)}%</span>
+              </div>
+              <div class="flex-1">
+                <p class="font-zain font-700 text-18 text-primary-dark">Your Attempt</p>
+                <p class="font-zain text-14 text-a9a9a9">${attempt.score}/${attempt.total_points || attempt.totalPoints || 0} pts · ${new Date((attempt.completed_at || attempt.completedAt || attempt.timestamp).replace(/-/g, "/")).toLocaleDateString()}</p>
+              </div>
+            </div>
+            ${attempt.feedback
+              ? `<div class="q-list2 mx-4 mb-4 rounded-xl px-4 py-3" style="background:#f0fafa;border:1px solid #b2e8eb">
+                  <p class="font-zain text-13 font-700" style="color:#00c2cb">Teacher Feedback</p>
+                  <p class="font-zain text-15 text-primary-dark mt-1">${attempt.feedback}</p>
+                </div>`
+              : `<div class="q-list2 mx-4 mb-4 rounded-xl px-4 py-3" style="background:#f8f8f8;border:1px solid #e0e0e0">
+                  <p class="font-zain text-14 text-a9a9a9">No feedback given yet for this attempt.</p>
+                </div>`
+            }
+          </div>
+        `;
+      }).join('');
     }
 
     function renderAttempts() {

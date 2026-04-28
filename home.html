@@ -51,6 +51,10 @@
           <div class="nav-icon"><i class="fa-solid fa-chalkboard"></i></div>
           <span class="nav-label">Dashboard</span>
         </a>
+        <a id="activityNavLink" href="my-activity.html" class="nav-item hidden">
+            <div class="nav-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+            <span class="nav-label">My Activity</span>
+        </a>
         <a id="adminNavLink" href="admin.html" class="nav-item hidden">
           <div class="nav-icon"><i class="fa-solid fa-user-shield"></i></div>
           <span class="nav-label">Admin Portal</span>
@@ -105,6 +109,7 @@
             <button id="myTestsTab" class="tab-btn">My Projects</button>
             <button id="classesTab" class="tab-btn">Classes</button>
             <button id="takeTestTab" class="tab-btn">Public Tests</button>
+            <button id="myActivityTab" class="tab-btn hidden">My Activity</button>
           </div>
 
           <!-- Grid Container -->
@@ -158,10 +163,14 @@
     const myTestsTab = document.getElementById('myTestsTab');
     const takeTestTab = document.getElementById('takeTestTab');
     const classesTab = document.getElementById('classesTab');
+    const myActivityTab = document.getElementById('myActivityTab');
     const createNewBtn = document.getElementById('createNewBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const testsGridContainer = document.getElementById('testsGrid');
     const homeTitle = document.getElementById('homeTitle');
+    const adminNavLink = document.getElementById('adminNavLink');
+    const activityNavLink = document.getElementById('activityNavLink');
+    const dashboardNavLink = document.querySelector('.sidebar-nav a[href="home.html"]');
 
     const sidebarUserBlock = document.getElementById('sidebarUserBlock');
     const userNameEl = document.getElementById('userName');
@@ -202,6 +211,7 @@
     myTestsTab.addEventListener('click', () => switchTab('my'));
     takeTestTab.addEventListener('click', () => switchTab('take'));
     classesTab.addEventListener('click', () => switchTab('classes'));
+    myActivityTab.addEventListener('click', () => window.location.href = 'my-activity.html');
 
     // Modal Input Handlers
     window.openJoinClassModal = () => {
@@ -402,9 +412,13 @@
 
       if (currentUserRole === 'Student') {
         myTestsTab.classList.add('hidden');
+        myActivityTab.classList.remove('hidden');
+        if (activityNavLink) activityNavLink.classList.remove('hidden');
         switchTab('classes'); // Default to classes for students
       } else {
         myTestsTab.classList.remove('hidden');
+        myActivityTab.classList.add('hidden');
+        if (activityNavLink) activityNavLink.classList.add('hidden');
         takeTestTab.classList.add('hidden'); // Teachers don't need the Public Tests tab
         switchTab('my'); // Default for Teachers
       }

@@ -1,6 +1,6 @@
 {
-  "version": "1.5",
-  "name": "ChoiceDraft Release",
+  "version": "1.6",
+  "name": "My Activity Update",
   "download_url": "https://github.com/AiruxPH/choicedraft-html/archive/refs/heads/main.zip",
-  "force_update": false
+  "force_update": true
 }

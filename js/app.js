@@ -213,6 +213,7 @@ const dataService = {
         const userEmailEl = document.getElementById('userEmail');
         const userAvatarEl = document.getElementById('userAvatar');
         const adminNavLink = document.getElementById('adminNavLink');
+        const activityNavLink = document.getElementById('activityNavLink');
         const dashboardNavLink = document.querySelector('.sidebar-nav a[href="home.html"]');
 
         if (user) {
@@ -223,6 +224,7 @@ const dataService = {
 
             if (user.role === 'Admin') {
                 if (adminNavLink) adminNavLink.classList.remove('hidden');
+                if (activityNavLink) activityNavLink.classList.add('hidden');
                 if (dashboardNavLink) dashboardNavLink.classList.add('hidden');
                 
                 // Hide irrelevant links for Admin
@@ -236,8 +238,13 @@ const dataService = {
                         }
                     }
                 });
+            } else if (user.role === 'Student') {
+                if (adminNavLink) adminNavLink.classList.add('hidden');
+                if (activityNavLink) activityNavLink.classList.remove('hidden');
+                if (dashboardNavLink) dashboardNavLink.classList.remove('hidden');
             } else {
                 if (adminNavLink) adminNavLink.classList.add('hidden');
+                if (activityNavLink) activityNavLink.classList.add('hidden');
                 if (dashboardNavLink) dashboardNavLink.classList.remove('hidden');
             }
         }

@@ -126,20 +126,43 @@
         <div id="subjectContent" style="display:none;">
           <!-- Hero -->
           <div class="class-hero" id="heroSection">
-          <div id="heroTitle" class="class-hero-title">Loading...</div>
-          <div id="heroDesc" class="class-hero-desc">â€”</div>
-          <div class="class-hero-meta">
-            <div class="class-hero-chip"><i class="fa-solid fa-users"></i><span id="heroCount">0 students</span></div>
-            <div class="class-hero-chip"><i class="fa-solid fa-key"></i><span id="heroCode">â€”</span></div>
+            <div id="heroTitle" class="class-hero-title">Loading...</div>
+            <div id="heroDesc" class="class-hero-desc">â€”</div>
+            <div class="class-hero-meta">
+              <div class="class-hero-chip"><i class="fa-solid fa-users"></i><span id="heroCount">0 students</span></div>
+              <div class="class-hero-chip"><i class="fa-solid fa-key"></i><span id="heroCode">â€”</span></div>
+            </div>
           </div>
-        </div>
-		
-        <div id="config_content">
-		</div>
 
-        <!-- Tests in This Class -->
-        <p class="section-label" id="testsLabel" style="display:none;">Tests in This Class</p>
-        <div id="testsList" style="margin: 0 16px 24px; display: flex; flex-direction: column; gap: 10px;"></div>
+          <!-- Tabs for Teachers -->
+          <div id="subjectTabs" class="flex border-b border-light hidden" style="margin-bottom: 20px; padding: 0 16px;">
+            <button id="manageTab" class="tab-btn active">Manage</button>
+            <button id="analyticsTab" class="tab-btn">Analytics</button>
+          </div>
+
+          <div id="manageView">
+            <div id="config_content"></div>
+            <!-- Tests in This Class -->
+            <p class="section-label" id="testsLabel" style="display:none;">Tests in This Class</p>
+            <div id="testsList" style="margin: 0 16px 24px; display: flex; flex-direction: column; gap: 10px;"></div>
+          </div>
+
+          <!-- Analytics View -->
+          <div id="analyticsView" class="hidden" style="padding: 0 16px 30px;">
+            <div id="analyticsStats" class="grid grid-cols-2 gap-3 mb-6">
+                <!-- Stat cards -->
+            </div>
+            
+            <p class="section-label" style="padding:0; margin-bottom:12px;">Test Performance</p>
+            <div id="testAnalyticsList" class="flex flex-col gap-3 mb-6">
+                <!-- Test bars -->
+            </div>
+
+            <p class="section-label" style="padding:0; margin-bottom:12px;">Student Performance</p>
+            <div id="studentAnalyticsList" class="flex flex-col gap-2">
+                <!-- Student rows -->
+            </div>
+          </div>
 
         </div> <!-- End subjectContent -->
 
@@ -183,6 +206,29 @@
       await window.ChoiceDraftApp.dataService.logout();
       window.ChoiceDraftApp.navigateTo('../signin.html');
     });
+
+    const manageTab = document.getElementById('manageTab');
+    const analyticsTab = document.getElementById('analyticsTab');
+    const manageView = document.getElementById('manageView');
+    const analyticsView = document.getElementById('analyticsView');
+
+    function switchTab(tab) {
+        if (tab === 'analytics') {
+            manageTab.classList.remove('active');
+            analyticsTab.classList.add('active');
+            manageView.classList.add('hidden');
+            analyticsView.classList.remove('hidden');
+            loadAnalytics();
+        } else {
+            manageTab.classList.add('active');
+            analyticsTab.classList.remove('active');
+            manageView.classList.remove('hidden');
+            analyticsView.classList.add('hidden');
+        }
+    }
+
+    manageTab.addEventListener('click', () => switchTab('manage'));
+    analyticsTab.addEventListener('click', () => switchTab('analytics'));
 
     function toggleSidebar(open) {
       document.getElementById('sidebar').classList.toggle('open', open);
@@ -318,6 +364,10 @@
 
       await window.ChoiceDraftApp.dataService.setupSidebar();
 
+      if (currentUser.role === 'Teacher' || currentUser.role === 'Admin') {
+          document.getElementById('subjectTabs').classList.remove('hidden');
+      }
+
 		
 		let conf_cont = document.getElementById('config_content');
 		let conf_cont_content = "";
@@ -439,6 +489,78 @@
         showToast((res && res.error) || 'Cannot delete this test.', true);
       }
     };
+
+    async function loadAnalytics() {
+        const list = document.getElementById('testAnalyticsList');
+        const stats = document.getElementById('analyticsStats');
+        const studentList = document.getElementById('studentAnalyticsList');
+        
+        list.innerHTML = `<div class="flex flex-col items-center py-6"><i class="fa-solid fa-spinner fa-spin text-cyan text-xl mb-2"></i><p class="font-zain text-14 text-a9a9a9">Calculating metrics...</p></div>`;
+        
+        try {
+            const data = await window.apiService.subjects.getAnalytics(subjectId);
+            
+            stats.innerHTML = `
+                <div class="bg-white border border-e0e0e0 rounded-2xl p-4 shadow-sm">
+                    <p class="font-zain text-13 text-a9a9a9 font-700 uppercase">Class Avg</p>
+                    <p class="font-zain text-28 font-800 text-primary-dark">${Math.round(data.class_average)}%</p>
+                </div>
+                <div class="bg-white border border-e0e0e0 rounded-2xl p-4 shadow-sm">
+                    <p class="font-zain text-13 text-a9a9a9 font-700 uppercase">Submissions</p>
+                    <p class="font-zain text-28 font-800 text-primary-dark">${data.total_attempts}</p>
+                </div>
+            `;
+
+            if (!data.tests || data.tests.length === 0) {
+                list.innerHTML = `<p class="font-zain text-14 text-a9a9a9 text-center py-4">No test data available.</p>`;
+                studentList.innerHTML = `<p class="font-zain text-14 text-a9a9a9 text-center py-4">No student data available.</p>`;
+                return;
+            }
+
+            list.innerHTML = data.tests.map(t => {
+                const pct = Math.round(t.avg_pct);
+                const color = pct >= 75 ? '#00c2cb' : (pct >= 50 ? '#f59e0b' : '#ef4444');
+                return `
+                    <div class="bg-white border border-e0e0e0 rounded-xl p-3">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <p class="font-zain font-700 text-15 text-primary-dark">${t.title}</p>
+                            <span class="font-zain font-800 text-14" style="color:${color}">${pct}%</span>
+                        </div>
+                        <div class="w-full h-2 bg-f0f0f0 rounded-full overflow-hidden">
+                            <div class="h-full" style="width:${pct}%; background:${color}"></div>
+                        </div>
+                        <div class="flex justify-between mt-1">
+                            <p class="font-zain text-12 text-a9a9a9">${t.attempt_count} takers</p>
+                            <p class="font-zain text-12 text-a9a9a9">High: ${Math.round(t.high_pct)}%</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            studentList.innerHTML = data.students.map(s => {
+                const pct = Math.round(s.avg_pct);
+                const color = pct >= 75 ? 'text-cyan' : (pct >= 50 ? 'text-yellow-600' : 'text-red-500');
+                return `
+                    <div class="flex items-center justify-between bg-white px-4 py-3 border-b border-f0f0f0 last:border-0">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-f8f8f8 flex items-center justify-center font-zain font-800 text-13 text-primary-dark border border-e0e0e0">
+                                ${s.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <p class="font-zain font-700 text-15 text-primary-dark">${s.name}</p>
+                                <p class="font-zain text-12 text-a9a9a9">${s.attempt_count} tests taken</p>
+                            </div>
+                        </div>
+                        <span class="font-zain font-800 text-16 ${color}">${pct}%</span>
+                    </div>
+                `;
+            }).join('');
+
+        } catch (error) {
+            console.error("Analytics failed:", error);
+            list.innerHTML = `<p class="font-zain text-14 text-red-500 text-center py-4">Failed to load analytics.</p>`;
+        }
+    }
 
     init();
   </script>

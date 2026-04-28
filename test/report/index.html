@@ -246,13 +246,91 @@
       const user = await window.ChoiceDraftApp.dataService.getCurrentUser();
       currentTest = await window.ChoiceDraftApp.dataService.getTestById(testId);
 
-      if (user) { sidebarUserBlock.classList.remove('hidden'); document.getElementById('userName').textContent = user.name; document.getElementById('userEmail').textContent = user.email; document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase(); }
+      if (user) {
+        sidebarUserBlock.classList.remove('hidden');
+        document.getElementById('userName').textContent = user.name;
+        document.getElementById('userEmail').textContent = user.email;
+        document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+      }
 
       backLink.href = `../index.html?id=${testId}`;
 
       if (currentTest) {
-        renderReport();
+        // Students only see their own attempt
+        if (user && user.role === 'Student') {
+          currentTest.attempts = (currentTest.attempts || []).filter(a => a.user_id === user.id);
+          renderStudentView(user, currentTest.attempts);
+        } else {
+          renderReport();
+        }
       }
+    }
+
+    // Student-only personal result view
+    function renderStudentView(user, attempts) {
+      document.getElementById('reportTestTitle').textContent = currentTest.title || 'Untitled Test';
+
+      if (attempts.length === 0) {
+        reportSubmissionsCount.textContent = 'Your Result';
+        emptyState.classList.remove('hidden');
+        reportContent.classList.add('hidden');
+        return;
+      }
+
+      const latest = attempts[0]; // Most recent attempt
+      reportSubmissionsCount.textContent = `Your Result — ${attempts.length} attempt${attempts.length !== 1 ? 's' : ''}`;
+      emptyState.classList.add('hidden');
+      reportContent.classList.remove('hidden');
+
+      const pct = Number(latest.percentage);
+      document.getElementById('avgScore').textContent = `${Math.round(pct)}%`;
+
+      const passingScore = Number(currentTest.passing_score ?? 70);
+      const passed = pct >= passingScore;
+      document.getElementById('passRate').textContent = passed ? 'Passed' : 'Failed';
+      document.getElementById('passedCount').textContent = attempts.filter(a => Number(a.percentage) >= passingScore).length;
+      document.getElementById('failedCount').textContent = attempts.filter(a => Number(a.percentage) < passingScore).length;
+      document.getElementById('highScore').textContent = `${Math.max(...attempts.map(a => Number(a.percentage)))}%`;
+      document.getElementById('lowScore').textContent = `${Math.min(...attempts.map(a => Number(a.percentage)))}%`;
+
+      // Hide distribution chart - not useful for a single student
+      const chartEl = document.getElementById('distributionChart');
+      if (chartEl) chartEl.closest('section')?.style && (chartEl.closest('.q-list2') ? chartEl.closest('.q-list2').style.display = 'none' : null);
+
+      // Question breakdown for their answers
+      const questions = currentTest.questions || [];
+      document.getElementById('questionAnalysisList').innerHTML = questions.length === 0
+        ? '<p class="text-14 text-a9a9a9">No questions.</p>'
+        : questions.map((q, idx) => {
+          const answered = latest.answers && latest.answers[q.id];
+          const correct = answered === q.correct_choice_id;
+          const color = correct ? '#00c2cb' : '#ef4444';
+          return `<div><div class="flex items-center justify-between mb-1">
+            <p class="font-zain text-14 text-primary-dark"><span class="font-700">Q${idx + 1}</span>: ${q.text.slice(0, 60)}${q.text.length > 60 ? '…' : ''}</p>
+            <span class="font-700 font-zain text-14" style="color:${color}">${correct ? '✓' : '✗'}</span>
+          </div>
+          <div class="w-full h-2 bg-e0e0e0 rounded-full overflow-hidden"><div class="h-full" style="width:${correct ? 100 : 0}%;background:${color}"></div></div>
+          </div>`;
+        }).join('');
+
+      // My attempts list
+      document.getElementById('attemptsList').innerHTML = attempts.map(a => {
+        const p = Number(a.percentage);
+        const color = p >= passingScore ? '#00c2cb' : '#ef4444';
+        return `<div class="bg-white shadow-sm border border-e0e0e0 rounded-xl px-5 py-4 flex items-start gap-3" style="padding:1rem">
+          <div class="w-14 h-14 rounded-full flex items-center justify-center shrink-0 shadow-sm" style="background:${color}">
+            <span class="font-800 text-16 text-white font-zain">${Math.round(p)}%</span>
+          </div>
+          <div class="flex-1">
+            <p class="font-700 text-18 text-primary-dark font-zain">${a.score}/${a.total_points} pts</p>
+            <p class="text-14 text-a9a9a9 font-zain">${new Date(a.completed_at.replace(/-/g,'/')).toLocaleDateString()}</p>
+            ${a.feedback ? `<div class="mt-2 p-3 rounded-xl" style="background:#f0fafa;border:1px solid #b2e8eb">
+              <p class="text-13 font-700 text-primary-dark font-zain" style="color:#00c2cb">Teacher Feedback</p>
+              <p class="text-14 text-primary-dark font-zain mt-1">${a.feedback}</p>
+            </div>` : ''}
+          </div>
+        </div>`;
+      }).join('');
     }
 
     function renderReport() {
